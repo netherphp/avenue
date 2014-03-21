@@ -192,7 +192,7 @@ class Router {
 		$this->DomainFull = $_SERVER['HTTP_HOST'];
 
 		// then clean it up to remove any subdomains.
-		preg_match('/([^\.]+\.[^\.]+)$/',$this->DomainFull,$match);
+		preg_match('/([^\.]+\.?[^\.]+)$/',$this->DomainFull,$match);
 		$this->Domain = $match[1];
 
 		return;
@@ -540,15 +540,16 @@ class Router {
 		do {
 			$class = join('\\',$chunks);
 			if(class_exists($class,true)) {
-				if(!is_a($class,'m\Avenue\Route',true))
-				continue;
+				if(!is_a($class,'Nether\Avenue\Route',true))
+				goto NextTry;
 
 				if(!$class::WillHandleRequest($this))
-				continue;
+				goto NextTry;
 
 				return $class;
 			}
 
+			NextTry:
 			array_pop($chunks);
 		} while(count($chunks) > $nslen);
 
