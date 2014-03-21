@@ -2,7 +2,7 @@
 	"name":"netherphp/avenue",
 	"description":"A request router.",
 	"keywords":["php","request","router"],
-	"licence":"BSD-2-Clause",
+	"license":"BSD-2-Clause",
 	"authors":[
 		{
 			"name":"Bob Majdak Jr","email":"bob@majdak.net","homepage":"http://majdak.net","role":"developer"
