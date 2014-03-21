@@ -41,7 +41,7 @@ class ConfigFile extends Nether\Object {
 	public function __construct($file) {
 
 		// load the specified file from disk.
-		$obj = new m\Object($this->Load($file),[
+		$obj = new Nether\Object($this->Load($file),[
 			'Avenues'     => [],
 			'Namespaces'  => [],
 			'Commonspace' => null,
@@ -49,7 +49,7 @@ class ConfigFile extends Nether\Object {
 		]);
 
 		// apply the config to the current object.
-		$this->InputProperties($obj,true);
+		$this->__apply_property_defaults($obj,true);
 
 		return;
 	}
