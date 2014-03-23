@@ -3,6 +3,11 @@
 namespace Nether\Avenue;
 use \Nether;
 
+Nether\Option::Define([
+	'nether-avenue-autostash'  => true,
+	'nether-avenue-stash-name' => 'avenue'
+]);
+
 class Router {
 
 	protected $Commonspace;
@@ -117,6 +122,10 @@ class Router {
 
 		// load from file if specified.
 		if($file) $this->SetFromFile($file);
+
+		// throw itself into the stash.
+		if(Nether\Option::Get('nether-avenue-autostash'))
+		Nether\Stash::Set(Nether\Option::Get('nether-avenue-stash-name'),$this);
 
 		return;
 	}
