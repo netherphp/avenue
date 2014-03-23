@@ -21,13 +21,6 @@ class Route {
 	////////////////////////////////
 	////////////////////////////////
 
-	public $EMS = false;
-	/*//
-	@type string
-	a key value that the router can check to see what event system the route
-	decided to use for launching events. set by the SetupEvents method.
-	//*/
-
 	public function __construct() {
 
 		if(!$this->Allow())
@@ -62,7 +55,6 @@ class Route {
 		Nether\Ki::Queue('nether-avenue-request',[$this,'Request']);
 		Nether\Ki::Queue('nether-avenue-main',[$this,'Main']);
 		Nether\Ki::Queue('nether-avenue-output',[$this,'Output']);
-
 		return;
 	}
 
