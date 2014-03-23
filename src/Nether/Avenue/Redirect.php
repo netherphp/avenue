@@ -33,7 +33,8 @@ class Redirect {
 
 		// this ki flow will allow libraries to shut themselves down
 		// early if a page redirect is requested.
-		m\Ki::Flow('m-request-redirect');
+		if(class_exists('Nether\\Ki'))
+		Nether\Ki::Flow('nether-avenue-redirect');
 
 		header("Location: {$this->Location}");
 		exit(0); // *wave*
@@ -49,26 +50,26 @@ class Redirect {
 			goto DoHome;
 
 		switch($this->Location) {
-			case 'm://home': {
+			case 'nether://home': {
 				goto DoHome;
 				break;
 			}
 
-			case 'm://back':
-			case 'm://referer':
-			case 'm://referrer': {
+			case 'nether://back':
+			case 'nether://referer':
+			case 'nether://referrer': {
 				goto DoBack;
 				break;
 			}
 
-			case 'm://refresh':
-			case 'm://reload': {
+			case 'nether://refresh':
+			case 'nether://reload': {
 				goto DoReload;
 				break;
 			}
 
-			case 'm://current':
-			case 'm://self': {
+			case 'nether://current':
+			case 'nether://self': {
 				goto DoSelf;
 				break;
 			}
