@@ -60,12 +60,14 @@ class ConfigFile extends Nether\Object {
 	protected function Load($file) {
 		if(!$this->IsReadable($file)) {
 			// TODO - log file not found or not readable.
+			echo "Route File Not Readable.";
 			return null;
 		}
 
 		$obj = json_decode(file_get_contents($file));
 		if(!is_object($obj)) {
 			// TODO - log error parsing config file
+			echo "Route File Parse Error";
 			return null;
 		}
 
