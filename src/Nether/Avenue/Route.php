@@ -33,6 +33,8 @@ class Route {
 		if(!$this->Allow())
 		throw new \Exception('Access Denied');
 
+		$this->SetupEvents();
+
 		return;
 	}
 
@@ -57,17 +59,13 @@ class Route {
 	supported event system to latch on to or not.
 	//*/
 
-		if(class_exists('Nether\Event')) {
-			//$this->SetupEvents_NetherEvent();
-			return true;
-		}
+		Nether\Ki::Queue('nether-avenue-request',[$this,'Request']);
+		Nether\Ki::Queue('nether-avenue-main',[$this,'Main']);
+		Nether\Ki::Queue('nether-avenue-output',[$this,'Output']);
 
-		// TODO
-		// add Symfony2 EventHandler support.
-
-		$this->EMS = false;
-		return false;
+		return;
 	}
+
 
 	////////////////////////////////
 	////////////////////////////////

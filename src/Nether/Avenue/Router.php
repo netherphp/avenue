@@ -336,23 +336,20 @@ class Router {
 	execute the selected route.
 	//*/
 
-		switch($this->Route->EMS) {
-			case 'monticello-ki': {
-				m\Ki::Flow('avenue-request');
-				m\Ki::Flow('avenue-main');
-				m\Ki::Flow('avenue-output');
-				break;
-			}
+//		switch($this->Route->EMS) {
+//			case 'nether-ki': {
+				Nether\Ki::Flow('nether-avenue-request');
+				Nether\Ki::Flow('nether-avenue-main');
+				Nether\Ki::Flow('nether-avenue-output');
+//				break;
+//			}
 
-			default: {
-				$this->Route->Request();
-				$this->Route->Main();
-				$this->Route->Output();
-			}
-		}
-
-		// TODO
-		// add support for symfony2 eventhandler.
+//			default: {
+//				$this->Route->Request();
+//				$this->Route->Main();
+//				$this->Route->Output();
+//			}
+//		}
 
 	}
 
