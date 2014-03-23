@@ -1,6 +1,6 @@
 <?php
 
-namespace Nether\Avenue;
+namespace Nether;
 use \Nether;
 
 Nether\Option::Define([
@@ -8,7 +8,7 @@ Nether\Option::Define([
 	'nether-avenue-stash-name' => 'avenue'
 ]);
 
-class Router {
+class Avenue {
 
 	protected $Commonspace;
 	/*//
@@ -474,7 +474,7 @@ class Router {
 	//*/
 
 
-		$file = new ConfigFile($filename);
+		$file = new Nether\Avenue\ConfigFile($filename);
 
 		$this->Routes = $file->Avenues;
 		$this->Namespaces = $file->Namespaces;
