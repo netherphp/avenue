@@ -475,11 +475,14 @@ class Avenue {
 
 
 		$file = new Nether\Avenue\ConfigFile($filename);
+		$this->Routes = (array)$file->Avenues;
+		$this->Namespaces = (array)$file->Namespaces;
+		$this->Commonspace = (string)$file->Commonspace;
 
-		$this->Routes = $file->Avenues;
-		$this->Namespaces = $file->Namespaces;
-		$this->Commonspace = $file->Commonspace;
-		$this->ErrorRoutes = $file->ErrorRoutes;
+		// $this->ErrorRoutes = (array)$file->ErrorRoutes;
+		foreach((array)$file->ErrorRoutes as $key => $val) {
+			$this->ErrorRoutes[$key] = $val;
+		}
 
 		return $this;
 	}
@@ -572,7 +575,7 @@ class Avenue {
 		return false;
 
 		if(class_exists($this->ErrorRoutes[$errno],true)) {
-			if(is_a($this->ErrorRoutes[$errno],'m\Avenue\Route',true))
+			if(is_a($this->ErrorRoutes[$errno],'Nether\Avenue\Route',true))
 			return $this->ErrorRoutes[$errno];
 		}
 
