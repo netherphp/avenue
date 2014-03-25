@@ -478,11 +478,7 @@ class Avenue {
 		$this->Routes = (array)$file->Avenues;
 		$this->Namespaces = (array)$file->Namespaces;
 		$this->Commonspace = (string)$file->Commonspace;
-
-		// $this->ErrorRoutes = (array)$file->ErrorRoutes;
-		foreach((array)$file->ErrorRoutes as $key => $val) {
-			$this->ErrorRoutes[$key] = $val;
-		}
+		$this->ErrorRoutes = (array)$file->ErrorRoutes;
 
 		return $this;
 	}

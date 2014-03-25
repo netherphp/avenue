@@ -48,6 +48,11 @@ class ConfigFile extends Nether\Object {
 			'ErrorRoutes' => []
 		]);
 
+		$obj->ErrorRoutes = get_object_vars($obj->ErrorRoutes);
+		// typecasting the object into an array had an issue where php only
+		// seemed to think it was half an array - trying to array_key_exists or
+		// access the properties would result in failure.
+
 		// apply the config to the current object.
 		$this->__apply_property_defaults($obj,true);
 
