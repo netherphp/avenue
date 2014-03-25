@@ -4,11 +4,39 @@ namespace Nether;
 use \Nether;
 
 Nether\Option::Define([
-	'nether-avenue-autostash'  => true,
+	'nether-avenue-autostash' => true,
+	/*//option//
+	@name nether-avenue-autostash
+	@type bool
+	@default true
+	value which defines if avenue automatically attempts to throw itself into
+	the Nether Stash when created.
+	//*/
+
 	'nether-avenue-stash-name' => 'avenue'
+	/*//option//
+	@name nether-avenue-stash-name
+	@type string
+	@default "avenue"
+	the alias used when automatically storing itself into the nether stash.
+	//*/
 ]);
 
 class Avenue {
+/*//
+@type singleton
+this class provides request routing capabilities, and is designed to work in
+conjunction with an autoloader of some sorts. it should also work if your app
+uses an include-all-the-things system too, though, as its a class_exists based
+system.
+
+* GET /test/hello-world
+* check defined routes if they want to handle this request.
+* check defined namespaces for route matching name Test\HelloWorld
+* check defined commonspace for a fallback route matching Test\HelloWorld
+* check if we have a 404 route defined, use it if we do.
+* explode. (throw exception)
+//*/
 
 	protected $Commonspace;
 	/*//
@@ -20,19 +48,23 @@ class Avenue {
 	protected $ErrorRoutes = [];
 	/*//
 	@type array
-	store classnames by their error number to use for errors.
+	store classnames by their error number to use for errors. avenue makes use
+	of 403 if a route accepts a request but won't allow it for some reason, and
+	404 if no routes to handle the request were found.
 	//*/
 
 	protected $Namespaces = [];
 	/*//
 	@type array
-	a list of namespaces that will be searched to find routes.
+	a list of namespaces that will be searched to find routes. first come first
+	serve.
 	//*/
 
 	protected $Routable;
 	/*//
 	@type boolean
-	if the current environment is actually routable.
+	if the current environment is actually routable. this will be false when
+	running things from unroutable environments like the command line.
 	//*/
 
 	protected $Route;
@@ -88,7 +120,7 @@ class Avenue {
 
 	protected $HitTime;
 	/*//
-	@type int
+	@type float
 	the time that the hit occured.
 	//*/
 
@@ -118,7 +150,7 @@ class Avenue {
 
 		// provide a simple way to identify this hit.
 		$this->HitHash = md5("{$_SERVER['REMOTE_ADDR']}-{$this->DomainFull}-{$this->Path}");
-		$this->HitTime = time();
+		$this->HitTime = microtime(true);
 
 		// load from file if specified.
 		if($file) $this->SetFromFile($file);
@@ -136,6 +168,7 @@ class Avenue {
 	protected function IsRoutableEnvironment() {
 	/*//
 	@return boolean
+	@flags internal
 	attempts to determine if the current environment is even routable. e.g. is
 	this a web request or are we being executed from the CLI? it matters.
 	//*/
@@ -158,6 +191,7 @@ class Avenue {
 
 	protected function ParseRequest() {
 	/*//
+	@flags internal
 	begin the parse request chain of tests.
 	//*/
 
@@ -194,6 +228,7 @@ class Avenue {
 
 	protected function ParseRequest_Domain() {
 	/*//
+	@flags internal
 	fill in the domain name properties.
 	//*/
 
@@ -332,7 +367,7 @@ class Avenue {
 
 	protected function RouteSetup($class) {
 	/*//
-	@argv string Class
+	@flags internal
 	setup an instance of the route that was selected for use.
 	//*/
 
@@ -342,35 +377,40 @@ class Avenue {
 
 	protected function RouteRun() {
 	/*//
+	@flags internal
 	execute the selected route.
 	//*/
 
-//		switch($this->Route->EMS) {
-//			case 'nether-ki': {
-				Nether\Ki::Flow('nether-avenue-request');
-				Nether\Ki::Flow('nether-avenue-main');
-				Nether\Ki::Flow('nether-avenue-output');
-//				break;
-//			}
+		Nether\Ki::Flow('nether-avenue-request');
+		Nether\Ki::Flow('nether-avenue-main');
+		Nether\Ki::Flow('nether-avenue-output');
 
-//			default: {
-//				$this->Route->Request();
-//				$this->Route->Main();
-//				$this->Route->Output();
-//			}
-//		}
-
+		return;
 	}
 
 	////////////////
 	////////////////
 
 	public function GetDomain($full=false) {
+	/*//
+	@argv bool FullDomain default false
+	@return string
+	fetch the domain name from this request. by default will only return the
+	usual whatever.tld domain. if given true then will return the full domain
+	name as written in the request, omg.wtf.bbq.whatever.tld etc.
+	//*/
+
 		if(!$full) return $this->Domain;
 		else return $this->DomainFull;
 	}
 
 	public function GetHit() {
+	/*//
+	@return object
+	return an object that defines the unique description of this request: the
+	hit hash and the request time.
+	//*/
+
 		return (object)[
 			'Hash' => $this->GetHitHash(),
 			'Time' => $this->GetHitTime()
@@ -378,22 +418,47 @@ class Avenue {
 	}
 
 	public function GetHitHash() {
+	/*//
+	@return string
+	return the hit hash for this request.
+	//*/
+
 		return $this->HitHash;
 	}
 
 	public function GetHitTime() {
+	/*//
+	@return float
+	return the hit time for this request.
+	//*/
+
 		return $this->HitTime;
 	}
 
 	public function GetPath() {
+	/*//
+	@return string
+	return the path of the request.
+	//*/
+
 		return $this->Path;
 	}
 
 	public function GetPathList() {
+	/*//
+	@return array
+	return the path this request as an array broken at the slashes.
+	//*/
+
 		return $this->PathList;
 	}
 
 	public function GetPathSlot($slot) {
+	/*//
+	@return string
+	return the specific slot of the path as broken up at the slashes.
+	//*/
+
 		if(array_key_exists($slot,$this->PathList))
 		return $this->PathList[$slot];
 
@@ -406,8 +471,9 @@ class Avenue {
 
 	public function AppendRoute($class) {
 	/*//
-	@argv  string Class
+	@argv string FullClassName
 	@return self
+	add a new route to check the request at the bottom of the list.
 	//*/
 
 		$this->Routes[] = $class;
@@ -416,8 +482,9 @@ class Avenue {
 
 	public function PrependRoute($class) {
 	/*//
-	@argv string Class
+	@argv string FullClassName
 	@return self
+	add a new route to check the request at the top of the list.
 	//*/
 
 		array_unshift($this->Routes,$class);
@@ -426,8 +493,9 @@ class Avenue {
 
 	public function AppendNamespace($ns) {
 	/*//
-	@argv string Namespace
+	@argv string NamespaceName
 	@return self
+	add a new namespace to search for routes at the bottom of the route list.
 	//*/
 
 		$this->Namespaces[] = $ns;
@@ -436,8 +504,9 @@ class Avenue {
 
 	public function PrependNamespace($ns) {
 	/*//
-	@argv string Namespace
+	@argv string NamespaceName
 	@return self
+	add a new namespace to search for routes at the top of the route list.
 	//*/
 
 		array_unshift($this->Namespace,$ns);
@@ -446,7 +515,7 @@ class Avenue {
 
 	public function SetCommonspace($ns) {
 	/*//
-	@argv string Namespace
+	@argv string NamespaceName
 	@return self
 	set the common namespace to look for routes not found in the specific
 	namespace.
@@ -458,7 +527,7 @@ class Avenue {
 
 	public function SetErrorRoute($errno,$class) {
 	/*//
-	@argv int Errno, string ClassName
+	@argv int Errno, string FullClassName
 	@return self
 	sets the class to use for the specific errors.
 	//*/
@@ -469,6 +538,7 @@ class Avenue {
 
 	public function SetFromFile($filename) {
 	/*//
+	@argv string Filename
 	@return self
 	load a route mapping from a json file on disk.
 	//*/
@@ -488,7 +558,8 @@ class Avenue {
 
 	protected function SelectRouteFromList() {
 	/*//
-	@return string or false
+	@return string
+	@flags internal
 	returns the class name of the first registered route that claims it can
 	handle the current request. returns boolean false if none found.
 	//*/
@@ -507,6 +578,7 @@ class Avenue {
 	protected function SelectRouteFromAuto() {
 	/*//
 	@return string
+	@flags internal
 	attempt to find a class that will handle the current request as determined
 	by the route name.
 	//*/
@@ -564,6 +636,7 @@ class Avenue {
 	protected function SelectRouteFromError($errno) {
 	/*//
 	@return string
+	@flags internal
 	check if the class specified as the error route is able to be used as one.
 	//*/
 
