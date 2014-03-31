@@ -256,8 +256,11 @@ system.
 		if(strpos($uri,'?') !== false)
 		$uri = trim(explode('?',$uri)[0],'/');
 
+		// kill directory iteration attempts.
+		$uri = preg_replace('/\.{2,}/','',$uri);
+
 		// the rule being used to determine if a chunk is clean.
-		$safex = '/^[a-zA-Z0-9_-]+$/';
+		$safex = '/^[a-zA-Z0-9\.\_\-]+$/';
 
 		// blow the string up.
 		$this->PathList = explode('/',$uri);
