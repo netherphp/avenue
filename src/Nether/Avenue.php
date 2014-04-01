@@ -4,6 +4,15 @@ namespace Nether;
 use \Nether;
 
 Nether\Option::Define([
+	'nether-avenue-autoindex' => true,
+	/*//option//
+	@name nether-avenue-autoindex
+	@type bool
+	@default true
+	determines if the router should add /index to the end of request uris to
+	try and find the extra route in a subfolder based section structure.
+	//*/
+
 	'nether-avenue-autostash' => true,
 	/*//option//
 	@name nether-avenue-autostash
@@ -613,7 +622,12 @@ system.
 	//*/
 
 		$nslen = substr_count($ns,'\\') + 1;
+
 		$target = "{$ns}\\{$this->RouteName}";
+
+		if(Nether\Option::Get('nether-avenue-autoindex'))
+		$target .= "\\Index";
+
 		$chunks = explode('\\',$target);
 		$class = null;
 
