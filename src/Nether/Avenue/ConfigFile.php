@@ -42,12 +42,13 @@ class ConfigFile extends Nether\Object {
 
 		// load the specified file from disk.
 		$obj = new Nether\Object($this->Load($file),[
-			'Avenues'     => [],
-			'Namespaces'  => [],
+			'Avenues'     => null,
+			'Namespaces'  => null,
 			'Commonspace' => null,
-			'ErrorRoutes' => []
+			'ErrorRoutes' => null
 		]);
 
+		if($obj->ErrorRoutes)
 		$obj->ErrorRoutes = get_object_vars($obj->ErrorRoutes);
 		// typecasting the object into an array had an issue where php only
 		// seemed to think it was half an array - trying to array_key_exists or
