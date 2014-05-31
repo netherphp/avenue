@@ -577,7 +577,7 @@ system.
 	//*/
 
 		foreach($this->Routes as $class) {
-			if(!is_a($class,'m\Avenue\Route',true))
+			if(!is_a($class,'Nether\Avenue\Route',true))
 			continue;
 
 			if($class::WillHandleRequest($this))
