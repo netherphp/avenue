@@ -1,7 +1,7 @@
 <?php
 
-namespace m\Avenue;
-use \m as m;
+namespace Nether\Avenue;
+use \Nether;
 
 /* TODO
 
