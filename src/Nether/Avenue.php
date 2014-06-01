@@ -521,7 +521,7 @@ system.
 	add a new namespace to search for routes at the top of the route list.
 	//*/
 
-		array_unshift($this->Namespace,$ns);
+		array_unshift($this->Namespaces,$ns);
 		return $this;
 	}
 
