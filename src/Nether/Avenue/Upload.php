@@ -1,6 +1,6 @@
 <?php
 
-namespace m\Avenue;
+namespace Nether\Avenue;
 use \m as m;
 
 class Upload {
@@ -147,7 +147,7 @@ with.
 	//*/
 
 		if(!is_dir($this->Dir)) {
-			if(!m_mkdir($this->Dir,0777))
+			if(!mkdir($this->Dir,0777))
 			throw new m\Error\DirectoryNotFound($this->Dir);
 		}
 
@@ -156,7 +156,7 @@ with.
 			throw new m\Error\DirectoryNotWritable($this->Dir);
 		}
 
-		$filepath = m_repath_fs("{$this->Dir}/{$this->File}");
+		$filepath = ("{$this->Dir}/{$this->File}");
 		@rename($this->UploadFile,$filepath);
 
 		if(!file_exists($filepath) || !filesize($filepath)) return false;
