@@ -396,6 +396,7 @@ system.
 		Nether\Ki::Flow('nether-avenue-request');
 		Nether\Ki::Flow('nether-avenue-main');
 		Nether\Ki::Flow('nether-avenue-output');
+		Nether\Ki::Flow('nether-avenue-done');
 
 		return;
 	}
