@@ -22,12 +22,19 @@ Nether\Option::Define([
 	the Nether Stash when created.
 	//*/
 
-	'nether-avenue-stash-name' => 'avenue'
+	'nether-avenue-stash-name' => 'avenue',
 	/*//option//
 	@name nether-avenue-stash-name
 	@type string
 	@default "avenue"
 	the alias used when automatically storing itself into the nether stash.
+	//*/
+
+	'avenue-url-safe-regex' => '/^[a-zA-Z0-9\.\_\-]+$/'
+	/*//option//
+	@name avenue-url-safe-regex
+	@type string
+	the regex used to determine what characters are allowed in URLs.
 	//*/
 ]);
 
@@ -269,7 +276,7 @@ system.
 		$uri = preg_replace('/\.{2,}/','',$uri);
 
 		// the rule being used to determine if a chunk is clean.
-		$safex = '/^[a-zA-Z0-9\.\_\-]+$/';
+		$safex = Nether\Option::Get('avenue-url-safe-regex');
 
 		// blow the string up.
 		$this->PathList = explode('/',$uri);
