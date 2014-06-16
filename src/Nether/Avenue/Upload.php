@@ -147,13 +147,13 @@ with.
 	//*/
 
 		if(!is_dir($this->Dir)) {
-			if(!mkdir($this->Dir,0777))
-			throw new m\Error\DirectoryNotFound($this->Dir);
+			if(!mkdir($this->Dir,0777,true))
+			throw new \Exception($this->Dir);
 		}
 
 		if(!is_writable($this->Dir)) {
 			if(!@chmod($this->Dir,0777))
-			throw new m\Error\DirectoryNotWritable($this->Dir);
+			throw new \Exception($this->Dir);
 		}
 
 		$filepath = ("{$this->Dir}/{$this->File}");
