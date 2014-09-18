@@ -18,9 +18,12 @@ in a utility library that can be reused here.
 class Redirect {
 
 	public $Location;
+	public $StatusCode = 302;
 
-	public function __construct($location = null) {
-		$this->Location = $location;
+	public function __construct($location = null,$status = 302) {
+		if($location) $this->Location = $location;
+		if($status) $this->StatusCode = $status;
+
 		$this->Parse();
 		return;
 	}
@@ -36,6 +39,7 @@ class Redirect {
 		if(class_exists('Nether\\Ki'))
 		Nether\Ki::Flow('nether-avenue-redirect');
 
+		header($this->FetchHeader());
 		header("Location: {$this->Location}");
 		exit(0); // *wave*
 	}
@@ -100,14 +104,24 @@ class Redirect {
 
 	}
 
-	static function Now($where) {
+	protected function FetchHeader() {
+		switch((int)$this->StatusCode) {
+			case 301: { return '301 Moved Permanently'; }
+			case 302: { return '302 Found'; }
+			case 303: { return '303 See Other'; }
+			case 304: { return '307 Temporary Redirect'; }
+			default:  { return '302 Found'; }
+		}
+	}
+
+	static function Now($where,$status=302) {
 	/*//
 	you do not want to deal with creating a redirect object yourself, mostly
 	because you might not care about proceedurally generating the destination.
 	whatever. that is cool. redirect now will do it for you.
 	//*/
 
-		$bye = new self($where);
+		$bye = new self($where,$status);
 		$bye->Go();
 	}
 

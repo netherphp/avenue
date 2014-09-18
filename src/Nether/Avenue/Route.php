@@ -24,7 +24,7 @@ class Route {
 	public function __construct() {
 
 		if(!$this->Allow())
-		throw new \Exception('Access Denied');
+		throw new \Exception('Access Denied',-1);
 
 		$this->SetupEvents();
 
