@@ -18,8 +18,8 @@ Route conditions are straight regular expressions at the end of the day, however
 
 There are two types of shortcuts - slotted and unslotted. Slotted (similar to default preg) is surrounded by parens and the value within them will be passed to the route that will be executed. Unslotted is surrounded by braces and that data will not be passed.
 
-* (@) - whatever we found will be passed to the routing method.
-* {@} - whatever we found will not be passed to the routing method.
+* (@) - slotted - whatever we found will be passed to the routing method.
+* {@} - unslotted - whatever we found will not be passed to the routing method.
 
 #### Available Shortcuts
 
@@ -42,6 +42,10 @@ Additionally, you can go hardmode with straight on Perl Regex just like you were
 	Matches for the homepage request on any domain.
 	- {@}//index
 	+ domain.tld/ => Route::Method();
+	
+	Matches the homepage request on any domain.
+	Straight Perl instead of shortcuts.
+	- .+?//index
 
 	Matches for the homepage request on any domain.
 	Passes the domain to the routing method.
@@ -66,8 +70,12 @@ Additionally, you can go hardmode with straight on Perl Regex just like you were
 	Passes the integer to the routing method.
 	- {@}//members/(#)
 	+ domain.tld/members/42 => Route::Method($id);
-	
 
+	Matches a members path with an integer.
+	Straight Perl instead of shortcuts.
+	Passes the integer to the routing method.
+	- .+?//members/(\d+)
+	+ domain.tld/members/42 => Route::Method($id);
 
 ## Installing
 Require this package in your composer.json.
@@ -81,9 +89,8 @@ Then install it or update into it.
 	$ composer install --no-dev
 	$ composer update --no-dev
 
-Testing
---------------------------------
 
+## Testing
 This library uses Codeception for testing. Composer will handle it for you. Install or Update into it.
 
 	$ composer install --dev
