@@ -1,4 +1,14 @@
 {
+	"name":"netherphp/avenue",
+	"description":"A Request Router.",
+	"keywords":["php","router"],
+	"license":"BSD-2-Clause",
+	"authors":[
+		{ "name":"Bob Majdak Jr",
+		  "email":"bob@nether.io",
+		  "homepage":"http://nether.io",
+		  "role":"developer" }
+	],
 	"require": {
 		"netherphp/object": "~1.0.0",
 		"netherphp/option": "~1.0.0"
