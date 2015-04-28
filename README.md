@@ -56,6 +56,12 @@ Additionally, you can go hardmode with straight on Perl Regex just like you were
 		* (@)//index
 		* domain.tld/ => Route::Method($domain);
 
+	Matches for the homepage request on any domain.
+	Straight Perl instead of shortcuts.
+	Passes the domain to the routing method.
+		* (.+?)//index
+		* domain.tld/ => Route::Method($domain);
+
 	Matches for the homepage on a beta domain.
 		* beta.{@}//index
 		* beta.domain.tld/ => Route::Method();
