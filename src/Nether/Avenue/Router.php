@@ -7,8 +7,11 @@ use \Exception;
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-Nether\Option::Define('nether-avenue-condition-shortcuts',[
+// define a list of shortcuts which can be used in the route conditions to make
+// regular expressions easier to deal with. with care, you can also add your
+// own shortcuts if there is anything you find yourself doing often.
 
+Nether\Option::Define('nether-avenue-condition-shortcuts',[
 	// match anything, as long as there is something.
 	'(@)' => '(.+?)', '{@}' => '(?:.+?)',
 
@@ -19,7 +22,12 @@ Nether\Option::Define('nether-avenue-condition-shortcuts',[
 	'(#)' => '(\d+)', '{#}' => '(?:\d+)',
 
 	// match a string within a path fragment e.g. between the slashes.
-	'($)' => '([^\/]+)', '{$}' => '(?:[^\/]+)'
+	'($)' => '([^\/]+)', '{$}' => '(?:[^\/]+)',
+
+	// match a relevant domain e.g. domain.tld without subdomains. it should
+	// also work on dotless domains like localhost. it will still match a full
+	// domain like www.nether.io, but it will only store nether.io in the slot.
+	'(domain)' => '.*?([^\.]+(?:\.[^\.]+)?)', '{domain}' => '.*?(?:[^\.]+(?:\.[^\.]+)?)'
 ]);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +90,7 @@ class Router {
 		return null;
 
 		return preg_replace(
-			'/.*?([^\.]+(?:\.[^\.]+)?)$/msi',
+			'/.*?([^\.]+(?:\.[^\.]+)?)$/',
 			'\1',
 			$this->Domain
 		);

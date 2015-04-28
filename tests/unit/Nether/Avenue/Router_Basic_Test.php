@@ -19,7 +19,8 @@ class Router_Basic_Test extends \Codeception\TestCase\Test {
 		'TestInt' => [ 'Domain'=>'www.nether.io', 'Path'=>'/test/42' ],
 		'TestIntTs' => [ 'Domain'=>'www.nether.io', 'Path'=>'/test/42/' ],
 		'TestDeep' => [ 'Domain'=>'www.nether.io', 'Path'=>'/one/two/three/four' ],
-		'TestDeepTs' => [ 'Domain'=>'www.nether.io', 'Path'=>'/one/two/three/four/' ]
+		'TestDeepTs' => [ 'Domain'=>'www.nether.io', 'Path'=>'/one/two/three/four/' ],
+		'LocalhostRoot' => [ 'Domain'=>'localhost', 'Path'=>'/' ]
 	];
 
 	public function testRequestParsingFromGlobals() {
@@ -345,6 +346,24 @@ class Router_Basic_Test extends \Codeception\TestCase\Test {
 		(new Verify($router->GetRoute()->Argv[1]))->equals('two');
 		(new Verify($router->GetRoute()->Argv[2]))->equals('three');
 		(new Verify($router->GetRoute()->Argv[3]))->equals('four');
+
+		return;
+	}
+
+	public function testRouteConditionDomainMeaning() {
+	/*//
+	test that the (domain) shortcut pulls domain.tld without any subdomains and
+	that it works as expected on dotless domains e.g. localhost.
+	//*/
+
+		$router = new Nether\Avenue\Router(static::$RequestData['Root']);
+		$router->AddRoute('(domain)//index','herp::derp');
+		(new Verify($router->GetRoute()->Argv[0]))->equals('nether.io');
+
+		$router = new Nether\Avenue\Router(static::$RequestData['LocalhostRoot']);
+		$router->AddRoute('(domain)//index','herp::derp');
+		(new Verify($router->GetRoute()->Argv[0]))->equals('localhost');
+
 
 		return;
 	}

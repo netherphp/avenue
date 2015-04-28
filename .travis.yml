@@ -8,4 +8,4 @@ php:
 install:
     - composer install
 script:
-    - php vendor/bin/codecept run unit -q
+    - php vendor/bin/codecept run unit
