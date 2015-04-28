@@ -263,20 +263,25 @@ class Router {
 	return(self)
 	//*/
 
-		if(!$this->IsRouteConditionValid($cond))
-		throw new Exception("Route condition ({$cond}) is not valid.");
+		{{{ // parse the route conditions.
+			if(!$this->IsRouteConditionValid($cond))
+			throw new Exception("Route condition ({$cond}) is not valid.");
 
-		if(!$this->IsRouteHandlerValid($hand))
-		throw new Exception("Route handler ({$hand}) is not valid.");
+			list($domain,$path) = explode('//',$cond);
+		}}}
 
-		list($domain,$path) = explode('//',$cond);
+		{{{ // parse the route handler.
+			if(!$this->IsRouteHandlerValid($hand))
+			throw new Exception("Route handler ({$hand}) is not valid.");
 
-		$this->Routes[] = (object)[
-			'Domain' => "`^{$this->TranslateRouteCondition($domain)}$`",
-			'Path' => "`^\/{$this->TranslateRouteCondition($path)}$`",
-			'Handler' => $hand
-		];
+			$handler = $this->TranslateRouteHandler($hand);
+		}}}
 
+		// throw in our extra data.
+		$handler->SetDomain("`^{$this->TranslateRouteCondition($domain)}$`");
+		$handler->SetPath("`^\/{$this->TranslateRouteCondition($path)}$`");
+
+		$this->Routes[] = $handler;
 		return $this;
 	}
 
@@ -286,18 +291,21 @@ class Router {
 	//*/
 
 		$dm = $pm = null;
-		$selected = false;
 
-		foreach($this->Routes as $route) {
-			if(!preg_match($route->Domain,$this->Domain,$dm)) continue;
-			if(!preg_match($route->Path,$this->Path,$pm)) continue;
+		foreach($this->Routes as $handler) {
+			// check if this route will service this request.
+			if(!preg_match($handler->GetDomain(),$this->Domain,$dm)) continue;
+			if(!preg_match($handler->GetPath(),$this->Path,$pm)) continue;
 
+			// fetch the arguments found by the route match.
 			unset($dm[0],$pm[0]);
-			$route->Argv = array_merge($dm,$pm);
-			$selected = $route; break;
+			$handler->SetArgv(array_merge($dm,$pm));
+
+			// and since we found a match we are done.
+			return $handler;
 		}
 
-		return $selected;
+		return false;
 	}
 
 	public function ClearRoutes() {
@@ -330,10 +338,37 @@ class Router {
 
 	public function TranslateRouteHandler($hand) {
 	/*//
-	return(string)
+	return(Nether\Avenue\RouteHandler)
 	//*/
 
-		return $hand;
+		if(strpos($hand,'::') !== false)
+		return $this->TranslateRouteHandler_ClassMethod($hand);
+
+		else
+		return $this->TranslateRouteHandler_ClassOnly($hand);
+	}
+
+	protected function TranslateRouteHandler_ClassMethod($hand) {
+	/*//
+	return(Nether\Avenue\RouteHandler)
+	//*/
+
+		list($class,$method) = explode('::',$hand);
+
+		return new RouteHandler([
+			'Class' => $class,
+			'Method' => $method
+		]);
+	}
+
+	protected function TranslateRouteHandler_ClassOnly($hand) {
+	/*//
+	return(Nether\Avenue\RouteHandler)
+	//*/
+
+		return new RouteHandler([
+			'Class' => $hand
+		]);
 	}
 
 	protected function IsRouteConditionValid($cond) {

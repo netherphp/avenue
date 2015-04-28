@@ -5,8 +5,7 @@ namespace Nether\Avenue;
 use \Nether;
 use \Codeception\Verify;
 
-
-class Router_Basic_Test extends \Codeception\TestCase\Test {
+class Router_Test extends \Codeception\TestCase\Test {
 
 	static $RequestData = [
 		'Root' => [ 'Domain'=>'www.nether.io', 'Path'=>'/' ],
@@ -149,12 +148,12 @@ class Router_Basic_Test extends \Codeception\TestCase\Test {
 
 		(new Verify(
 			'check that the route domain condition translated right',
-			current($routes)->Domain
+			current($routes)->GetDomain()
 		))->equals('`^(.+?)$`');
 
 		(new Verify(
 			'check that the route path condition translated right',
-			current($routes)->Path
+			current($routes)->GetPath()
 		))->equals('`^\/index$`');
 
 		(new Verify(
@@ -164,12 +163,17 @@ class Router_Basic_Test extends \Codeception\TestCase\Test {
 
 		(new Verify(
 			'check that GetRoute() selected the right route.',
-			$router->GetRoute()->Handler
-		))->equals('Nether\Avenue\RouteTest::Test');
+			($router->GetRoute() instanceof Nether\Avenue\RouteHandler)
+		))->true();
+
+		(new Verify(
+			'check that TranslateRouteHandler() parsed the class right.',
+			"Class: {$router->GetRoute()->GetClass()}, Method: {$router->GetRoute()->GetMethod()}"
+		))->equals('Class: Nether\Avenue\RouteTest, Method: Test');
 
 		(new Verify(
 			'check that GetRoute() found the arguments.',
-			$router->GetRoute()->Argv[0]
+			$router->GetRoute()->GetArgv()[0]
 		))->equals('www.nether.io');
 
 		return;
@@ -189,12 +193,12 @@ class Router_Basic_Test extends \Codeception\TestCase\Test {
 
 		(new Verify(
 			'first route is unslotted.',
-			(count($r1->GetRoute()->Argv) === 0)
+			(count($r1->GetRoute()->GetArgv()) === 0)
 		))->true();
 
 		(new Verify(
 			'second route is slotted.',
-			(count($r2->GetRoute()->Argv) === 1)
+			(count($r2->GetRoute()->GetArgv()) === 1)
 		))->true();
 
 		return;
@@ -242,27 +246,27 @@ class Router_Basic_Test extends \Codeception\TestCase\Test {
 		$router = new Nether\Avenue\Router(static::$RequestData['TestDeep']);
 
 		$router->AddRoute('(@)//one/two/three/four','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('www.nether.io');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('www.nether.io');
 
 		$router->ClearRoutes()->AddRoute('(@)//one/two/three/four(@)','herp::derp');
 		(new Verify($router->GetRoute()))->equals(false);
 
 		$router->ClearRoutes()->AddRoute('www.(@)//one/two/three/four','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('nether.io');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('nether.io');
 
 		$router->ClearRoutes()->AddRoute('www.(@).io//one/two/three/four','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('nether');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('nether');
 
 		$router->ClearRoutes()->AddRoute('www.(@).io//(@)','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('nether');
-		(new Verify($router->GetRoute()->Argv[1]))->equals('one/two/three/four');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('nether');
+		(new Verify($router->GetRoute()->GetArgv()[1]))->equals('one/two/three/four');
 
 		$router->ClearRoutes()->AddRoute('www.(@).io//(@)/(@)/(@)/(@)','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('nether');
-		(new Verify($router->GetRoute()->Argv[1]))->equals('one');
-		(new Verify($router->GetRoute()->Argv[2]))->equals('two');
-		(new Verify($router->GetRoute()->Argv[3]))->equals('three');
-		(new Verify($router->GetRoute()->Argv[4]))->equals('four');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('nether');
+		(new Verify($router->GetRoute()->GetArgv()[1]))->equals('one');
+		(new Verify($router->GetRoute()->GetArgv()[2]))->equals('two');
+		(new Verify($router->GetRoute()->GetArgv()[3]))->equals('three');
+		(new Verify($router->GetRoute()->GetArgv()[4]))->equals('four');
 
 		return;
 	}
@@ -276,27 +280,27 @@ class Router_Basic_Test extends \Codeception\TestCase\Test {
 		$router = new Nether\Avenue\Router(static::$RequestData['TestDeep']);
 
 		$router->AddRoute('(?)//one/two/three/four','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('www.nether.io');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('www.nether.io');
 
 		$router->ClearRoutes()->AddRoute('(?)//one/two/three/four(?)','herp::derp');
-		(new Verify($router->GetRoute()->Argv[1]))->equals('');
+		(new Verify($router->GetRoute()->GetArgv()[1]))->equals('');
 
 		$router->ClearRoutes()->AddRoute('www.(?)//one/two/three/four','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('nether.io');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('nether.io');
 
 		$router->ClearRoutes()->AddRoute('www.(?).io//one/two/three/four','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('nether');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('nether');
 
 		$router->ClearRoutes()->AddRoute('www.(?).io//(?)','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('nether');
-		(new Verify($router->GetRoute()->Argv[1]))->equals('one/two/three/four');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('nether');
+		(new Verify($router->GetRoute()->GetArgv()[1]))->equals('one/two/three/four');
 
 		$router->ClearRoutes()->AddRoute('www.(?).io//(?)/(?)/(?)/(?)','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('nether');
-		(new Verify($router->GetRoute()->Argv[1]))->equals('one');
-		(new Verify($router->GetRoute()->Argv[2]))->equals('two');
-		(new Verify($router->GetRoute()->Argv[3]))->equals('three');
-		(new Verify($router->GetRoute()->Argv[4]))->equals('four');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('nether');
+		(new Verify($router->GetRoute()->GetArgv()[1]))->equals('one');
+		(new Verify($router->GetRoute()->GetArgv()[2]))->equals('two');
+		(new Verify($router->GetRoute()->GetArgv()[3]))->equals('three');
+		(new Verify($router->GetRoute()->GetArgv()[4]))->equals('four');
 
 		return;
 	}
@@ -316,10 +320,10 @@ class Router_Basic_Test extends \Codeception\TestCase\Test {
 		$router = new Nether\Avenue\Router(static::$RequestData['TestInt']);
 
 		$router->AddRoute('{@}//test/(#)','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('42');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('42');
 
 		$router->AddRoute('{@}//test/(#)(?:/photos/{#})?','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('42');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('42');
 
 		return;
 	}
@@ -342,10 +346,10 @@ class Router_Basic_Test extends \Codeception\TestCase\Test {
 		(new Verify($router->GetRoute()))->false();
 
 		$router->ClearRoutes()->AddRoute('{@}//($)/($)/($)/($)','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('one');
-		(new Verify($router->GetRoute()->Argv[1]))->equals('two');
-		(new Verify($router->GetRoute()->Argv[2]))->equals('three');
-		(new Verify($router->GetRoute()->Argv[3]))->equals('four');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('one');
+		(new Verify($router->GetRoute()->GetArgv()[1]))->equals('two');
+		(new Verify($router->GetRoute()->GetArgv()[2]))->equals('three');
+		(new Verify($router->GetRoute()->GetArgv()[3]))->equals('four');
 
 		return;
 	}
@@ -358,11 +362,11 @@ class Router_Basic_Test extends \Codeception\TestCase\Test {
 
 		$router = new Nether\Avenue\Router(static::$RequestData['Root']);
 		$router->AddRoute('(domain)//index','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('nether.io');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('nether.io');
 
 		$router = new Nether\Avenue\Router(static::$RequestData['LocalhostRoot']);
 		$router->AddRoute('(domain)//index','herp::derp');
-		(new Verify($router->GetRoute()->Argv[0]))->equals('localhost');
+		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('localhost');
 
 
 		return;
