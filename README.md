@@ -2,7 +2,9 @@
 
 [![Code Climate](https://codeclimate.com/github/netherphp/avenue/badges/gpa.svg)](https://codeclimate.com/github/netherphp/avenue) [![Build Status](https://travis-ci.org/netherphp/avenue.svg?branch=redux)](https://travis-ci.org/netherphp/avenue)  [![Packagist](https://img.shields.io/packagist/v/netherphp/avenue.svg)](https://packagist.org/packages/netherphp/avenue) [![Packagist](https://img.shields.io/packagist/dt/netherphp/avenue.svg)](https://packagist.org/packages/netherphp/avenue)
 
-A Request Router. Again. A simple [in my opinion] router. I've written about 10 of these now. But this one... this is the one. First you have to setup your webserver so that all requests get pumped to your www/index.php. This can be done multiple ways, and should be familiar to you if you have done web development before. Once you have everything piped to index.php, your file can be as simple as this...
+A Request Router. Again. A simple [in my opinion] router. I've written about 10 of these now. But this one... this is the one. I have designed this one with everything that matters in mind: single domain support, multi domain support, argument capture, all sorts of fun stuff.
+
+First you have to setup your webserver so that all requests get pumped to your www/index.php. This can be done multiple ways, and should be familiar to you if you have done web development before. Once you have everything piped to index.php, your file can be as simple as this...
 
 	<?php $router = (new Nether\Avenue\Router)
 	->AddRoute('{@}//index','Routes\Home::Index')
@@ -13,6 +15,8 @@ A Request Router. Again. A simple [in my opinion] router. I've written about 10 
 
 ## Route Conditions
 Route conditions are straight regular expressions at the end of the day, however I have provided several shortcuts to make writing the routes easier. You can also define your own shortcuts if you find yourself doing something frequently.
+
+They are defined with the format domain//path, and the double slash is important. Domains are tested separately from the path that way you can have one route class that is able to handle the same request, but serve it differently based on the domain if you so choose.
 
 #### Shortcut Types
 
