@@ -21,10 +21,9 @@ There are two types of shortcuts - slotted and unslotted. Slotted (similar to de
 * (@) - slotted - whatever we found will be passed to the routing method.
 * {@} - unslotted - whatever we found will not be passed to the routing method.
 
-#### Available Shortcuts
-
 You can have several slotted or unslotted shortcuts in a route condition. All slotted shortcuts (and slotted regex) will be passed to the routing method in the order they were given.
 
+#### Available Shortcuts
 There are several shortcuts for matching data we need to reference out of URLs often.
 
 * @ = match anything, as long as there is something to match.
