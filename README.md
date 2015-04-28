@@ -40,42 +40,42 @@ Additionally, you can go hardmode with straight on Perl Regex just like you were
 #### Example Route Conditions
 
 	Matches for the homepage request on any domain.
-	- {@}//index
-	+ domain.tld/ => Route::Method();
+		- {@}//index
+		+ domain.tld/ => Route::Method();
 	
 	Matches the homepage request on any domain.
 	Straight Perl instead of shortcuts.
-	- .+?//index
+		- .+?//index => Route::Method();
 
 	Matches for the homepage request on any domain.
 	Passes the domain to the routing method.
-	- (@)//index
-	+ domain.tld/ => Route::Method($domain);
+		- (@)//index
+		+ domain.tld/ => Route::Method($domain);
 
 	Matches for the homepage on a beta domain.
-	- beta.{@}//index
-	+ beta.domain.tld/ => Route::Method();
+		- beta.{@}//index
+		+ beta.domain.tld/ => Route::Method();
 
 	Matches for any page on any domain.
 	Passes everything after the domain to the routing method as one long string argument.
-	- {@}//(@)
-	+ domain.tld/slender/man/needs/you => Route::Method($path);
+		- {@}//(@)
+		+ domain.tld/slender/man/needs/you => Route::Method($path);
 
 	Matches for a two path part request.
 	Passes both parts to the routing method as two separate string arguments.
-	- {@}//($)/($)
-	+ domain.tld/user/create => Route::Method($namespace,$action);
+		- {@}//($)/($)
+		+ domain.tld/user/create => Route::Method($namespace,$action);
 
 	Matches a members path with an integer.
 	Passes the integer to the routing method.
-	- {@}//members/(#)
-	+ domain.tld/members/42 => Route::Method($id);
+		- {@}//members/(#)
+		+ domain.tld/members/42 => Route::Method($id);
 
 	Matches a members path with an integer.
 	Straight Perl instead of shortcuts.
 	Passes the integer to the routing method.
-	- .+?//members/(\d+)
-	+ domain.tld/members/42 => Route::Method($id);
+		- .+?//members/(\d+)
+		+ domain.tld/members/42 => Route::Method($id);
 
 ## Installing
 Require this package in your composer.json.
