@@ -1,0 +1,4 @@
+#ignores
+
+/vendor/
+/tests/_output

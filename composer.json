@@ -1,23 +1,15 @@
 {
-	"name":"netherphp/avenue",
-	"description":"A request router.",
-	"keywords":["php","request","router"],
-	"license":"BSD-2-Clause",
-	"authors":[
-		{
-			"name":"Bob Majdak Jr","email":"bob@majdak.net","homepage":"http://majdak.net","role":"developer"
-		}
-	],
-	"require":{
-		"php": ">=5.4.0",
-		"netherphp/ki":"dev-master",
-		"netherphp/object":"1.*",
-		"netherphp/option":"1.*"
+	"require": {
+		"netherphp/object": "~1.0.0"
 	},
-	"require-dev":{ },
-	"autoload":{
-		"psr-0": {
-			"Nether\\": "src/"
-		}
-	}
+    "require-dev": {
+        "codeception/codeception": "~2.0.13",
+        "codeception/verify": "~0.2.0"
+    },
+    "autoload": {
+    	"psr-0": {
+    		"Nether\\":"src/"
+    	}
+    }
 }
+
