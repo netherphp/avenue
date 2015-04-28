@@ -1,9 +1,29 @@
 <?php
 
 namespace Nether\Avenue;
-
 use \Nether;
 use \Exception;
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+Nether\Option::Define('nether-avenue-condition-shortcuts',[
+
+	// match anything, as long as there is something.
+	'(@)' => '(.+?)', '{@}' => '(?:.+?)',
+
+	// match anything, even if there is nothing.
+	'(?)' => '(.*?)', '{?}' => '(?:.*?)',
+
+	// match numbers.
+	'(#)' => '(\d+)', '{#}' => '(?:\d+)',
+
+	// match a string within a path fragment e.g. between the slashes.
+	'($)' => '([^\/]+)', '{$}' => '(?:[^\/]+)'
+]);
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 class Router {
 
@@ -32,7 +52,11 @@ class Router {
 	////////////////
 
 	public function Run() {
-		$this->Route = $this->GetSelectedRoute();
+
+		$this->Route = $this->GetRoute();
+
+		if(!$this->Route)
+		throw new Exception("No routes found to handle request. TODO: make this a nicer 404 handler.");
 
 		return;
 	}
@@ -213,7 +237,7 @@ class Router {
 	////////////////
 	////////////////
 
-	protected $RouteUsed;
+	protected $Route;
 	/*//
 	type(string)
 	the currently selected route.
@@ -240,25 +264,17 @@ class Router {
 		list($domain,$path) = explode('//',$cond);
 
 		$this->Routes[] = (object)[
-			'Domain' => "/^{$this->TranslateRouteCondition($domain)}$/",
-			'Path' => "/^\/{$this->TranslateRouteCondition($path)}$/",
+			'Domain' => "`^{$this->TranslateRouteCondition($domain)}$`",
+			'Path' => "`^\/{$this->TranslateRouteCondition($path)}$`",
 			'Handler' => $hand
 		];
 
 		return $this;
 	}
 
-	public function GetRoutes() {
-	/*//
-	return(array)
-	//*/
-
-		return $this->Routes;
-	}
-
 	public function GetRoute() {
 	/*//
-	return(array)
+	return(object)
 	//*/
 
 		$dm = $pm = null;
@@ -276,23 +292,29 @@ class Router {
 		return $selected;
 	}
 
+	public function ClearRoutes() {
+	/*//
+	return(self)
+	//*/
+
+		$this->Routes = [];
+		return $this;
+	}
+
+	public function GetRoutes() {
+	/*//
+	return(array)
+	//*/
+
+		return $this->Routes;
+	}
+
 	public function TranslateRouteCondition($cond) {
 	/*//
 	return(string)
 	//*/
 
-		$shortcut = [
-			'(@)' => '(.+?)',
-			'{@}' => '(?:.+?)',
-			'(?)' => '(.*?)',
-			'{?}' => '(?:.*?)',
-			'(#)' => '(\d+)',
-			'{#}' => '(?:\d+)',
-			'($)' => '(\w+)',
-			'{$}' => '(?:\w+)'
-		];
-
-		foreach($shortcut as $old => $new)
+		foreach(Nether\Option::Get('nether-avenue-condition-shortcuts') as $old => $new)
 		$cond = str_replace($old,$new,$cond);
 
 		return $cond;
