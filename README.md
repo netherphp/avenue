@@ -55,7 +55,7 @@ Additionally, you can go hardmode with straight on Perl Regex just like you were
 		
 	Matches the homepage request on any domain.
 	DEMANDS that the GET variables omg, wtf, and bbq also exist.
-		* {@}//index??bbq&wtf&bbq
+		* {@}//index??omg&wtf&bbq
 
 	Matches for the homepage request on any domain.
 	Passes the domain to the routing method.
