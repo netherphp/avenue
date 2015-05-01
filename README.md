@@ -1,6 +1,6 @@
 # Nether Avenue
 
-[![Code Climate](https://codeclimate.com/github/netherphp/avenue/badges/gpa.svg)](https://codeclimate.com/github/netherphp/avenue) [![Build Status](https://travis-ci.org/netherphp/avenue.svg?branch=redux)](https://travis-ci.org/netherphp/avenue)  [![Packagist](https://img.shields.io/packagist/v/netherphp/avenue.svg)](https://packagist.org/packages/netherphp/avenue) [![Packagist](https://img.shields.io/packagist/dt/netherphp/avenue.svg)](https://packagist.org/packages/netherphp/avenue)
+[![Build Status](https://travis-ci.org/netherphp/avenue.svg?branch=redux)](https://travis-ci.org/netherphp/avenue)  [![Packagist](https://img.shields.io/packagist/v/netherphp/avenue.svg)](https://packagist.org/packages/netherphp/avenue) [![Packagist](https://img.shields.io/packagist/dt/netherphp/avenue.svg)](https://packagist.org/packages/netherphp/avenue)
 
 A Request Router. Again. A simple [in my opinion] router. I've written about 10 of these now. But this one... this is the one. I have designed this one with everything that matters in mind: single domain support, multi domain support, argument capture, all sorts of fun stuff.
 
