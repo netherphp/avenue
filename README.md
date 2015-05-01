@@ -18,7 +18,9 @@ Route conditions are straight regular expressions at the end of the day, however
 
 They are defined with the format domain//path, and the double slash is important. Domains are tested separately from the path that way you can have one route class that is able to handle the same request, but serve it differently based on the domain if you so choose.
 
-#### Shortcut Types
+If desired, you can also specify if certain GET variables exist. domain//path??var1&var2&var3 will only match if all 3 of those GETs existed. More may exist, that is fine. Because of this, you must list more specific routes before more generic routes. domain//path and domain//path??var will both match the request, but only the last one will demand that specific GET variable.
+
+#### Conditions and Shortcut Types
 
 There are two types of shortcuts - slotted and unslotted. Slotted (similar to default preg) is surrounded by parens and the value within them will be passed to the route that will be executed. Unslotted is surrounded by braces and that data will not be passed.
 
@@ -50,6 +52,10 @@ Additionally, you can go hardmode with straight on Perl Regex just like you were
 	Straight Perl instead of shortcuts.
 		* .+?//index
 		* domain.tld/ => Route::Method();
+		
+	Matches the homepage request on any domain.
+	DEMANDS that the GET variables omg, wtf, and bbq also exist.
+		* {@}//index??bbq&wtf&bbq
 
 	Matches for the homepage request on any domain.
 	Passes the domain to the routing method.
