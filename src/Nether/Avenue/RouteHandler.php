@@ -60,11 +60,27 @@ class RouteHandler extends Nether\Object {
 	//*/
 
 	public function GetPath() {
+
 		return $this->Path;
 	}
 
 	public function SetPath($p) {
 		$this->Path = $p;
+		return $this;
+	}
+
+	protected $Query = false;
+	/*//
+	@type array
+	//*/
+
+	public function GetQuery() {
+
+		return $this->Query;
+	}
+
+	public function SetQuery(array $q) {
+		$this->Query = $q;
 		return $this;
 	}
 

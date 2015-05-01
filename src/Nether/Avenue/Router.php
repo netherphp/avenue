@@ -11,23 +11,27 @@ use \Exception;
 // regular expressions easier to deal with. with care, you can also add your
 // own shortcuts if there is anything you find yourself doing often.
 
-Nether\Option::Define('nether-avenue-condition-shortcuts',[
-	// match anything, as long as there is something.
-	'(@)' => '(.+?)', '{@}' => '(?:.+?)',
+Nether\Option::Define([
+	'nether-avenue-condition-shortcuts' => [
+		// match anything, as long as there is something.
+		'(@)' => '(.+?)', '{@}' => '(?:.+?)',
 
-	// match anything, even if there is nothing.
-	'(?)' => '(.*?)', '{?}' => '(?:.*?)',
+		// match anything, even if there is nothing.
+		'(?)' => '(.*?)', '{?}' => '(?:.*?)',
 
-	// match numbers.
-	'(#)' => '(\d+)', '{#}' => '(?:\d+)',
+		// match numbers.
+		'(#)' => '(\d+)', '{#}' => '(?:\d+)',
 
-	// match a string within a path fragment e.g. between the slashes.
-	'($)' => '([^\/]+)', '{$}' => '(?:[^\/]+)',
+		// match a string within a path fragment e.g. between the slashes.
+		'($)' => '([^\/]+)', '{$}' => '(?:[^\/]+)',
 
-	// match a relevant domain e.g. domain.tld without subdomains. it should
-	// also work on dotless domains like localhost. it will still match a full
-	// domain like www.nether.io, but it will only store nether.io in the slot.
-	'(domain)' => '.*?([^\.]+(?:\.[^\.]+)?)', '{domain}' => '.*?(?:[^\.]+(?:\.[^\.]+)?)'
+		// match a relevant domain e.g. domain.tld without subdomains. it
+		// should also work on dotless domains like localhost. it will still
+		// match a full domain like www.nether.io, but it will only store
+		// nether.io in the slot.
+		'(domain)' => '.*?([^\.]+(?:\.[^\.]+)?)',
+		'{domain}' => '.*?(?:[^\.]+(?:\.[^\.]+)?)'
+	]
 ]);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,10 +51,23 @@ class Router {
 		]);
 
 		$this->Domain = $opt->Domain;
+		$this->Path = (($opt->Path=='/')?('/index'):($opt->Path));
 		$this->Query = $opt->Query;
 
-		// take care for paths.
-		$this->Path = rtrim($opt->Path,'/');
+		if(array_key_exists('REMOTE_ADDR',$_SERVER)) {
+			// we can identify a non-malicious webhit with their ip address.
+			$userpart = $_SERVER['REMOTE_ADDR'];
+		} else {
+			// i'm not sure what i want to do about non-web or broken web.
+			$userpart = '';
+		}
+
+		$this->HitHash = md5("{$userpart}-{$this->GetFullDomain()}-{$this->GetPath()}");
+		$this->HitTime = microtime(true);
+
+		// take care for paths. remove trailing slashes and query strings if
+		// they made it into the path.
+		$this->Path = preg_replace('/\?.*$/','',rtrim($opt->Path,'/'));
 		if(!$this->Path) $this->Path = '/index';
 
 		return;
@@ -59,14 +76,22 @@ class Router {
 	////////////////
 	////////////////
 
-	public function Run() {
+	public function Run(Nether\Avenue\RouteHandler $route=null) {
+	/*//
+	argv(Nether\Avenue\RouteHandler ForcedRoute)
+	if given a route it will attempt to execute it. you can use this in the
+	event you want to GetRoute() prior to Run() to see if it would have run
+	anything. that feature mostly useful if you are in the middle of migrating
+	between routers.
+	//*/
 
-		$this->Route = $this->GetRoute();
+		if($route) $this->Route = $route;
+		else $this->Route = $this->GetRoute();
 
 		if(!$this->Route)
 		throw new Exception("No routes found to handle request. TODO: make this a nicer 404 handler.");
 
-		return;
+		return $this->Route->Run();
 	}
 
 	////////////////
@@ -149,6 +174,78 @@ class Router {
 		return false;
 
 		return $path[$slot-1];
+	}
+
+	protected $HitHash;
+	/*//
+	type(string)
+	a hash that represents this hit, made form the user ip and request info.
+	//*/
+
+	public function GetHitHash() {
+	/*//
+	return(string)
+	return the hit hash for this request.
+	//*/
+
+		return $this->HitHash;
+	}
+
+	////////////////
+	////////////////
+
+	protected $HitTime;
+	/*//
+	type(float)
+	the time that the hit occured.
+	//*/
+
+	public function GetHitTime() {
+	/*//
+	return(float)
+	return the hit time for this request.
+	//*/
+		return $this->HitTime;
+	}
+
+	////////////////
+	////////////////
+
+	public function GetHit() {
+	/*//
+	return(object)
+	return an object that defines the unique description of this request: the
+	hit hash and the request time.
+	//*/
+		return (object)[
+			'Hash' => $this->HitHash,
+			'Time' => $this->HitTime
+		];
+	}
+
+	public function GetProtocol() {
+	/*//
+	return(string)
+	returns http or https lol.
+	//*/
+
+		return ((array_key_exists('HTTPS',$_SERVER))?
+		('https'):
+		('http'));
+	}
+
+	public function GetURL() {
+	/*//
+	return(string)
+	returns a recompiled url from the current request using the parsed data.
+	//*/
+
+		return sprintf(
+			'%s://%s%s',
+			$this->GetProtocol(),
+			$this->GetFullDomain(),
+			$this->GetPath()
+		);
 	}
 
 	////////////////
@@ -268,6 +365,9 @@ class Router {
 			throw new Exception("Route condition ({$cond}) is not valid.");
 
 			list($domain,$path) = explode('//',$cond);
+
+			if(strpos($path,'??') !== false) list($path,$query) = explode('??',$path);
+			else $query = '';
 		}}}
 
 		{{{ // parse the route handler.
@@ -280,6 +380,7 @@ class Router {
 		// throw in our extra data.
 		$handler->SetDomain("`^{$this->TranslateRouteCondition($domain)}$`");
 		$handler->SetPath("`^\/{$this->TranslateRouteCondition($path)}$`");
+		$handler->SetQuery(explode('&',$query));
 
 		$this->Routes[] = $handler;
 		return $this;
@@ -293,9 +394,23 @@ class Router {
 		$dm = $pm = null;
 
 		foreach($this->Routes as $handler) {
-			// check if this route will service this request.
+
+			// require a domain hard match.
 			if(!preg_match($handler->GetDomain(),$this->Domain,$dm)) continue;
+
+			// require a path hard match.
 			if(!preg_match($handler->GetPath(),$this->Path,$pm)) continue;
+
+			// require a query soft match.
+			$nope = false;
+			foreach($handler->GetQuery() as $q) {
+				if(!$q) continue;
+
+				if(!array_key_exists($q,$this->GetQuery()))
+				$nope = true;
+			}
+
+			if($nope) continue;
 
 			// fetch the arguments found by the route match.
 			unset($dm[0],$pm[0]);

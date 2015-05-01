@@ -13,8 +13,8 @@ class Router_Test extends \Codeception\TestCase\Test {
 		'IndexTs' => [ 'Domain'=>'www.nether.io', 'Path'=>'/index/' ],
 		'Test' => [ 'Domain'=>'www.nether.io', 'Path'=>'/test' ],
 		'TestTs' => [ 'Domain'=>'www.nether.io', 'Path'=>'/test/' ],
-		'TestQuery' => [ 'Domain'=>'www.nether.io', 'Path'=>'/test?omg=true' ],
-		'TestQueryTs' => [ 'Domain'=>'www.nether.io', 'Path'=>'/test/?omg=true' ],
+		'TestQuery' => [ 'Domain'=>'www.nether.io', 'Path'=>'/test?omg=true&bbq=yum' ],
+		'TestQueryTs' => [ 'Domain'=>'www.nether.io', 'Path'=>'/test/?omg=true&bbq=yum' ],
 		'TestInt' => [ 'Domain'=>'www.nether.io', 'Path'=>'/test/42' ],
 		'TestIntTs' => [ 'Domain'=>'www.nether.io', 'Path'=>'/test/42/' ],
 		'TestDeep' => [ 'Domain'=>'www.nether.io', 'Path'=>'/one/two/three/four' ],
@@ -31,6 +31,7 @@ class Router_Test extends \Codeception\TestCase\Test {
 		$_SERVER['HTTP_HOST'] = static::$RequestData['TestQuery']['Domain'];
 		$_SERVER['REQUEST_URI'] = static::$RequestData['TestQuery']['Path'];
 		$_GET['omg'] = 'true';
+		$_GET['bbq'] = 'yum';
 
 		$router = new Nether\Avenue\Router;
 
@@ -65,8 +66,8 @@ class Router_Test extends \Codeception\TestCase\Test {
 		))->equals('test');
 
 		(new Verify(
-			'check that GetQuery() returns the input data array that contains one element.',
-			(is_array($router->GetQuery()) && count($router->GetQuery()) === 1)
+			'check that GetQuery() returns the input data array that contains two element.',
+			(is_array($router->GetQuery()) && count($router->GetQuery()) === 2)
 		))->true();
 
 		(new Verify(
@@ -82,7 +83,8 @@ class Router_Test extends \Codeception\TestCase\Test {
 		unset(
 			$_SERVER['HTTP_HOST'],
 			$_SERVER['REQUEST_URI'],
-			$_GET['omg']
+			$_GET['omg'],
+			$_GET['bbq']
 		);
 
 		return;
@@ -236,6 +238,47 @@ class Router_Test extends \Codeception\TestCase\Test {
 		return;
 	}
 
+	public function testRouteConditionQueryVars() {
+	/*//
+	test that query vars are being accounted for in the route conditions.
+	//*/
+
+		$_GET['omg'] = 'true';
+		$_GET['bbq'] = 'yey';
+
+		$router = new Nether\Avenue\Router(static::$RequestData['TestQuery']);
+
+		$router->ClearRoutes()->AddRoute('{@}//test??tacobell','herp::derp');
+		$route = $router->GetRoute();
+		(new Verify(
+			'this route fails because there is no tacobell in get.',
+			($route instanceof Nether\Avenue\RouteHandler)
+		))->false();
+
+		$router->ClearRoutes()->AddRoute('{@}//test??omg','herp::derp');
+		$route = $router->GetRoute();
+		(new Verify(
+			'this route passes because we had omg',
+			($route instanceof Nether\Avenue\RouteHandler)
+		))->true();
+
+		$router->ClearRoutes()->AddRoute('{@}//test??omg&bbq','herp::derp');
+		$route = $router->GetRoute();
+		(new Verify(
+			'this route passes because we had omg and bbq',
+			($route instanceof Nether\Avenue\RouteHandler)
+		))->true();
+
+		$router->ClearRoutes()->AddRoute('{@}//test??omg&wtf&bbq','herp::derp');
+		$route = $router->GetRoute();
+		(new Verify(
+			'this route fails because we had omg and bbq, but no wtf.',
+			($route instanceof Nether\Avenue\RouteHandler)
+		))->false();
+
+		return;
+	}
+
 	public function testRouteConditionAtSignMeaning() {
 	/*//
 	testing that the (@) {@} shortcuts means what i think they mean after
@@ -368,6 +411,104 @@ class Router_Test extends \Codeception\TestCase\Test {
 		$router->AddRoute('(domain)//index','herp::derp');
 		(new Verify($router->GetRoute()->GetArgv()[0]))->equals('localhost');
 
+
+		return;
+	}
+
+	public function testHitHashAndTime() {
+	/*//
+	test that the hit hashing stuff is working from web requests.
+	//*/
+
+		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+		$r1 = new Nether\Avenue\Router(static::$RequestData['Root']);
+		$r2 = new Nether\Avenue\Router(static::$RequestData['Test']);
+
+		(new Verify(
+			'verify that GetHitHash() returned a hashy looking thing.',
+			strlen($r1->GetHitHash())
+		))->equals(32);
+
+		(new Verify(
+			'verify that r1 and r2 GetHitHash() do not match.',
+			($r1->GetHitHash() === $r2->GetHitHash())
+		))->false();
+
+		(new Verify(
+			'verify GetHitTime() returned a float',
+			is_float($r1->GetHitTime())
+		))->true();
+
+		// it is actually plausable that a machine could be so fast that r1 and
+		// r2 register at the exact same microsecond. if you are seeing a failed
+		// test for r1 and r2 hit times matching, put a sleep(0.01) or something
+		// between them. i am not doing that now intentionally to see how long
+		// it takes for it to happen.
+
+		// if they do end up matching, that is not a failure of the libarary.
+		// in fact, that is a success. it means that two hits happend so fast
+		// that you should ignore one of them because seriously, stop spamming
+		// my server.
+
+		// i don't expect this to happen until we have warp capabilities anyway.
+		// at which point microtime is probably going to naturally be further
+		// down the decimal point hole anyway.
+
+		// it sure as fuck isn't going to happen on travis-ci.
+
+		(new Verify(
+			'verify that r1 and r2 GetHitTime()s do not match.',
+			($r1->GetHitTime() === $r2->GetHitTime())
+		))->false();
+
+		$h1 = $r1->GetHit();
+
+		(new Verify(
+			'verify that GetHit() returned data matching GetHitHash().',
+			$h1->Hash
+		))->equals($r1->GetHitHash());
+
+		(new Verify(
+			'verify that GetHit() returned data matching GetHitTime().',
+			$h1->Time
+		))->equals($r1->GetHitTime());
+
+		return;
+	}
+
+	public function testProtocolDetect() {
+	/*//
+	test https detection.
+	//*/
+
+		$router = new Nether\Avenue\Router(static::$RequestData['Test']);
+		(new Verify(
+			'check that GetProtocol() thinks its on HTTP right now.',
+			$router->GetProtocol()
+		))->equals('http');
+
+		$_SERVER['HTTPS'] = true;
+		(new Verify(
+			'check that GetProtocol() thinks its on HTTPS right now.',
+			$router->GetProtocol()
+		))->equals('https');
+
+		return;
+	}
+
+	public function testUrlReconstruction() {
+	/*//
+	test that the url reconstruction builds accurate urls from the parsed
+	request data.
+	//*/
+
+		$router = new Nether\Avenue\Router(static::$RequestData['TestQuery']);
+
+		(new Verify(
+			'check that GetURL() reconstructed an accurate URL.',
+			$router->GetURL()
+		))->equals('http://www.nether.io/test');
 
 		return;
 	}
