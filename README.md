@@ -18,7 +18,7 @@ Route conditions are straight regular expressions at the end of the day, however
 
 They are defined with the format domain//path, and the double slash is important. Domains are tested separately from the path that way you can have one route class that is able to handle the same request, but serve it differently based on the domain if you so choose.
 
-If desired, you can also specify if certain GET variables exist. domain//path??var1&var2&var3 will only match if all 3 of those GETs existed. More may exist, that is fine. Because of this, you must list more specific routes before more generic routes. domain//path and domain//path??var will both match the request, but only the last one will demand that specific GET variable.
+If desired, you can also specify if certain GET variables exist. domain//path??var1&var2&var3 will only match if all 3 of those GETs existed. More may exist, that is fine. Because of this, you must list more specific routes before more generic routes. domain//path and domain//path??var will both match the request, but only the last one will demand that specific GET variable. *Typically you want to avoid having routing depending on Query Variables. They exist because they are suppose to describe the request, not define it - but you have the power so do what you want with it.*
 
 #### Conditions and Shortcut Types
 
