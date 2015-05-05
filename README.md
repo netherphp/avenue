@@ -1,6 +1,6 @@
 # Nether Avenue
 
-[![Build Status](https://travis-ci.org/netherphp/avenue.svg?branch=redux)](https://travis-ci.org/netherphp/avenue)  [![Packagist](https://img.shields.io/packagist/v/netherphp/avenue.svg)](https://packagist.org/packages/netherphp/avenue) [![Packagist](https://img.shields.io/packagist/dt/netherphp/avenue.svg)](https://packagist.org/packages/netherphp/avenue)
+[![nether.io](https://img.shields.io/badge/nether-avenue-C661D2.svg)](http://nether.io/) [![Code Climate](https://codeclimate.com/github/netherphp/avenue/badges/gpa.svg)](https://codeclimate.com/github/netherphp/avenue) [![Build Status](https://travis-ci.org/netherphp/avenue.svg)](https://travis-ci.org/netherphp/avenue)  [![Packagist](https://img.shields.io/packagist/v/netherphp/avenue.svg)](https://packagist.org/packages/netherphp/avenue) [![Packagist](https://img.shields.io/packagist/dt/netherphp/avenue.svg)](https://packagist.org/packages/netherphp/avenue)
 
 A Request Router. Again. A simple [in my opinion] router. I've written about 10 of these now. But this one... this is the one. I have designed this one with everything that matters in mind: single domain support, multi domain support, argument capture, all sorts of fun stuff.
 
@@ -47,12 +47,12 @@ Additionally, you can go hardmode with straight on Perl Regex just like you were
 	Matches for the homepage request on any domain.
 		* {@}//index
 		* domain.tld/ => Route::Method();
-	
+
 	Matches the homepage request on any domain.
 	Straight Perl instead of shortcuts.
 		* .+?//index
 		* domain.tld/ => Route::Method();
-		
+
 	Matches the homepage request on any domain.
 	DEMANDS that the GET variables omg, wtf, and bbq also exist.
 		* {@}//index??omg&wtf&bbq
@@ -101,17 +101,17 @@ This allows you to have a class make the final call about if it will handle a ro
 	->AddRoute('{@}//($)','Routes\Profile\Car::Home')
 	->AddRoute('{@}//($)','Routes\Profile\Truck::Home')
 	->AddRoute('{@}//($)','Routes\Profile\Motorcycle::Home');
-	
+
 All three of these would match, but no matter what only the first route referncing the Car class would be used, causing problems for viewing your trucks and motorcycles. With this style of archetecture we can add a new static method to our classes to determine if we will accept the request or not.
 
 	class Car {
 		static function WillHandleRequest($router,$handler) {
 			$vehicle = App\Vehicle::GetByAlias($handler->GetArgv()[0]);
 			if(!$vehicle || $vehicle->Type !== 'car') return false;
-			
+
 			return true;
 		}
-		
+
 		public function Home() {
 			// ...
 		}
