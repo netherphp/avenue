@@ -416,6 +416,9 @@ class Router {
 			unset($dm[0],$pm[0]);
 			$handler->SetArgv(array_merge($dm,$pm));
 
+			// ask the route if it is willing to handle the request.
+			if(!$this->WillHandlerAcceptRequest($handler)) continue;
+
 			// and since we found a match we are done.
 			return $handler;
 		}
@@ -438,6 +441,23 @@ class Router {
 	//*/
 
 		return $this->Routes;
+	}
+
+	public function WillHandlerAcceptRequest(Nether\Avenue\RouteHandler $h) {
+	/*//
+	return(bool)
+	//*/
+
+		$class = $h->GetClass();
+
+		// if the handler class does not have the query method then assume
+		// that it will handle it.
+		if(!method_exists($class,'WillHandleRequest')) return true;
+
+		return call_user_func_array(
+			[$class,'WillHandleRequest'],
+			[ $this, $h ]
+		);
 	}
 
 	public function TranslateRouteCondition($cond) {

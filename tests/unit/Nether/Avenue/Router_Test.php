@@ -5,6 +5,31 @@ namespace Nether\Avenue;
 use \Nether;
 use \Codeception\Verify;
 
+////////
+////////
+
+class LocalTestRouteAckHandle {
+	static function WillHandleRequest($r,$h) {
+		(new Verify($r instanceof Nether\Avenue\Router))->true();
+		(new Verify($h instanceof Nether\Avenue\RouteHandler))->true();
+
+		// our test route only wants to run on nether.io
+		if($r->GetDomain() !== 'nether.io') return false;
+
+		// and if the url is test.
+		if($h->GetArgv()[1] === 'test') return true;
+		else return false;
+	}
+	public function Test() {
+		echo "Test";
+		return;
+	}
+}
+
+
+////////
+////////
+
 class Router_Test extends \Codeception\TestCase\Test {
 
 	static $RequestData = [
@@ -509,6 +534,29 @@ class Router_Test extends \Codeception\TestCase\Test {
 			'check that GetURL() reconstructed an accurate URL.',
 			$router->GetURL()
 		))->equals('http://www.nether.io/test');
+
+		return;
+	}
+
+	public function testRouteConfirmWillHandle() {
+
+		$router = new Nether\Avenue\Router(static::$RequestData['Test']);
+		$router->AddRoute('(@)//(test)','Nether\Avenue\LocalTestRouteAckHandle::Test');
+
+		$route = $router->GetRoute();
+		(new Verify(
+			'found a route to match.',
+			($route instanceof Nether\Avenue\RouteHandler)
+		))->true();
+
+		$router = new Nether\Avenue\Router(static::$RequestData['Index']);
+		$router->AddRoute('(@)//(test)','Nether\Avenue\LocalTestRouteAckHandle::Test');
+
+		$route = $router->GetRoute();
+		(new Verify(
+			'did not find a route to match.',
+			($route instanceof Nether\Avenue\RouteHandler)
+		))->false();
 
 		return;
 	}
