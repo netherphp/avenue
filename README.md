@@ -123,7 +123,7 @@ The static method **WillHandleRequest** accepts two arguments, the Nether\Avenue
 Require this package in your composer.json.
 
 	require {
-		"netherphp/avenue": "dev-redux"
+		"netherphp/avenue": "~1.0.0"
 	}
 
 Then install it or update into it.
