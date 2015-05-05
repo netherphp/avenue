@@ -93,6 +93,32 @@ Additionally, you can go hardmode with straight on Perl Regex just like you were
 		* .+?//members/(\d+)
 		* domain.tld/members/42 => Route::Method($id);
 
+#### Class Acceptance
+
+This allows you to have a class make the final call about if it will handle a route or not. Imagine you have a website that has a list of cars, trucks, and motorcycles, and on this site we will use the first segment of the URL Path to determine what vehicle we want to show. We can set routes like this:
+
+	$router
+	->AddRoute('@//($)','Routes\Profile\Car::Home')
+	->AddRoute('@//($)','Routes\Profile\Truck::Home')
+	->AddRoute('@//($)','Routes\Profile\Motorcycle::Home');
+	
+All three of these would match, but no matter what only the first route referncing the Car class would be used, causing problems for viewing your trucks and motorcycles. With this style of archetecture we can add a new static method to our classes to determine if we will accept the request or not.
+
+	class Car {
+		static function WillHandleRequest($router,$handler) {
+			$vehicle = App\Vehicle::GetByAlias($handler->GetArgv()[0]);
+			if(!$vehicle || $vehicle->Type !== 'car') return false;
+			
+			return true;
+		}
+		
+		public function Home() {
+			// ...
+		}
+	}
+
+The static method **WillHandleRequest** accepts two arguments, the Nether\Avenue\Router that was run to process the request, and the Nether\Avenue\RouteHandler that the Router created to define the possible route. You could typehint them if you so choose to. This method should return boolean true or false, true if the class decides it will accept the route, false if not.
+
 ## Installing
 Require this package in your composer.json.
 
