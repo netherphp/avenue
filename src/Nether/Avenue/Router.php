@@ -91,7 +91,7 @@ class Router {
 		if(!$this->Route)
 		throw new Exception("No routes found to handle request. TODO: make this a nicer 404 handler.");
 
-		return $this->Route->Run();
+		return $this->Route->Run($this);
 	}
 
 	////////////////
@@ -525,6 +525,47 @@ class Router {
 		if(strpos($hand,'::') === false) return false;
 
 		return true;
+	}
+
+	public function QueryMerger($input) {
+	/*//
+	return(array)
+	merge the input with the original query array to generate an updated query
+	string that we may want to pass in for hyperlinking.
+	//*/
+
+		if(!is_object($input) && !is_array($input))
+		throw new Exception('QueryMerger expects an array or object, so good job with that.');
+
+		return array_merge(
+			$this->Query,
+			(array)$input
+		);
+	}
+
+	public function QueryBlender($input) {
+	/*//
+	return(string)
+	use the QueryMerger to output a final string of the merged query.
+	//*/
+
+		return http_build_query($this->QueryMerger($input));
+	}
+
+	public function QueryCooker($input) {
+	/*//
+	return(string)
+	returns the exact same thing as QueryBlender but with a question mark in
+	front of it. did i try too hard with these series of methods? i don't think
+	so. in the apps i work on i often need the blended and cooked versions for
+	many different reasons. i sure as hell don't want to manually append
+	question marks at times. life should be easy. this library is easy.
+	//*/
+
+		return sprintf(
+			'?%s',
+			$this->QueryBlender($input)
+		);
 	}
 
 }

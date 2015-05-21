@@ -20,7 +20,7 @@ class RouteHandler extends Nether\Object {
 		return;
 	}
 
-	public function Run() {
+	public function Run(Nether\Avenue\Router $router) {
 
 		if(!class_exists($this->Class))
 		throw new Exception("Class {$this->Class} does not exist.");
@@ -28,10 +28,29 @@ class RouteHandler extends Nether\Object {
 		if(!method_exists($this->Class,$this->Method))
 		throw new Exception("Method {$this->Class}::{$this->Method} does not exist.");
 
+		$this->SetRouter($router);
+
 		return call_user_func_array(
 			[(new $this->Class), $this->Method],
 			((is_array($this->Argv))?(array_values($this->Argv)):([]))
 		);
+	}
+
+	////////////////
+	////////////////
+
+	protected $Router;
+	/*//
+	@type Nether\Avenue\Router
+	//*/
+
+	public function GetRouter() {
+		return $this->Router;
+	}
+
+	public function SetRouter(Nether\Avenue\Router $router) {
+		$this->Router = $router;
+		return $this;
 	}
 
 	////////////////
