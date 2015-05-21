@@ -561,4 +561,18 @@ class Router_Test extends \Codeception\TestCase\Test {
 		return;
 	}
 
+	public function testWillTheQueryBlend() {
+
+		$_GET['omg'] = 'lol';
+		$_GET['bbq'] = 'saucey';
+
+		$router = new Nether\Avenue\Router(static::$RequestData['Index']);
+		(new Verify(
+			'query arguments: will they blend?',
+			($router->QueryCooker(['donkey'=>'punch']))
+		))->equals('?omg=lol&bbq=saucey&donkey=punch');
+
+		return;
+	}
+
 }
