@@ -80,13 +80,13 @@ class Router {
 	/*//
 	argv(Nether\Avenue\RouteHandler ForcedRoute)
 	if given a route it will attempt to execute it. you can use this in the
-	event you want to GetRoute() prior to Run() to see if it would have run
+	event you want to GetRouteHandler() prior to Run() to see if it would have run
 	anything. that feature mostly useful if you are in the middle of migrating
 	between routers.
 	//*/
 
 		if($route) $this->Route = $route;
-		else $this->Route = $this->GetRoute();
+		else $this->Route = $this->GetRouteHandler();
 
 		if(!$this->Route)
 		throw new Exception("No routes found to handle request. TODO: make this a nicer 404 handler.");
@@ -386,10 +386,18 @@ class Router {
 		return $this;
 	}
 
-	public function GetRoute() {
+	public function GetRouteHandler($force=false) {
 	/*//
 	return(object)
 	//*/
+
+		if($this->Route && !$force) {
+			// on average, we wont be GetRouteHandler()ing, looking for failure, adding
+			// more routes, trying again, etc etc etc. But you can if you want.\
+			// for the rest of the time we will just return the route we already
+			// decided on, if that was a thing.
+			return $this->Route;
+		}
 
 		$dm = $pm = null;
 
