@@ -76,10 +76,11 @@ class RouteHandler_Test extends \Codeception\TestCase\Test {
 
 	public function testExecuteRouteNoArgs() {
 
+		$router = new Nether\Avenue\Router;
 		$handler = new Nether\Avenue\RouteHandler(static::$RequestData['Test']);
 
 		ob_start();
-		$handler->Run();
+		$handler->Run($router);
 		(new Verify(
 			'check for default output',
 			ob_get_clean()
@@ -90,10 +91,11 @@ class RouteHandler_Test extends \Codeception\TestCase\Test {
 
 	public function testExecuteRouteWithArgs() {
 
+		$router = new Nether\Avenue\Router;
 		$handler = new Nether\Avenue\RouteHandler(static::$RequestData['Test']);
 		$handler->SetArgv(['Patrick Stewart']);
 
-		ob_start(); $handler->Run();
+		ob_start(); $handler->Run($router);
 		(new Verify(
 			'check for specific output',
 			ob_get_clean()
