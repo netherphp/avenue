@@ -527,7 +527,7 @@ class Router {
 		return true;
 	}
 
-	public function QueryMerger($input) {
+	public function QueryMerger($input=[]) {
 	/*//
 	return(array)
 	merge the input with the original query array to generate an updated query
@@ -543,7 +543,7 @@ class Router {
 		);
 	}
 
-	public function QueryBlender($input) {
+	public function QueryBlender($input=[]) {
 	/*//
 	return(string)
 	use the QueryMerger to output a final string of the merged query.
@@ -552,7 +552,7 @@ class Router {
 		return http_build_query($this->QueryMerger($input));
 	}
 
-	public function QueryCooker($input) {
+	public function QueryCooker($input=[]) {
 	/*//
 	return(string)
 	returns the exact same thing as QueryBlender but with a question mark in
@@ -562,10 +562,15 @@ class Router {
 	question marks at times. life should be easy. this library is easy.
 	//*/
 
-		return sprintf(
+		$Result = $this->QueryBlender($input);
+
+		if($Result) return sprintf(
 			'?%s',
 			$this->QueryBlender($input)
 		);
+
+		else
+		return '';
 	}
 
 }
