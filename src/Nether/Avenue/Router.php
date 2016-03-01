@@ -527,32 +527,49 @@ class Router {
 		return true;
 	}
 
-	public function QueryMerger($input=[]) {
+	public function
+	QueryMerger($Input=[], Bool $DropUnused=false) {
 	/*//
 	return(array)
 	merge the input with the original query array to generate an updated query
 	string that we may want to pass in for hyperlinking.
 	//*/
 
-		if(!is_object($input) && !is_array($input))
+		if(!is_object($Input) && !is_array($Input))
 		throw new Exception('QueryMerger expects an array or object, so good job with that.');
 
-		return array_merge(
-			$this->Query,
-			(array)$input
-		);
+		if(!is_array($Input))
+		$Input = (array)$Input;
+
+		// clean out anything that was left empty string, leaving 0's,
+		// booleans, nulls, and everything else that evals to them in the
+		// event those cases were needed.
+
+		foreach($Input as $Key => $Value)
+		if($Value === '') unset($Input[$Key]);
+
+		// if we only want what we passed then return the cleaned input.
+
+		if($DropUnused)
+		return $Input;
+
+		// else merge it with the current request as overwrites.
+
+		return array_merge($this->Query,$Input);
 	}
 
-	public function QueryBlender($input=[]) {
+	public function
+	QueryBlender($Input=[], Bool $DropUnused=false) {
 	/*//
 	return(string)
 	use the QueryMerger to output a final string of the merged query.
 	//*/
 
-		return http_build_query($this->QueryMerger($input));
+		return http_build_query($this->QueryMerger($Input,$DropUnused));
 	}
 
-	public function QueryCooker($input=[]) {
+	public function
+	QueryCooker($Input=[], Bool $DropUnused=false) {
 	/*//
 	return(string)
 	returns the exact same thing as QueryBlender but with a question mark in
@@ -562,14 +579,11 @@ class Router {
 	question marks at times. life should be easy. this library is easy.
 	//*/
 
-		$Result = $this->QueryBlender($input);
+		$Result = $this->QueryBlender($Input,$DropUnused);
 
-		if($Result) return sprintf(
-			'?%s',
-			$this->QueryBlender($input)
-		);
+		if($Result)
+		return sprintf('?%s',$Result);
 
-		else
 		return '';
 	}
 
