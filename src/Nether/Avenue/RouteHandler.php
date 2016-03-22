@@ -140,17 +140,47 @@ class RouteHandler extends Nether\Object {
 	////////////////
 	////////////////
 
-	protected $Argv;
+	protected
+	$Argv = [];
+
+	public function
+	GetArg(Int $Offset=1) {
 	/*//
-	@type string
+	fetch the specified argument from the result of the route pattern matching.
+	it is 1 indexed, and the result is merged with the domain and path matches
+	so if you had a pattern like (.+)//object/(#), 1 will return you the domain
+	and 2 will return you that object id. if you ask for something that did not
+	exist then you will get NULL back.
 	//*/
 
-	public function GetArgv() {
+		$Offset -= 1;
+
+		if(array_key_exists($Offset,$this->Argv))
+		return $this->Argv[$Offset];
+
+		return NULL;
+	}
+
+	public function
+	GetArgv():
+	Array {
+	/*//
+	fetch the entire array that defines the arguments generated as the result
+	of this route's pattern matching.
+	//*/
+
 		return $this->Argv;
 	}
 
-	public function SetArgv(array $a) {
-		$this->Argv = $a;
+	public function
+	SetArgv(Array $Input):
+	Self {
+	/*//
+	force an array into the argument space. this is mainly used by the router
+	to tell the route about the result of its route pattern.
+	//*/
+
+		$this->Argv = $Input;
 		return $this;
 	}
 
