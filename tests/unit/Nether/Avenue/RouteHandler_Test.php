@@ -42,8 +42,8 @@ class RouteHandler_Test extends \Codeception\TestCase\Test {
 
 		(new Verify(
 			'make sure $Argv was set right.',
-			$handler->GetArgv()
-		))->null();
+			count($handler->GetArgv())
+		))->equals(0);
 
 		return;
 	}
