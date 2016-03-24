@@ -10,7 +10,7 @@ class RouteHandler extends Nether\Object {
 		$opt = new Nether\Object($opt,[
 			'Class'  => null,
 			'Method' => null,
-			'Argv'   => null
+			'Argv'   => []
 		]);
 
 		$this->Class = $opt->Class;
