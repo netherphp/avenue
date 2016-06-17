@@ -545,8 +545,15 @@ class Router {
 		// booleans, nulls, and everything else that evals to them in the
 		// event those cases were needed.
 
+		$Source = $this->Query;
+
 		foreach($Input as $Key => $Value)
-		if($Value === '') unset($Input[$Key]);
+		if($Value === '') {
+			unset($Input[$Key]);
+
+			if(array_key_exists($Key,$Source))
+			unset($Source[$Key]);
+		}
 
 		// if we only want what we passed then return the cleaned input.
 
@@ -555,7 +562,7 @@ class Router {
 
 		// else merge it with the current request as overwrites.
 
-		return array_merge($this->Query,$Input);
+		return array_merge($Source,$Input);
 	}
 
 	public function
