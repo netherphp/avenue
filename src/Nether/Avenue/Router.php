@@ -241,10 +241,13 @@ class Router {
 	//*/
 
 		return sprintf(
-			'%s://%s%s',
+			'%s://%s%s%s',
 			$this->GetProtocol(),
 			$this->GetFullDomain(),
-			$this->GetPath()
+			$this->GetPath(),
+			((count($this->Query) >= 1)?
+				($this->QueryCooker($this->Query)):
+				(''))
 		);
 	}
 
