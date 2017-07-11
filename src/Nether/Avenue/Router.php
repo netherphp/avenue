@@ -244,7 +244,10 @@ class Router {
 			'%s://%s%s%s',
 			$this->GetProtocol(),
 			$this->GetFullDomain(),
-			$this->GetPath(),
+			(($this->GetPath() === '/index')?
+				('/'):
+				($this->GetPath())
+			),
 			((count($this->Query) >= 1)?
 				($this->QueryCooker($this->Query)):
 				(''))
