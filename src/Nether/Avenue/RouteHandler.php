@@ -1,22 +1,31 @@
 <?php
 
-namespace Nether\Avenue;
-use \Nether;
-use \Exception;
+namespace
+Nether\Avenue;
 
-class RouteHandler extends Nether\Object {
+use
+\Nether    as Nether,
+\Exception as Exception;
 
-	public function __construct($opt=null) {
-		$opt = new Nether\Object($opt,[
-			'Class'  => null,
-			'Method' => null,
+class
+RouteHandler
+
+extends Nether\Object\Mapped {
+
+	public function
+	__construct($Opt=NULL) {
+	/*//
+	//*/
+
+		$Opt = new Nether\Object\Mapped($Opt,[
+			'Class'  => NULL,
+			'Method' => NULL,
 			'Argv'   => []
 		]);
 
-		$this->Class = $opt->Class;
-		$this->Method = $opt->Method;
-		$this->Argv = $opt->Argv;
-
+		$this->Class = $Opt->Class;
+		$this->Method = $Opt->Method;
+		$this->Argv = $Opt->Argv;
 		return;
 	}
 

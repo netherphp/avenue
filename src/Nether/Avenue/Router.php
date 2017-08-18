@@ -1,8 +1,11 @@
 <?php
 
-namespace Nether\Avenue;
-use \Nether;
-use \Exception;
+namespace
+Nether\Avenue;
+
+use
+\Nether    as Nether,
+\Exception as Exception;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -37,38 +40,51 @@ Nether\Option::Define([
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-class Router {
+class
+Router {
 
-	public function __construct($opt=null) {
+	public function
+	__construct($Opt=NULL) {
 	/*//
-	argv(array Options)
 	//*/
 
-		$opt = new Nether\Object($opt,[
+		$Userpart = '';
+
+		////////
+
+		$Opt = new Nether\Object\Mapped($Opt,[
 			'Domain' => $this->GetRequestDomain(),
 			'Path' => $this->GetRequestPath(),
 			'Query' => $this->GetRequestQuery()
 		]);
 
-		$this->Domain = $opt->Domain;
-		$this->Path = (($opt->Path=='/')?('/index'):($opt->Path));
-		$this->Query = $opt->Query;
+		////////
 
-		if(array_key_exists('REMOTE_ADDR',$_SERVER)) {
-			// we can identify a non-malicious webhit with their ip address.
-			$userpart = $_SERVER['REMOTE_ADDR'];
-		} else {
-			// i'm not sure what i want to do about non-web or broken web.
-			$userpart = '';
-		}
+		$this->Domain = $Opt->Domain;
+		$this->Query = $Opt->Query;
+		$this->Path = (($Opt->Path=='/')?
+			('/index'):
+			($Opt->Path)
+		);
 
-		$this->HitHash = md5("{$userpart}-{$this->GetFullDomain()}-{$this->GetPath()}");
-		$this->HitTime = microtime(true);
+		////////
+
+		if(array_key_exists('REMOTE_ADDR',$_SERVER))
+		$Userpart = $_SERVER['REMOTE_ADDR'];
+
+		$this->HitHash = md5("{$Userpart}-{$this->GetFullDomain()}-{$this->GetPath()}");
+		$this->HitTime = microtime(TRUE);
 
 		// take care for paths. remove trailing slashes and query strings if
 		// they made it into the path.
-		$this->Path = preg_replace('/\?.*$/','',rtrim($opt->Path,'/'));
-		if(!$this->Path) $this->Path = '/index';
+
+		$this->Path = preg_replace(
+			'/\?.*$/', '',
+			rtrim($Opt->Path,'/')
+		);
+
+		if(!$this->Path)
+		$this->Path = '/index';
 
 		return;
 	}
