@@ -1,11 +1,10 @@
 <?php
 
-namespace
-Nether\Avenue;
+namespace Nether\Avenue;
 
-use
-\Nether    as Nether,
-\Exception as Exception;
+use \Nether as Nether;
+
+use \Exception;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -40,8 +39,7 @@ Nether\Option::Define([
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-class
-Router {
+class Router {
 
 	public function
 	__construct($Opt=NULL) {
@@ -106,6 +104,13 @@ Router {
 
 		if(!$this->Route)
 		throw new Exception("No routes found to handle request. TODO: make this a nicer 404 handler.");
+
+		Nether\Ki::Queue('avenue-route-init',function($Route){
+			if(is_object($Route))
+			$Route->Router = $this;
+
+			return;
+		},TRUE);
 
 		return $this->Route->Run($this);
 	}
