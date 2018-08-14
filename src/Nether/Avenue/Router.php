@@ -14,6 +14,7 @@ use \Exception;
 // own shortcuts if there is anything you find yourself doing often.
 
 Nether\Option::Define([
+	'nether-avenue-path-cs'             => TRUE,
 	'nether-avenue-condition-shortcuts' => [
 		// match anything, as long as there is something.
 		'(@)' => '(.+?)', '{@}' => '(?:.+?)',
@@ -39,7 +40,8 @@ Nether\Option::Define([
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-class Router {
+class
+Router {
 
 	public function
 	__construct($Opt=NULL) {
@@ -104,13 +106,6 @@ class Router {
 
 		if(!$this->Route)
 		throw new Exception("No routes found to handle request. TODO: make this a nicer 404 handler.");
-
-		Nether\Ki::Queue('avenue-route-init',function($Route){
-			if(is_object($Route))
-			$Route->Router = $this;
-
-			return;
-		},TRUE);
 
 		return $this->Route->Run($this);
 	}
@@ -406,7 +401,12 @@ class Router {
 
 		// throw in our extra data.
 		$handler->SetDomain("`^{$this->TranslateRouteCondition($domain)}$`");
+
+		if(Nether\Option::Get('nether-avenue-path-cs'))
 		$handler->SetPath("`^\/{$this->TranslateRouteCondition($path)}$`");
+		else
+		$handler->SetPath("`^\/{$this->TranslateRouteCondition($path)}$`i");
+
 		$handler->SetQuery(explode('&',$query));
 
 		$this->Routes[] = $handler;
