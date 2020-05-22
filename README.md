@@ -34,7 +34,7 @@ There are several shortcuts for matching data we need to reference out of URLs o
 
 * @ = match anything, as long as there is something to match.
 * ? = match anything, even if there is nothing to match.
-* # = match a number (or series of)
+* &#35; = match a number (or series of)
 * $ = match a string as a path fragment. anything between forward slashes, not including them.
 * domain = match a string that is a domain name. it will match the full domain like "www.nether.io", however, it will only pass the relevant domain to the route e.g. without subdomains, in this case "nether.io".
 
@@ -133,14 +133,14 @@ Then install it or update into it.
 
 
 ## Testing
-This library uses Codeception for testing. Composer will handle it for you. Install or Update into it.
+This library uses PHPUnit for testing. Composer will handle it for you. Install or Update into it.
 
 	$ composer install --dev
 	$ composer update --dev
 
 Then run the tests.
 
-	$ php vendor/bin/codecept run unit
-	$ vendor\bin\codecept run unit
+	$ php vendor/bin/phpunit tests --bootstrap vendor/autoload.php
+	$ vendor\bin\phpunit tests --bootstrap vendor\autoload.php
 
 
