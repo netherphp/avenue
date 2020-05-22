@@ -16,7 +16,8 @@ jobs:
         with:
           coverage: none
           extensions: mbstring, intl
-          tools: phpunit
+          tools: composer, phpunit
       - name: Run PHPUnit
         run: |
+          composer install
           phpunit tests --bootstrap vendor/autoload.php
