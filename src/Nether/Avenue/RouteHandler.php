@@ -7,15 +7,11 @@ use
 \Nether    as Nether,
 \Exception as Exception;
 
-class
-RouteHandler
-
+class RouteHandler
 extends Nether\Object\Mapped {
 
 	public function
-	__construct($Opt=NULL) {
-	/*//
-	//*/
+	__Construct($Opt=NULL) {
 
 		$Opt = new Nether\Object\Mapped($Opt,[
 			'Class'  => NULL,
@@ -29,7 +25,8 @@ extends Nether\Object\Mapped {
 		return;
 	}
 
-	public function Run(Nether\Avenue\Router $router) {
+	public function
+	Run(Nether\Avenue\Router $Router) {
 
 		if(!class_exists($this->Class))
 		throw new Exception("Class {$this->Class} does not exist.");
@@ -37,10 +34,10 @@ extends Nether\Object\Mapped {
 		if(!method_exists($this->Class,$this->Method))
 		throw new Exception("Method {$this->Class}::{$this->Method} does not exist.");
 
-		$this->SetRouter($router);
+		$this->SetRouter($Router);
 
 		return call_user_func_array(
-			[(new $this->Class($router)), $this->Method],
+			[(new $this->Class($Router)), $this->Method],
 			((is_array($this->Argv))?(array_values($this->Argv)):([]))
 		);
 	}
@@ -48,101 +45,139 @@ extends Nether\Object\Mapped {
 	////////////////
 	////////////////
 
-	protected $Router;
+	protected
+	$Router = NULL;
 	/*//
 	@type Nether\Avenue\Router
 	//*/
 
-	public function GetRouter() {
+	public function
+	GetRouter():
+	?Nether\Avenue\Router {
+
 		return $this->Router;
 	}
 
-	public function SetRouter(Nether\Avenue\Router $router) {
-		$this->Router = $router;
+	public function
+	SetRouter(Nether\Avenue\Router $Router):
+	self {
+
+		$this->Router = $Router;
 		return $this;
 	}
 
 	////////////////
 	////////////////
 
-	protected $Domain;
+	protected
+	$Domain = NULL;
 	/*//
 	@type string
 	//*/
 
-	public function GetDomain() {
+	public function
+	GetDomain():
+	?String {
+
 		return $this->Domain;
 	}
 
-	public function SetDomain($d) {
-		$this->Domain = $d;
+	public function
+	SetDomain(String $Input) {
+
+		$this->Domain = $Input;
 		return $this;
 	}
 
 	////////////////
 	////////////////
 
-	protected $Path;
+	protected
+	$Path = NULL;
 	/*//
 	@type string
 	//*/
 
-	public function GetPath() {
+	public function
+	GetPath():
+	?String {
 
 		return $this->Path;
 	}
 
-	public function SetPath($p) {
-		$this->Path = $p;
+	public function
+	SetPath(String $Input):
+	self {
+
+		$this->Path = $Input;
 		return $this;
 	}
 
-	protected $Query = false;
+	protected
+	$Query = NULL;
 	/*//
 	@type array
 	//*/
 
-	public function GetQuery() {
+	public function
+	GetQuery():
+	?Array {
 
 		return $this->Query;
 	}
 
-	public function SetQuery(array $q) {
-		$this->Query = $q;
+	public function
+	SetQuery(Array $Input):
+	self {
+
+		$this->Query = $Input;
 		return $this;
 	}
 
 	////////////////
 	////////////////
 
-	protected $Class;
+	protected
+	$Class = NULL;
 	/*//
 	@type string
 	//*/
 
-	public function GetClass() {
+	public function
+	GetClass():
+	?String {
+
 		return $this->Class;
 	}
 
-	public function SetClass($c) {
-		$this->Class = $c;
+	public function
+	SetClass(String $Input) {
+
+		$this->Class = $Input;
 		return $this;
 	}
 
 	////////////////
 	////////////////
 
-	protected $Method;
+	protected
+	$Method = NULL;
 	/*//
 	@type string
 	//*/
 
-	public function GetMethod() {
+	public function
+	GetMethod():
+	?String {
+
 		return $this->Method;
 	}
 
-	public function SetMethod($m) {
-		$this->Method = $m;
+	public function
+	SetMethod($M):
+	self {
+
+		$this->Method = $M;
 		return $this;
 	}
 
@@ -153,7 +188,8 @@ extends Nether\Object\Mapped {
 	$Argv = [];
 
 	public function
-	GetArg(Int $Offset=1) {
+	GetArg(Int $Offset=1):
+	?String {
 	/*//
 	fetch the specified argument from the result of the route pattern matching.
 	it is 1 indexed, and the result is merged with the domain and path matches
@@ -165,7 +201,7 @@ extends Nether\Object\Mapped {
 		$Offset -= 1;
 
 		if(array_key_exists($Offset,$this->Argv))
-		return $this->Argv[$Offset];
+		return (String)$this->Argv[$Offset];
 
 		return NULL;
 	}
@@ -183,7 +219,7 @@ extends Nether\Object\Mapped {
 
 	public function
 	SetArgv(Array $Input):
-	Self {
+	self {
 	/*//
 	force an array into the argument space. this is mainly used by the router
 	to tell the route about the result of its route pattern.

@@ -225,7 +225,7 @@ extends PHPUnit\Framework\TestCase {
 		$Router = new Nether\Avenue\Router(static::$RequestData['TestDeep']);
 		$Router->AddRoute('{@}//index','herp::derp');
 
-		$this->AssertFalse(
+		$this->AssertNull(
 			$Router->GetRoute(),
 			'no route should have been found'
 		);
@@ -293,7 +293,7 @@ extends PHPUnit\Framework\TestCase {
 		$this->AssertEquals('www.nether.io',$Router->GetRoute()->GetArgv()[0]);
 
 		$Router->ClearRoutes()->AddRoute('(@)//one/two/three/four(@)','herp::derp');
-		$this->AssertFalse($Router->GetRoute());
+		$this->AssertNull($Router->GetRoute());
 
 		$Router->ClearRoutes()->AddRoute('www.(@)//one/two/three/four','herp::derp');
 		$this->AssertEquals('nether.io',$Router->GetRoute()->GetArgv()[0]);
@@ -367,7 +367,7 @@ extends PHPUnit\Framework\TestCase {
 		$Router = new Nether\Avenue\Router(static::$RequestData['Test']);
 
 		$Router->AddRoute('{@}//test/(#)','herp::derp');
-		$this->AssertFalse($Router->GetRoute());
+		$this->AssertNull($Router->GetRoute());
 
 		////////
 
@@ -394,14 +394,14 @@ extends PHPUnit\Framework\TestCase {
 		$Router = new Nether\Avenue\Router(static::$RequestData['TestDeep']);
 
 		$Router->AddRoute('{@}//test/($)','herp::derp');
-		$this->AssertFalse($Router->GetRoute());
+		$this->AssertNull($Router->GetRoute());
 
 		////////
 
 		$Router = new Nether\Avenue\Router(static::$RequestData['TestDeep']);
 
 		$Router->AddRoute('{@}//($)','herp::derp');
-		$this->AssertFalse($Router->GetRoute());
+		$this->AssertNull($Router->GetRoute());
 
 		$Router->ClearRoutes()->AddRoute('{@}//($)/($)/($)/($)','herp::derp');
 		$Args = $Router->GetRoute()->GetArgv();

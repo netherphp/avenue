@@ -4,7 +4,9 @@ namespace Nether\Avenue;
 
 use \Nether as Nether;
 
-use \Exception;
+use
+\Exception as Exception,
+\StdClass as StdClass;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -40,23 +42,18 @@ Nether\Option::Define([
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-class
-Router {
+class Router {
 
 	public function
-	__construct($Opt=NULL) {
-	/*//
-	//*/
-
-		$Userpart = '';
-
-		////////
+	__Construct($Opt=NULL) {
 
 		$Opt = new Nether\Object\Mapped($Opt,[
 			'Domain' => $this->GetRequestDomain(),
 			'Path' => $this->GetRequestPath(),
 			'Query' => $this->GetRequestQuery()
 		]);
+
+		$Userpart = '';
 
 		////////
 
@@ -92,7 +89,8 @@ Router {
 	////////////////
 	////////////////
 
-	public function Run(Nether\Avenue\RouteHandler $route=null) {
+	public function
+	Run(Nether\Avenue\RouteHandler $Route=NULL) {
 	/*//
 	argv(Nether\Avenue\RouteHandler ForcedRoute)
 	if given a route it will attempt to execute it. you can use this in the
@@ -101,7 +99,7 @@ Router {
 	between routers.
 	//*/
 
-		if($route) $this->Route = $route;
+		if($Route) $this->Route = $Route;
 		else $this->Route = $this->GetRoute();
 
 		if(!$this->Route)
@@ -113,22 +111,24 @@ Router {
 	////////////////
 	////////////////
 
-	protected $Domain;
+	protected
+	$Domain = NULL;
 	/*//
-	type(string)
+	@type String
 	store the requested host name as it was given to us.
 	//*/
 
-	public function GetDomain() {
+	public function
+	GetDomain():
+	?String {
 	/*//
-	return(string)
 	return only the part of the domain that is most useful to most apps aka the
 	main top level domain that is being used. this cuts off any subdomains. if
 	you need the full host name as it was requested use GetFullDomain() instead.
 	//*/
 
-		if($this->Domain === null)
-		return null;
+		if($this->Domain === NULL)
+		return NULL;
 
 		return preg_replace(
 			'/.*?([^\.]+(?:\.[^\.]+)?)$/',
@@ -137,9 +137,10 @@ Router {
 		);
 	}
 
-	public function GetFullDomain() {
+	public function
+	GetFullDomain():
+	?String {
 	/*//
-	return(string)
 	fetch the domain asked for in this request. by default we will truncate the
 	domain to not include the subdomain. if you pass full as true then we will
 	just dump the entire string as it was, which will include any subdomains.
@@ -148,13 +149,16 @@ Router {
 		return $this->Domain;
 	}
 
-	protected $Path;
+	protected
+	$Path = NULL;
 	/*//
 	type(string)
 	store the requested path as it was given to us.
 	//*/
 
-	public function GetPath() {
+	public function
+	GetPath():
+	?String {
 	/*//
 	return(string)
 	fetch the requested path as a string.
@@ -163,44 +167,51 @@ Router {
 		return $this->Path;
 	}
 
-	public function GetPathArray() {
+	public function
+	GetPathArray():
+	?Array {
 	/*//
 	return(array)
 	return the path string as an array.
 	//*/
 
+		if(!$this->Path)
+		return NULL;
+
 		return explode('/',trim($this->Path,'/'));
 	}
 
-	public function GetPathSlot($slot) {
+	public function
+	GetPathSlot($Slot):
+	?String {
 	/*//
-	return(string)
-	return(null) slot out of bounds.
 	return the specified slot from the path.
 	//*/
 
 		// oob
-		if($slot < 1)
-		return false;
+		if($Slot < 1)
+		return NULL;
 
-		$path = $this->GetPathArray();
+		$Path = $this->GetPathArray();
 
 		// oob
-		if($slot > count($path))
-		return false;
+		if($Slot > count($Path))
+		return NULL;
 
-		return $path[$slot-1];
+		return (String)$Path[$Slot-1];
 	}
 
-	protected $HitHash;
+	protected
+	$HitHash = NULL;
 	/*//
-	type(string)
+	@type String
 	a hash that represents this hit, made form the user ip and request info.
 	//*/
 
-	public function GetHitHash() {
+	public function
+	GetHitHash():
+	?String {
 	/*//
-	return(string)
 	return the hit hash for this request.
 	//*/
 
@@ -210,38 +221,46 @@ Router {
 	////////////////
 	////////////////
 
-	protected $HitTime;
+	protected
+	$HitTime = NULL;
 	/*//
-	type(float)
+	@type Float
 	the time that the hit occured.
 	//*/
 
-	public function GetHitTime() {
+	public function
+	GetHitTime():
+	?Float {
 	/*//
-	return(float)
 	return the hit time for this request.
 	//*/
+
 		return $this->HitTime;
 	}
 
 	////////////////
 	////////////////
 
-	public function GetHit() {
+	public function
+	GetHit():
+	StdClass {
 	/*//
-	return(object)
 	return an object that defines the unique description of this request: the
 	hit hash and the request time.
 	//*/
+
+		// @todo 2020-05-22 Return a HitHash object.
+
 		return (object)[
 			'Hash' => $this->HitHash,
 			'Time' => $this->HitTime
 		];
 	}
 
-	public function GetProtocol() {
+	public function
+	GetProtocol():
+	?String {
 	/*//
-	return(string)
 	returns http or https lol.
 	//*/
 
@@ -250,9 +269,10 @@ Router {
 		('http'));
 	}
 
-	public function GetURL() {
+	public function
+	GetURL():
+	?String {
 	/*//
-	return(string)
 	returns a recompiled url from the current request using the parsed data.
 	//*/
 
@@ -273,38 +293,39 @@ Router {
 	////////////////
 	////////////////
 
-	public function GetQuery() {
+	public function
+	GetQuery():
+	?Array {
 	/*//
-	return(array)
 	return the query array as it was given to us.
 	//*/
 
 		return $this->Query;
 	}
 
-	public function GetQueryVar($key) {
+	public function
+	GetQueryVar($Key):
+	?String {
 	/*//
-	return(mixed)
-	return(null) if key not defined.
 	fetch a specific query var.
 	//*/
 
 		// if we have that data give it.
-		if(array_key_exists($key,$this->Query))
-		return $this->Query[$key];
+		if(array_key_exists($Key,$this->Query))
+		return (String)$this->Query[$Key];
 
 		// else nope.
-		return null;
+		return NULL;
 	}
 
 	////////////////
 	////////////////
 
-	public function GetRequestDomain() {
+	public function
+	GetRequestDomain():
+	?String {
 	/*//
-	return(null) running from cli.
-	return(false) unable to determine domain.
-	return(string) the current domain.
+	get the domain as it was requested in the global.
 	//*/
 
 		// if we have a hostname request then return what that was, even on cli
@@ -312,255 +333,313 @@ Router {
 		if(array_key_exists('HTTP_HOST',$_SERVER))
 		return $_SERVER['HTTP_HOST'];
 
-		// if there was no hostname and we are command line then return a null
-		// to symbolise that.
-		if(php_sapi_name() === 'cli') return null;
-
-		// else we still thought we were in web mode, and with no hostname
-		// to process we will return a false.
-		return false;
+		return NULL;
 	}
 
-	public function GetRequestPath() {
+	public function
+	GetRequestPath():
+	?String {
 	/*//
-	return(null) running from cli.
-	return(false) unable to determine path.
-	return(string) the current request path.
+	get the request as it was in the global.
 	//*/
 
 		if(array_key_exists('REQUEST_URI',$_SERVER)) {
-			$path = rtrim(explode('?',$_SERVER['REQUEST_URI'])[0],'/');
+			$Path = rtrim(explode('?',$_SERVER['REQUEST_URI'])[0],'/');
 
-			if($path) return $path;
+			if($Path) return $Path;
 			else return '/index';
 		}
 
-		if(php_sapi_name() === 'cli') return null;
-
-		return false;
+		return NULL;
 	}
 
-	public function GetRequestQuery($which='get') {
+	public function
+	GetRequestQuery(String $Which='get'):
+	?Array {
 	/*//
-	argv(string SourceArray)
-	return(false) no query data found.
-	return(array) the input query data as requested.
+	get a request datasource variable.
 	//*/
 
-		switch($which) {
+		switch($Which) {
 			case 'get': {
 				if(isset($_GET)) return $_GET;
-				else return false;
+				break;
 			}
 			case 'post': {
 				if(isset($_POST)) return $_POST;
-				else return false;
+				break;
+			}
+			case 'request': {
+				if(isset($_REQUEST)) return $_REQUEST;
+				break;
 			}
 		}
 
-		return false;
+		return NULL;
 	}
 
 	////////////////
 	////////////////
 
-	protected $Route;
+	protected
+	$Route = NULL;
 	/*//
-	type(string)
+	@type String
 	the currently selected route.
 	//*/
 
-	protected $Routes = [];
+	protected
+	$Routes = [];
 	/*//
-	type(array)
+	@type Array
 	a list of all the routes that have been specified.
 	//*/
 
-	public function AddRoute($cond,$hand) {
+	public function
+	AddRoute(String $Cond, String $Hand):
+	self {
 	/*//
-	argv(string Condition, string Handler)
-	return(self)
+	add a route to the condition table.
 	//*/
 
-		{{{ // parse the route conditions.
-			if(!$this->IsRouteConditionValid($cond))
-			throw new Exception("Route condition ({$cond}) is not valid.");
+		$Domain = NULL;
+		$Path = NULL;
+		$Query = NULL;
+		$Handler = NULL;
 
-			list($domain,$path) = explode('//',$cond);
+		// parse the route conditions.
 
-			if(strpos($path,'??') !== false) list($path,$query) = explode('??',$path);
-			else $query = '';
-		}}}
+		if(!$this->IsRouteConditionValid($Cond))
+		throw new Exception("Route condition ({$Cond}) is not valid.");
 
-		{{{ // parse the route handler.
-			if(!$this->IsRouteHandlerValid($hand))
-			throw new Exception("Route handler ({$hand}) is not valid.");
+		list($Domain,$Path) = explode('//',$Cond);
 
-			$handler = $this->TranslateRouteHandler($hand);
-		}}}
+		if(strpos($Path,'??') !== FALSE) list($Path,$Query) = explode('??',$Path);
+		else $Query = '';
+
+		// parse the route handler.
+
+		if(!$this->IsRouteHandlerValid($Hand))
+		throw new Exception("Route handler ({$Hand}) is not valid.");
+
+		$Handler = $this->TranslateRouteHandler($Hand);
 
 		// throw in our extra data.
-		$handler->SetDomain("`^{$this->TranslateRouteCondition($domain)}$`");
+
+		$Handler->SetDomain(sprintf(
+			'`^%s$`',
+			$this->TranslateRouteCondition($Domain)
+		));
 
 		if(Nether\Option::Get('nether-avenue-path-cs'))
-		$handler->SetPath("`^\/{$this->TranslateRouteCondition($path)}$`");
+		$Handler->SetPath(sprintf(
+			'`^\/%s$`',
+			$this->TranslateRouteCondition($Path)
+		));
+
 		else
-		$handler->SetPath("`^\/{$this->TranslateRouteCondition($path)}$`i");
+		$Handler->SetPath(sprintf(
+			'`^\/%s$`i',
+			$this->TranslateRouteCondition($Path)
+		));
 
-		$handler->SetQuery(explode('&',$query));
+		$Handler->SetQuery(explode('&',$Query));
 
-		$this->Routes[] = $handler;
+		$this->Routes[] = $Handler;
 		return $this;
 	}
 
-	public function GetRoute() {
+	public function
+	GetRoute():
+	?Nether\Avenue\RouteHandler {
 	/*//
-	return(object)
+	find a route from the handler table.
 	//*/
 
-		$dm = $pm = null;
+		$Handler = NULL;
+		$Dm = $Pm = NULL;
+		$Nope = NULL;
+		$Q = NULL;
 
-		foreach($this->Routes as $handler) {
+		foreach($this->Routes as $Handler) {
 
 			// require a domain hard match.
-			if(!preg_match($handler->GetDomain(),$this->Domain,$dm)) continue;
+
+			if(!preg_match($Handler->GetDomain(),$this->Domain,$Dm))
+			continue;
 
 			// require a path hard match.
-			if(!preg_match($handler->GetPath(),$this->Path,$pm)) continue;
+
+			if(!preg_match($Handler->GetPath(),$this->Path,$Pm))
+			continue;
 
 			// require a query soft match.
-			$nope = false;
-			foreach($handler->GetQuery() as $q) {
-				if(!$q) continue;
 
-				if(!array_key_exists($q,$this->GetQuery()))
-				$nope = true;
+			$Nope = FALSE;
+			foreach($Handler->GetQuery() as $Q) {
+				if(!$Q)
+				continue;
+
+				if(!array_key_exists($Q,$this->GetQuery()))
+				$Nope = TRUE;
 			}
 
-			if($nope) continue;
+			if($Nope)
+			continue;
 
 			// fetch the arguments found by the route match.
-			unset($dm[0],$pm[0]);
-			$handler->SetArgv(array_merge($dm,$pm));
+			unset($Dm[0],$Pm[0]);
+			$Handler->SetArgv(array_merge($Dm,$Pm));
 
 			// ask the route if it is willing to handle the request.
-			if(!$this->WillHandlerAcceptRequest($handler)) continue;
+			if(!$this->WillHandlerAcceptRequest($Handler))
+			continue;
 
 			// and since we found a match we are done.
-			return $handler;
+			return $Handler;
 		}
 
-		return false;
+		return NULL;
 	}
 
-	public function ClearRoutes() {
+	public function
+	ClearRoutes():
+	self {
 	/*//
-	return(self)
+	empty the routing table.
 	//*/
 
 		$this->Routes = [];
 		return $this;
 	}
 
-	public function GetRoutes() {
+	public function
+	GetRoutes():
+	?Array {
 	/*//
-	return(array)
+	fetch the routing table.
 	//*/
 
 		return $this->Routes;
 	}
 
-	public function WillHandlerAcceptRequest(Nether\Avenue\RouteHandler $h) {
+	public function
+	WillHandlerAcceptRequest(Nether\Avenue\RouteHandler $H):
+	Bool {
 	/*//
-	return(bool)
+	ask a handler if it is willing to handle this request.
 	//*/
 
-		$class = $h->GetClass();
+		$Class = $H->GetClass();
 
 		// if the handler class does not have the query method then assume
 		// that it will handle it.
-		if(!method_exists($class,'WillHandleRequest')) return true;
+		if(!method_exists($Class,'WillHandleRequest'))
+		return TRUE;
 
-		return call_user_func_array(
-			[$class,'WillHandleRequest'],
-			[ $this, $h ]
+		return (Bool)call_user_func_array(
+			[$Class,'WillHandleRequest'],
+			[ $this, $H ]
 		);
 	}
 
-	public function TranslateRouteCondition($cond) {
+	public function
+	TranslateRouteCondition(String $Cond):
+	String {
 	/*//
-	return(string)
+	parses a route condition to replace shortcuts into any regex that was defined.
 	//*/
 
-		foreach(Nether\Option::Get('nether-avenue-condition-shortcuts') as $old => $new)
-		$cond = str_replace($old,$new,$cond);
+		$Old = NULL;
+		$New = NULL;
 
-		return $cond;
-	}
+		foreach(Nether\Option::Get('nether-avenue-condition-shortcuts') as $Old => $New)
+		$Cond = str_replace($Old,$New,$Cond);
 
-	public function TranslateRouteHandler($hand) {
-	/*//
-	return(Nether\Avenue\RouteHandler)
-	//*/
-
-		if(strpos($hand,'::') !== false)
-		return $this->TranslateRouteHandler_ClassMethod($hand);
-
-		else
-		return $this->TranslateRouteHandler_ClassOnly($hand);
-	}
-
-	protected function TranslateRouteHandler_ClassMethod($hand) {
-	/*//
-	return(Nether\Avenue\RouteHandler)
-	//*/
-
-		list($class,$method) = explode('::',$hand);
-
-		return new RouteHandler([
-			'Class' => $class,
-			'Method' => $method
-		]);
-	}
-
-	protected function TranslateRouteHandler_ClassOnly($hand) {
-	/*//
-	return(Nether\Avenue\RouteHandler)
-	//*/
-
-		return new RouteHandler([
-			'Class' => $hand
-		]);
-	}
-
-	protected function IsRouteConditionValid($cond) {
-	/*//
-	argv(string Condition)
-	return(bool)
-	//*/
-
-		if(strpos($cond,'//') === false) return false;
-
-		return true;
-	}
-
-	protected function IsRouteHandlerValid($hand) {
-	/*//
-	return(bool)
-	//*/
-
-		if(strpos($hand,'::') === false) return false;
-
-		return true;
+		return $Cond;
 	}
 
 	public function
-	QueryMerger($Input=[], Bool $DropUnused=false) {
+	TranslateRouteHandler(String $Hand):
+	Nether\Avenue\RouteHandler {
 	/*//
-	return(array)
+	get a handler from its definition.
+	//*/
+
+		if(strpos($Hand,'::') !== FALSE)
+		return $this->TranslateRouteHandler_ClassMethod($Hand);
+
+		else
+		return $this->TranslateRouteHandler_ClassOnly($Hand);
+	}
+
+	protected function
+	TranslateRouteHandler_ClassMethod(String $Hand):
+	Nether\Avenue\RouteHandler {
+	/*//
+	get a handler that was defined with a specific method.
+	//*/
+
+		$Class = NULL;
+		$Method = NULL;
+
+		list($Class,$Method) = explode('::',$Hand);
+
+		return new RouteHandler([
+			'Class' => $Class,
+			'Method' => $Method
+		]);
+	}
+
+	protected function
+	TranslateRouteHandler_ClassOnly(String $Hand):
+	Nether\Avenue\RouteHandler {
+	/*//
+	get a handler that was defined without a specific method.
+	//*/
+
+		return new RouteHandler([
+			'Class' => $Hand
+		]);
+	}
+
+	protected function
+	IsRouteConditionValid(String $Cond):
+	Bool {
+	/*//
+	check if a route condition seems a valid format.
+	//*/
+
+		if(strpos($Cond,'//') === FALSE)
+		return FALSE;
+
+		return TRUE;
+	}
+
+	protected function
+	IsRouteHandlerValid(String $Hand):
+	Bool {
+	/*//
+	check if a route handler seems a valid format.
+	//*/
+
+		if(strpos($Hand,'::') === FALSE)
+		return FALSE;
+
+		return TRUE;
+	}
+
+	public function
+	QueryMerger($Input=[], Bool $DropUnused=FALSE):
+	Array {
+	/*//
+	@todo 2020-05-22 union type $Input as array|object in PHP 8
 	merge the input with the original query array to generate an updated query
 	string that we may want to pass in for hyperlinking.
 	//*/
+
+		$Key = NULL;
+		$Value = NULL;
 
 		if(!is_object($Input) && !is_array($Input))
 		throw new Exception('QueryMerger expects an array or object, so good job with that.');
@@ -593,9 +672,9 @@ Router {
 	}
 
 	public function
-	QueryBlender($Input=[], Bool $DropUnused=false) {
+	QueryBlender($Input=[], Bool $DropUnused=FALSE):
+	String {
 	/*//
-	return(string)
 	use the QueryMerger to output a final string of the merged query.
 	//*/
 
@@ -603,9 +682,9 @@ Router {
 	}
 
 	public function
-	QueryCooker($Input=[], Bool $DropUnused=false) {
+	QueryCooker($Input=[], Bool $DropUnused=FALSE):
+	?String {
 	/*//
-	return(string)
 	returns the exact same thing as QueryBlender but with a question mark in
 	front of it. did i try too hard with these series of methods? i don't think
 	so. in the apps i work on i often need the blended and cooked versions for
