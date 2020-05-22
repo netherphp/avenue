@@ -11,17 +11,17 @@ use
 ////////
 
 class LocalTestRouteAckHandle {
-	static function
-	WillHandleRequest($r,$h) {
+	static public function
+	WillHandleRequest($R,$H) {
 		//(new Verify($r instanceof Nether\Avenue\Router))->true();
 		//(new Verify($h instanceof Nether\Avenue\RouteHandler))->true();
 
 		// our Test route only wants to run on nether.io
-		if($r->GetDomain() !== 'nether.io') return false;
+		if($R->GetDomain() !== 'nether.io') return FALSE;
 
 		// and if the url is Test.
-		if($h->GetArgv()[1] === 'test') return true;
-		else return false;
+		if($H->GetArgv()[1] === 'test') return TRUE;
+		else return FALSE;
 	}
 	public function
 	Test() {
@@ -30,14 +30,14 @@ class LocalTestRouteAckHandle {
 	}
 }
 
-
 ////////
 ////////
 
 class RouterTest
 extends PHPUnit\Framework\TestCase {
 
-	static $RequestData = [
+	static
+	$RequestData = [
 		'Root' => [ 'Domain'=>'www.nether.io', 'Path'=>'/' ],
 		'Index' => [ 'Domain'=>'www.nether.io', 'Path'=>'/index' ],
 		'IndexTs' => [ 'Domain'=>'www.nether.io', 'Path'=>'/index/' ],
@@ -88,27 +88,22 @@ extends PHPUnit\Framework\TestCase {
 		return;
 	}
 
+	/** @test */
 	public function
 	TestRequestParsingFromInput() {
 	/*//
 	testing that things work when we specified data instead.
 	//*/
 
-		$router = new Nether\Avenue\Router(static::$RequestData['Index']);
+		$Router = new Nether\Avenue\Router(static::$RequestData['Index']);
 
-		(new Verify(
-			'parsed domain from input',
-			$router->GetDomain()
-		))->equals('nether.io');
-
-		(new Verify(
-			'parsed path from input',
-			$router->GetPath()
-		))->equals('/index');
+		$this->AssertEquals('nether.io',$Router->GetDomain());
+		$this->AssertEquals('/index',$Router->GetPath());
 
 		return;
 	}
 
+	/** @test */
 	public function
 	TestRequestRootIsAndIndex() {
 	/*//
@@ -205,6 +200,9 @@ extends PHPUnit\Framework\TestCase {
 	/*//
 	test that the shortcuts translate as expected.
 	//*/
+
+		$Old = NULL;
+		$New = NULL;
 
 		$Router = new Nether\Avenue\Router(static::$RequestData['Test']);
 
