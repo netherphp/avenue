@@ -40,7 +40,7 @@ extends Nether\Object\Mapped {
 		$this->SetRouter($router);
 
 		return call_user_func_array(
-			[(new $this->Class), $this->Method],
+			[(new $this->Class($router)), $this->Method],
 			((is_array($this->Argv))?(array_values($this->Argv)):([]))
 		);
 	}
