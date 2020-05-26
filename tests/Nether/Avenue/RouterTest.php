@@ -447,7 +447,7 @@ extends PHPUnit\Framework\TestCase {
 		$R1 = new Nether\Avenue\Router(static::$RequestData['Root']);
 		$R2 = new Nether\Avenue\Router(static::$RequestData['Test']);
 
-		$this->AssertTrue(strlen($R1->GetHitHash()) === 32);
+		$this->AssertTrue(strlen($R1->GetHitHash()) === 128);
 		$this->AssertTrue($R1->GetHitHash() !== $R2->GetHitHash());
 		$this->AssertTrue(is_float($R1->GetHitTime()));
 
