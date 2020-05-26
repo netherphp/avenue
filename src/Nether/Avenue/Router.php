@@ -69,8 +69,11 @@ class Router {
 		if(array_key_exists('REMOTE_ADDR',$_SERVER))
 		$Userpart = $_SERVER['REMOTE_ADDR'];
 
-		$this->HitHash = md5("{$Userpart}-{$this->GetFullDomain()}-{$this->GetPath()}");
 		$this->HitTime = microtime(TRUE);
+		$this->HitHash = hash(
+			'sha512',
+			"{$Userpart}-{$this->GetFullDomain()}-{$this->GetPath()}"
+		);
 
 		// take care for paths. remove trailing slashes and query strings if
 		// they made it into the path.
