@@ -295,7 +295,7 @@ class Router {
 
 	public function
 	GetRemoteAddr():
-	String {
+	?String {
 	/*//
 	@date 2020-05-27
 	fetch the request ip address checking that it even exists in the case
@@ -305,7 +305,7 @@ class Router {
 		if(array_key_exists('REMOTE_ADDR',$_SERVER))
 		return $_SERVER['REMOTE_ADDR'];
 
-		return '';
+		return NULL;
 	}
 
 	////////////////
