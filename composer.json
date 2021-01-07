@@ -10,11 +10,12 @@
 		  "role":"developer" }
 	],
 	"require": {
-		"netherphp/object": "^3.0.0",
-		"netherphp/option": "^1.0.0"
+		"php": ">=8.0",
+		"netherphp/object": ">=3.0.0",
+		"netherphp/option": ">=1.0.0"
 	},
 	"require-dev": {
-		"netherphp/standards": "^0.1.9"
+		"netherphp/standards": ">=0.1.9"
 	},
 	"autoload": {
 		"psr-0": {
