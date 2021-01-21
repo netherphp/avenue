@@ -7,28 +7,12 @@ jobs:
     strategy:
       matrix:
         operating-system: [ 'ubuntu-latest', 'windows-latest' ]
-        php-versions: [ '7.1', '7.2', '7.4' ]
+        php-versions: [ '8.0' ]
     steps:
       - name: Checkout Source.
         uses: actions/checkout@v2
-      - name: Setup PHP 7.1
-        if: ${{ matrix.php-versions == '7.1' }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          coverage: none
-          extensions: mbstring, intl
-          tools: phpunit:7.5.20
-      - name: Setup PHP 7.2
-        if: ${{ matrix.php-versions == '7.2' }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          coverage: none
-          extensions: mbstring, intl
-          tools: phpunit:8.5.5
-      - name: Setup PHP 7.4
-        if: ${{ matrix.php-versions == '7.4' }}
+      - name: Setup PHP 8.0
+        if: ${{ matrix.php-versions == '8.0' }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
