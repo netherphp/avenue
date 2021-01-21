@@ -22,4 +22,4 @@ jobs:
       - name: Run PHPUnit
         run: |
           composer install
-          phpunit tests --bootstrap vendor/autoload.php
+          php vendor/bin/phpunit tests --bootstrap vendor/autoload.php

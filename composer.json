@@ -14,7 +14,8 @@
 		"netherphp/option": "^1.0.0"
 	},
 	"require-dev": {
-		"netherphp/standards": "^0.1.9"
+		"netherphp/standards": "^0.1.9",
+		"phpunit/phpunit": "^9.5"
 	},
 	"autoload": {
 		"psr-0": {
