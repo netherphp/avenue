@@ -477,7 +477,9 @@ class Router {
 		$Handler = NULL;
 		$Dm = $Pm = NULL;
 		$Nope = NULL;
-		$Q = NULL;
+		$Qk = NULL;
+		$Qv = NULL;
+		$Query = $this->GetQuery();
 
 		foreach($this->Routes as $Handler) {
 
@@ -494,11 +496,12 @@ class Router {
 			// require a query soft match.
 
 			$Nope = FALSE;
-			foreach($Handler->GetQuery() as $Q) {
-				if(!$Q)
+			foreach($Handler->GetQuery() as $Qk => $Qv) {
+				if(!$Qv)
 				continue;
 
-				if(!array_key_exists($Q,$this->GetQuery()))
+				if(!array_key_exists($Qv,$Query))
+				if(!array_key_exists($Qk,$Query) || $Query[$Qk] !== $Qv)
 				$Nope = TRUE;
 			}
 

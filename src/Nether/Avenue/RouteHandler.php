@@ -130,7 +130,23 @@ extends Nether\Object\Mapped {
 	SetQuery(Array $Input):
 	self {
 
-		$this->Query = $Input;
+		$Value = NULL;
+		$Key = NULL;
+		$Val = NULL;
+
+		////////
+
+		foreach($Input as $Value) {
+			if(str_contains($Value,'=')) {
+				list($Key,$Val) = explode('=',$Value);
+				$this->Query[$Key] = $Val;
+			}
+
+			else {
+				$this->Query[] = $Value;
+			}
+		}
+
 		return $this;
 	}
 
