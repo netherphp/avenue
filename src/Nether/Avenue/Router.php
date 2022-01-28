@@ -78,6 +78,7 @@ class Router {
 		// take care for paths. remove trailing slashes and query strings if
 		// they made it into the path.
 
+		if($this->Path)
 		$this->Path = preg_replace(
 			'/\?.*$/', '',
 			rtrim($Opt->Path,'/')
