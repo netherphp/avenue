@@ -48,9 +48,9 @@ class Router {
 	__Construct($Opt=NULL) {
 
 		$Opt = new Nether\Object\Mapped($Opt,[
-			'Domain' => $this->GetRequestDomain(),
-			'Path' => $this->GetRequestPath(),
-			'Query' => $this->GetRequestQuery()
+			'Domain' => $this->GetRequestDomain() ?? '',
+			'Path' => $this->GetRequestPath() ?? '',
+			'Query' => $this->GetRequestQuery() ?? ''
 		]);
 
 		$Userpart = '';
@@ -59,9 +59,9 @@ class Router {
 
 		$this->Domain = $Opt->Domain;
 		$this->Query = $Opt->Query;
-		$this->Path = (($Opt->Path=='/')?
-			('/index'):
-			($Opt->Path)
+		$this->Path = (
+			($Opt->Path==='/')
+			? ('/index') : ($Opt->Path)
 		);
 
 		////////
