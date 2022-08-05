@@ -6,17 +6,27 @@ use Nether\Console;
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-$Autoloaders = [
-	'DeveloperMode'    => sprintf('%s/../vendor/autoload.php', __DIR__),
-	'InstalledMode' => sprintf('%s/../../../autoload.php', __DIR__)
-];
+(function(){
+	$CWD = getcwd();
+	$Autoloaders = [
+		'InstalledMode' => sprintf('%s/../../../autoload.php', __DIR__),
+		'DeveloperMode' => sprintf('%s/../vendor/autoload.php', __DIR__)
+	];
 
-foreach($Autoloaders as $AutoType => $AutoFile)
-if(file_exists($AutoFile)) {
-	echo "Autoloader: {$AutoType}", PHP_EOL;
-	require($AutoFile);
-	break;
-}
+	if(file_exists("{$CWD}/dev.lock")) {
+		echo 'DEVELOPER MODE', PHP_EOL;
+		require($Autoloaders['DeveloperMode']);
+	}
+
+	else {
+		echo 'INSTALLED MODE', PHP_EOL;
+		require($Autoloaders['InstalledMode']);
+	}
+
+	return;
+})();
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////

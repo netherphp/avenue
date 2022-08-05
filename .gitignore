@@ -1,4 +1,5 @@
 # ignores
 
+/dev.lock
 /vendor/
 
