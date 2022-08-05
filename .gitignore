@@ -1,4 +1,4 @@
-#ignores
+# ignores
 
 /vendor/
-/tests/_output
+
