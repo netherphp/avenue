@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+
+use Nether\Console;
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+$Autoloaders = [
+	'DeveloperMode'    => sprintf('%s/../vendor/autoload.php', __DIR__),
+	'InstalledMode' => sprintf('%s/../../../autoload.php', __DIR__)
+];
+
+foreach($Autoloaders as $AutoType => $AutoFile)
+if(file_exists($AutoFile)) {
+	echo "Autoloader: {$AutoType}", PHP_EOL;
+	require($AutoFile);
+	break;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+class App
+extends Nether\Console\Client {
+
+	#[Console\Meta\Subcommand]
+	#[Console\Meta\Info('Generate a static route map.')]
+	public function
+	HandleGen():
+	int {
+
+		return 0;
+	}
+
+}
+
+(new App)->Run();
