@@ -7,23 +7,23 @@ use Nether\Console;
 ////////////////////////////////////////////////////////////////////////////////
 
 (function(){
+
 	$CWD = getcwd();
-	$Autoloaders = [
-		'InstalledMode' => sprintf('%s/autoload.php', dirname(__DIR__, 3)),
-		'DeveloperMode' => sprintf('%s/vendor/autoload.php', dirname(__DIR__,1))
-	];
+	$Autoloader = sprintf(
+		'%s/autoload.php',
+		dirname(__DIR__, 3)
+	);
 
-	echo __DIR__, PHP_EOL;
+	if(file_exists("{$CWD}/dev.lock"))
+	$Autoloader = sprintf(
+		'%s/vendor/autoload.php',
+		dirname(__DIR__, 1)
+	);
 
-	if(file_exists("{$CWD}/dev.lock")) {
-		echo 'DEVELOPER MODE', PHP_EOL;
-		require($Autoloaders['DeveloperMode']);
-	}
+	////////
 
-	else {
-		echo 'INSTALLED MODE', PHP_EOL;
-		require($Autoloaders['InstalledMode']);
-	}
+	echo "Autoloader: {$Autoloader}", PHP_EOL;
+	require($Autoloader);
 
 	return;
 })();
