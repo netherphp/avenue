@@ -9,9 +9,11 @@ use Nether\Console;
 (function(){
 	$CWD = getcwd();
 	$Autoloaders = [
-		'InstalledMode' => sprintf('%s/../../../autoload.php', __DIR__),
-		'DeveloperMode' => sprintf('%s/../vendor/autoload.php', __DIR__)
+		'InstalledMode' => sprintf('%s/autoload.php', dirname(__DIR__, 3)),
+		'DeveloperMode' => sprintf('%s/vendor/autoload.php', dirname(__DIR__,1))
 	];
+
+	echo __DIR__, PHP_EOL;
 
 	if(file_exists("{$CWD}/dev.lock")) {
 		echo 'DEVELOPER MODE', PHP_EOL;
