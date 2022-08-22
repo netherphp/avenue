@@ -31,6 +31,9 @@ jobs:
       - name: Run PHPUnit
         run: |
           composer install
+          cd vendor/netherphp/object
+          git checkout -b redux
+          cd ../../../
           phpunit tests --bootstrap vendor/autoload.php --coverage-clover ./coverage.xml
           php tests/timed.php 1 100000
           php tests/timed.php 2 100000
