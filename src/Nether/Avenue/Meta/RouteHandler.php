@@ -50,7 +50,7 @@ implements MethodInfoInterface {
 	////////////////////////////////////////////////////////////////
 
 	public function
-	__Construct(?string $Path, ?string $Domain=NULL, ?string $Verb='GET', ?string $Sort=NULL) {
+	__Construct(?string $Path=NULL, ?string $Domain=NULL, ?string $Verb='GET', ?string $Sort=NULL) {
 
 		$this->Verb = strtoupper($Verb);
 		$this->Domain = $Domain;
@@ -153,6 +153,9 @@ implements MethodInfoInterface {
 
 		// determine if we could answer this request.
 
+		if($Req->Verb !== $this->Verb)
+		return FALSE;
+
 		$Found = preg_match($RegEx, $Input, $Data);
 
 		if($Found === 0)
@@ -233,7 +236,7 @@ implements MethodInfoInterface {
 			throw new Exception(sprintf(
 				'%s %s not callable',
 				$Attrib::class,
-				$Attrib->Func
+				$Attrib->MethodName
 			));
 
 			////////
