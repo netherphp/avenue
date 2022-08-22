@@ -68,7 +68,7 @@ implements MethodInfoInterface {
 			'%s::%s(Path: %s, Domain: %s, Verb: %s);',
 			$this->Class,
 			$this->Method,
-			$this->path,
+			$this->Path,
 			$this->Domain,
 			$this->Verb
 		);
