@@ -212,9 +212,6 @@ implements MethodInfoInterface {
 		$Attrib = NULL;
 		$Confirm = NULL;
 
-		if(!($Info instanceof MethodInfo))
-		return FALSE;
-
 		// check if the method has a ConfirmWillAnswerRequest that defines
 		// what method to use as a pre-check. that method should accept
 		// a request as input and spit a boolean out regarding if it is
