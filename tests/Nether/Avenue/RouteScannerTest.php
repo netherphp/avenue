@@ -62,7 +62,6 @@ extends PHPUnit\Framework\TestCase {
 			$HadExcept = FALSE;
 			chmod("{$Path}-fail", 0000);
 			$Scanner = new RouteScanner("{$Path}-fail");
-			chmod("{$Path}-fail}", 0666);
 		}
 
 		catch(Exception $Err) {
@@ -73,6 +72,7 @@ extends PHPUnit\Framework\TestCase {
 			);
 		}
 
+		chmod("{$Path}-fail", 0777);
 		$this->AssertTrue($HadExcept);
 
 		return;
@@ -257,6 +257,69 @@ extends PHPUnit\Framework\TestCase {
 		}
 
 		$this->AssertTrue($HadExcept);
+
+		return;
+	}
+
+	/**
+	 * @test
+	 * @runInSeparateProcess
+	 */
+	public function
+	TestGenerate():
+	void {
+
+		$Path = sprintf('%s/routes', dirname(__FILE__, 4));
+		$Scanner = new RouteScanner($Path);
+		$Map = $Scanner->Generate();
+		$Verbs = NULL;
+		$Handlers = NULL;
+		$Handler = NULL;
+
+		////////
+
+		$Verbs = [ 'GET' ];
+
+		$RouteHandlers = [
+			'TestRoutes\\Home::Index',
+			'TestRoutes\\Blog::Index',
+			'TestRoutes\\Blog::ViewPost'
+		];
+
+		$ErrorHandlers = [
+			'TestRoutes\\Errors::NotFound',
+			'TestRoutes\\Errors::Forbidden'
+		];
+
+		$this->AssertTrue($Map->HasKey('Verbs'));
+		$this->AssertTrue($Map->HasKey('Errors'));
+		$this->AssertCount(count($Verbs), $Map['Verbs']);
+
+		foreach($Map['Verbs'] as $Handlers) {
+			$this->AssertCount(
+				count($RouteHandlers),
+				$Handlers
+			);
+
+			foreach($Handlers as $Handler) {
+				$this->assertContains(
+					"{$Handler->Class}::{$Handler->Method}",
+					$RouteHandlers
+				);
+			}
+		}
+
+		$this->AssertCount(
+			count($ErrorHandlers),
+			$Map['Errors']
+		);
+
+		foreach($Map['Errors'] as $Handler) {
+			$this->assertContains(
+				"{$Handler->Class}::{$Handler->Method}",
+				$ErrorHandlers
+			);
+		}
 
 		return;
 	}
