@@ -3,32 +3,27 @@
 
 use Nether\Console;
 
+use Nether\Avenue\Error\RouteScannerDirInvalid;
+use Nether\Avenue\Error\RouteScannerDirUnreadable;
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
 (function(){
 
 	$CWD = getcwd();
-	$Autoloader = sprintf(
-		'%s/autoload.php',
-		dirname(__DIR__, 3)
-	);
+	$Autoloader = sprintf('%s/autoload.php', dirname(__DIR__, 3));
 
 	if(file_exists("{$CWD}/dev.lock"))
-	$Autoloader = sprintf(
-		'%s/vendor/autoload.php',
-		dirname(__DIR__, 1)
-	);
+	$Autoloader = sprintf('%s/vendor/autoload.php', dirname(__DIR__, 1));
 
 	////////
 
-	echo "Autoloader: {$Autoloader}", PHP_EOL;
+	//echo "Autoloader: {$Autoloader}", PHP_EOL;
 	require($Autoloader);
 
 	return;
 })();
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -38,9 +33,44 @@ extends Nether\Console\Client {
 
 	#[Console\Meta\Subcommand]
 	#[Console\Meta\Info('Generate a static route map.')]
+	#[Console\Meta\SubcommandOption('--dir', TRUE, 'Directory to scan. (default: routes)')]
+	#[Console\Meta\Error(1, 'unknown error.')]
+	#[Console\Meta\Error(2, 'invalid route directory.')]
+	#[Console\Meta\Error(3, 'unreadable route directory.')]
 	public function
 	HandleGen():
 	int {
+
+		$Dir = $this->GetInput(2) ?? 'routes';
+		$Outfile = $this->GetOption('output') ?? './routes.phson';
+		$Scanner = NULL;
+		$Route = NULL;
+		$Attrib = NULL;
+
+		////////
+
+		try {
+			$Scanner = new Nether\Avenue\RouteScanner($Dir);
+		}
+
+		catch(Throwable $Err) {
+			$this->EndOfLine(match(TRUE) {
+				($Err instanceof RouteScannerDirInvalid) => 2,
+				($Err instanceof RouteScannerDirUnreadable) => 3,
+				default => 1
+			});
+		}
+
+		////////
+
+		static::Message("Route Directory: {$Dir}");
+		static::Message();
+
+		$RouteMap = $Scanner->Generate();
+		$RouteMap->Write($Outfile);
+
+
+		////////
 
 		return 0;
 	}

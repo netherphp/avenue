@@ -1,5 +1,5 @@
 # ignores
 
+/.phpunit.cache
 /dev.lock
-/vendor/
-
+/vendor

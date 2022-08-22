@@ -35,6 +35,9 @@
 	"autoload": {
 		"psr-0": {
 			"Nether\\":"src/"
+		},
+		"psr-4": {
+			"TestRoutes\\": "routes/"
 		}
 	}
 }
