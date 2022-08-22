@@ -140,7 +140,7 @@ class RouteScanner {
 		////////
 
 		foreach($Input as $Item)
-		(fn($F)=> require($F))($Item);
+		(fn($F)=> require_once($F))($Item);
 
 		$ClassesPost = array_diff(
 			get_declared_classes(),
