@@ -32,7 +32,7 @@ jobs:
         run: |
           composer install
           cd vendor/netherphp/object
-          git checkout -b redux
+          git pull origin redux
           cd ../../../
           phpunit tests --bootstrap vendor/autoload.php --coverage-clover ./coverage.xml
           php tests/timed.php 1 100000
