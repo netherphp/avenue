@@ -64,10 +64,7 @@ class Router {
 		$this->RouteFile = $this->Conf[Library::ConfRouteFile];
 		$this->RouteRoot = $this->Conf[Library::ConfRouteRoot];
 
-		if($this->RouteFile === NULL)
-		throw new Error\RouterRouteFileUndefined;
-
-		if($this->RouteRoot === NULL)
+		if($this->RouteFile === NULL && $this->RouteRoot === NULL)
 		throw new Error\RouterRouteRootUndefined;
 
 		// make sure we know what we need to know about the web root.
@@ -76,7 +73,7 @@ class Router {
 
 		if($this->WebRoot === NULL) {
 			if(isset($_SERVER['DOCUMENT_ROOT']))
-			$this->WebRoot = $_SERVER['DOCUMENT_ROOT'];
+			$this->WebRoot = $_SERVER['DOCUMENT_ROOT'] ?: NULL;
 		}
 
 		if($this->WebRoot === NULL)
@@ -87,7 +84,6 @@ class Router {
 		$this->Request = new Request([
 			'DomainLvl'
 			=> ($this->Conf[Library::ConfDomainLvl] ?? 2),
-
 			'DomainSep'
 			=> ($this->Conf[Library::ConfDomainSep] ?? '.')
 		]);
@@ -100,27 +96,39 @@ class Router {
 
 		////////
 
-		$File = new SplFileInfo($this->RouteFile);
+		// read from the cached index if it exists.
 
-		if($File->IsReadable()) {
-			$Map = Datastore::NewFromFile($File->GetRealPath());
+		if($this->RouteFile && is_readable($this->RouteFile)) {
+			$Map = Datastore::NewFromFile($this->RouteFile);
+
 			$this->RouteSource = 'cache';
+			$this->Handlers = $Map['Verbs'];
+			$this->ErrorHandlers = $Map['Errors'];
 		}
 
-		else {
+		// scan the directory if needed.
+
+		elseif($this->RouteRoot && is_dir($this->RouteRoot)) {
 			$Scanner = new RouteScanner($this->RouteRoot);
 			$Map = $Scanner->Generate();
-			$this->RouteSource = 'dirscan';
-		}
 
-		$this->Handlers = $Map['Verbs'];
-		$this->ErrorHandlers = $Map['Errors'];
+			$this->RouteSource = 'dirscan';
+			$this->Handlers = $Map['Verbs'];
+			$this->ErrorHandlers = $Map['Errors'];
+		}
 
 		return;
 	}
 
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
+
+	public function
+	GetSource():
+	string {
+
+		return $this->RouteSource;
+	}
 
 	public function
 	GetHandlers():

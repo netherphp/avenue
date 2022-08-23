@@ -57,23 +57,29 @@ extends PHPUnit\Framework\TestCase {
 		$this->AssertTrue($HadExcept);
 
 		// try a path that should be valid but not readable.
+		// the library performs fine on windows but this hack to chmod
+		// a file to be unreadable just for this test does not. on github
+		// its running both ubuntu-latest and windows-latest so it'll get
+		// caught if its an issue.
 
-		try {
-			$HadExcept = FALSE;
-			chmod("{$Path}-fail", 0000);
-			$Scanner = new RouteScanner("{$Path}-fail");
+		if(PHP_OS_FAMILY !== 'Windows') {
+			try {
+				$HadExcept = FALSE;
+				chmod("{$Path}-fail", 0000);
+				$Scanner = new RouteScanner("{$Path}-fail");
+			}
+
+			catch(Exception $Err) {
+				$HadExcept = TRUE;
+				$this->AssertInstanceOf(
+					RouteScannerDirUnreadable::class,
+					$Err
+				);
+			}
+
+			chmod("{$Path}-fail", 0777);
+			$this->AssertTrue($HadExcept);
 		}
-
-		catch(Exception $Err) {
-			$HadExcept = TRUE;
-			$this->AssertInstanceOf(
-				RouteScannerDirUnreadable::class,
-				$Err
-			);
-		}
-
-		chmod("{$Path}-fail", 0777);
-		$this->AssertTrue($HadExcept);
 
 		return;
 	}
@@ -98,7 +104,7 @@ extends PHPUnit\Framework\TestCase {
 
 		$Files = $Scanner->FetchFilesInDir($Scanner->Directory);
 		$Files->Sort()->Revalue();
-		$Expect = [ 'Blog.php', 'Errors.php', 'Home.php', 'NotActuallyAnRoute.php' ];
+		$Expect = [ 'Blog.php', 'Dashboard.php', 'Errors.php', 'Home.php', 'NotActuallyAnRoute.php' ];
 
 		$this->AssertEquals(count($Expect), $Files->Count());
 
@@ -131,7 +137,7 @@ extends PHPUnit\Framework\TestCase {
 
 		$Classes = $Scanner->DetermineRoutableClasses($Files);
 		$Classes->Sort()->Revalue();
-		$Expect = [ 'TestRoutes\\Blog', 'TestRoutes\\Errors', 'TestRoutes\\Home' ];
+		$Expect = [ 'TestRoutes\\Blog', 'TestRoutes\\Dashboard', 'TestRoutes\\Errors', 'TestRoutes\\Home' ];
 
 		$this->AssertEquals(count($Expect), $Classes->Count());
 
@@ -173,9 +179,10 @@ extends PHPUnit\Framework\TestCase {
 		$Classes->Sort()->Revalue();
 
 		$Expect = [
-			'TestRoutes\\Home'   => [ 'Index' ],
+			'TestRoutes\\Home'   => [ 'Index', 'About' ],
 			'TestRoutes\\Errors' => [],
-			'TestRoutes\\Blog'   => [ 'Index', 'ViewPost' ]
+			'TestRoutes\\Blog'   => [ 'Index', 'ViewPost' ],
+			'TestRoutes\\Dashboard' => [ 'Index', 'SingleConfirm' ]
 		];
 
 		foreach($Classes as $Class) {
@@ -200,9 +207,10 @@ extends PHPUnit\Framework\TestCase {
 		// check that we found error handlers where we expect.
 
 		$Expect = [
-			'TestRoutes\\Home'   => [ ],
-			'TestRoutes\\Errors' => [ 'NotFound', 'Forbidden' ],
-			'TestRoutes\\Blog'   => [ ]
+			'TestRoutes\\Home'      => [ ],
+			'TestRoutes\\Errors'    => [ 'NotFound', 'Forbidden' ],
+			'TestRoutes\\Blog'      => [ ],
+			'TestRoutes\\Dashboard' => [ ]
 		];
 
 		foreach($Classes as $Class) {
@@ -282,8 +290,11 @@ extends PHPUnit\Framework\TestCase {
 
 		$RouteHandlers = [
 			'TestRoutes\\Home::Index',
+			'TestRoutes\\Home::About',
 			'TestRoutes\\Blog::Index',
-			'TestRoutes\\Blog::ViewPost'
+			'TestRoutes\\Blog::ViewPost',
+			'TestRoutes\\Dashboard::Index',
+			'TestRoutes\\Dashboard::SingleConfirm'
 		];
 
 		$ErrorHandlers = [

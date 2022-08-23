@@ -4,6 +4,7 @@ namespace TestRoutes;
 
 use Nether\Avenue\Route;
 use Nether\Avenue\Meta\RouteHandler;
+use Nether\Avenue\Meta\ConfirmWillAnswerRequest;
 
 class Blog
 extends Route {

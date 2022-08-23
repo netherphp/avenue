@@ -16,4 +16,12 @@ extends Route {
 		return;
 	}
 
+	#[RouteHandler('/about')]
+	public function
+	About():
+	void {
+
+		return;
+	}
+
 }

@@ -133,6 +133,11 @@ extends PHPUnit\Framework\TestCase {
 		$Req->ParseRequest('GET', 'avenue.test', '/nope');
 		$this->AssertFalse($Handler->CanAnswerRequest($Req));
 
+		$this->AssertEquals(
+			"NetherTestSuite\\Avenue\\RouteHandler\\TestRoute1::Index",
+			$Handler->GetCallableName()
+		);
+
 		////////
 
 		$Method = TestRoute1::GetMethodInfo('DefaultEverything');
@@ -143,6 +148,13 @@ extends PHPUnit\Framework\TestCase {
 
 		$Req->ParseRequest('GET', 'avenue.test', '/nope');
 		$this->AssertTrue($Handler->CanAnswerRequest($Req));
+
+		$this->AssertEquals(
+			"NetherTestSuite\\Avenue\\RouteHandler\\TestRoute1::DefaultEverything",
+			$Handler->GetCallableName()
+		);
+
+		////////
 
 		return;
 	}

@@ -290,6 +290,16 @@ implements MethodInfoInterface {
 	}
 
 	public function
+	GetCallableName():
+	string {
+	/*//
+	generate a fqcn for the route method.
+	//*/
+
+		return "{$this->Class}::{$this->Method}";
+	}
+
+	public function
 	GetMethodArgValues():
 	array {
 	/*//

@@ -21,7 +21,7 @@ implements LibraryInitWithConfig {
 	////////////////////////////////////////////////////////////////
 
 	static public function
-	Init(Datastore $Config):
+	Init(Datastore $Config=NULL):
 	bool {
 
 		static::PrepareDefaultConfig($Config);
@@ -35,9 +35,12 @@ implements LibraryInitWithConfig {
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
 
-	static protected function
-	PrepareDefaultConfig(Datastore $Config):
-	void {
+	static public function
+	PrepareDefaultConfig(?Datastore $Config=NULL):
+	Datastore {
+
+		if($Config === NULL)
+		$Config = new Datastore;
 
 		$Config->BlendRight([
 			static::ConfDomainLvl           => 2,
@@ -48,10 +51,10 @@ implements LibraryInitWithConfig {
 			static::ConfParsePathableConfig => TRUE
 		]);
 
-		return;
+		return $Config;
 	}
 
-	static protected function
+	static public function
 	ParsePathableConfig(Datastore $Config):
 	void {
 
