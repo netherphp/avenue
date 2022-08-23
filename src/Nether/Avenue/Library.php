@@ -26,9 +26,6 @@ implements LibraryInitWithConfig {
 
 		static::PrepareDefaultConfig($Config);
 
-		if($Config[static::ConfParsePathableConfig])
-		static::ParsePathableConfig($Config);
-
 		return TRUE;
 	}
 
@@ -52,30 +49,6 @@ implements LibraryInitWithConfig {
 		]);
 
 		return $Config;
-	}
-
-	static public function
-	ParsePathableConfig(Datastore $Config):
-	void {
-
-		$Pathise = [
-			static::ConfRouteFile,
-			static::ConfRouteRoot,
-			static::ConfWebRoot
-		];
-
-		$Key = NULL;
-
-		foreach($Pathise as $Key) {
-			$Info = new SplFileInfo($Config[$Key]);
-
-			if($Info->IsReadable())
-			$Config[$Key] = $Info->GetRealPath();
-
-			unset($Info);
-		}
-
-		return;
 	}
 
 }
