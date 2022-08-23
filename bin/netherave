@@ -33,7 +33,8 @@ extends Nether\Console\Client {
 
 	#[Console\Meta\Subcommand]
 	#[Console\Meta\Info('Generate a static route map.')]
-	#[Console\Meta\SubcommandOption('--dir', TRUE, 'Directory to scan. (default: routes)')]
+	#[Console\Meta\SubcommandArg('dir-to-scan', Text: 'Directory to scan for route classes. (default "routes")')]
+	#[Console\Meta\SubcommandArg('file-to-write', Text: 'Directory to scan for route classes. (default "routes.phson")')]
 	#[Console\Meta\Error(1, 'unknown error.')]
 	#[Console\Meta\Error(2, 'invalid route directory.')]
 	#[Console\Meta\Error(3, 'unreadable route directory.')]
@@ -42,10 +43,10 @@ extends Nether\Console\Client {
 	int {
 
 		$Dir = $this->GetInput(2) ?? 'routes';
-		$Outfile = $this->GetOption('output') ?? './routes.phson';
+		$Outfile = $this->GetInput(3) ?? './routes.phson';
 		$Scanner = NULL;
+		$Show = $this->GetOption('show') ?? FALSE;
 		$Route = NULL;
-		$Attrib = NULL;
 
 		////////
 
@@ -64,11 +65,44 @@ extends Nether\Console\Client {
 		////////
 
 		static::Message("Route Directory: {$Dir}");
+		static::Message("Route File: {$Outfile}");
 		static::Message();
 
 		$RouteMap = $Scanner->Generate();
 		$RouteMap->Write($Outfile);
 
+		////////
+
+		static::Message('Summary:');
+
+		$Verb = NULL;
+		$Routes = NULL;
+		$Route = NULL;
+
+		if($RouteMap['Verbs']) {
+			foreach($RouteMap['Verbs'] as $Verb => $Routes) {
+				static::Message(sprintf(' * %s (%d)', $Verb, count($Routes)));
+
+				if($Show) {
+					foreach($Routes as $Route)
+					static::Message(sprintf('   %s', $Route->GetCallableName()));
+
+					static::Message();
+				}
+			}
+		}
+
+		if($RouteMap['Errors']) {
+			static::Message(sprintf(' * Error Handlers (%d)', count($RouteMap['Errors'])));
+
+			if($Show) {
+				foreach($RouteMap['Errors'] as $Verb => $Route) {
+					static::Message(sprintf('   %s', $Route->GetCallableName()));
+				}
+
+				static::Message();
+			}
+		}
 
 		////////
 

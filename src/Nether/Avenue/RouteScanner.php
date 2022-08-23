@@ -2,12 +2,14 @@
 
 namespace Nether\Avenue;
 
+use FilesystemIterator;
+use SplFileInfo;
+use PhpToken;
+
 use Nether\Object\Datastore;
 use Nether\Object\Prototype\MethodInfo;
 use Nether\Avenue\Meta\RouteHandler;
 use Nether\Avenue\Meta\ErrorHandler;
-use SplFileInfo;
-use FilesystemIterator;
 
 class RouteScanner {
 
@@ -121,7 +123,15 @@ class RouteScanner {
 		foreach($Dir as $File) {
 			$Path = $File->GetRealPath();
 
-			if(str_ends_with(strtolower($Path), 'php'))
+			if($File->IsDir()) {
+				$Output->MergeRight(
+					$this->FetchFilesInDir($File)
+					->GetData()
+				);
+				continue;
+			}
+
+			if(str_ends_with(strtolower($Path), '.php'))
 			$Output->Push($Path);
 		}
 
@@ -133,26 +143,18 @@ class RouteScanner {
 	Datastore {
 
 		$Output = new Datastore;
-		$Item = NULL;
-		$ClassesPre = get_declared_classes();
-		$ClassesPost = NULL;
+		$Found = NULL;
+		$Filename = NULL;
 
-		////////
-
-		foreach($Input as $Item)
-		(fn($F)=> require_once($F))($Item);
-
-		$ClassesPost = array_diff(
-			get_declared_classes(),
-			$ClassesPre
-		);
-
-		foreach($ClassesPost as $Item) {
-			if(is_subclass_of($Item, static::RouteBaseClass))
-			$Output->Push($Item);
+		foreach($Input as $Filename) {
+			$Found = Util::FindClassesInFile($Filename);
+			$Output->MergeRight($Found);
 		}
 
-		////////
+		$Output->Filter(
+			fn($Class)
+			=> is_subclass_of($Class, static::RouteBaseClass)
+		);
 
 		return $Output;
 	}

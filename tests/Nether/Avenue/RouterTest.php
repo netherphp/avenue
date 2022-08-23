@@ -167,7 +167,8 @@ extends PHPUnit\Framework\TestCase {
 				'TestRoutes\\Home::Index',
 				'TestRoutes\\Dashboard::FailConfirm',
 				'TestRoutes\\Dashboard::SingleConfirm',
-				'TestRoutes\\Dashboard::DoubleConfirm'
+				'TestRoutes\\Dashboard::DoubleConfirm',
+				'TestRoutes\\Deep\\Deeper\\DeepRoute::SoDeep'
 			]
 		];
 

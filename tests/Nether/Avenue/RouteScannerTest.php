@@ -104,7 +104,14 @@ extends PHPUnit\Framework\TestCase {
 
 		$Files = $Scanner->FetchFilesInDir($Scanner->Directory);
 		$Files->Sort()->Revalue();
-		$Expect = [ 'Blog.php', 'Dashboard.php', 'Errors.php', 'Home.php', 'NotActuallyAnRoute.php' ];
+		$Expect = [
+			'Blog.php',
+			'Dashboard.php',
+			'DeepRoute.php',
+			'Errors.php',
+			'Home.php',
+			'NotActuallyAnRoute.php'
+		];
 
 		$this->AssertEquals(count($Expect), $Files->Count());
 
@@ -137,8 +144,15 @@ extends PHPUnit\Framework\TestCase {
 
 		$Classes = $Scanner->DetermineRoutableClasses($Files);
 		$Classes->Sort()->Revalue();
-		$Expect = [ 'TestRoutes\\Blog', 'TestRoutes\\Dashboard', 'TestRoutes\\Errors', 'TestRoutes\\Home' ];
+		$Expect = [
+			'TestRoutes\\Blog',
+			'TestRoutes\\Dashboard',
+			'TestRoutes\\Errors',
+			'TestRoutes\\Home',
+			'TestRoutes\\Deep\\Deeper\\DeepRoute'
+		];
 
+		sort($Expect);
 		$this->AssertEquals(count($Expect), $Classes->Count());
 
 		foreach($Classes as $Key => $Value) {
@@ -182,7 +196,8 @@ extends PHPUnit\Framework\TestCase {
 			'TestRoutes\\Home'   => [ 'Index', 'About' ],
 			'TestRoutes\\Errors' => [],
 			'TestRoutes\\Blog'   => [ 'Index', 'ViewPost' ],
-			'TestRoutes\\Dashboard' => [ 'FailConfirm', 'SingleConfirm', 'DoubleConfirm' ]
+			'TestRoutes\\Dashboard' => [ 'FailConfirm', 'SingleConfirm', 'DoubleConfirm' ],
+			'TestRoutes\\Deep\\Deeper\\DeepRoute' => [ 'SoDeep' ]
 		];
 
 		foreach($Classes as $Class) {
@@ -210,7 +225,8 @@ extends PHPUnit\Framework\TestCase {
 			'TestRoutes\\Home'      => [ ],
 			'TestRoutes\\Errors'    => [ 'NotFound', 'Forbidden' ],
 			'TestRoutes\\Blog'      => [ ],
-			'TestRoutes\\Dashboard' => [ ]
+			'TestRoutes\\Dashboard' => [ ],
+			'TestRoutes\\Deep\\Deeper\\DeepRoute' => [ ]
 		];
 
 		foreach($Classes as $Class) {
@@ -295,7 +311,8 @@ extends PHPUnit\Framework\TestCase {
 			'TestRoutes\\Blog::ViewPost',
 			'TestRoutes\\Dashboard::FailConfirm',
 			'TestRoutes\\Dashboard::SingleConfirm',
-			'TestRoutes\\Dashboard::DoubleConfirm'
+			'TestRoutes\\Dashboard::DoubleConfirm',
+			'TestRoutes\\Deep\\Deeper\\DeepRoute::SoDeep'
 		];
 
 		$ErrorHandlers = [
