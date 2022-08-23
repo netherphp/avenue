@@ -17,10 +17,7 @@ use Nether\Object\Datastore;
 class RouterTest
 extends PHPUnit\Framework\TestCase {
 
-	/**
-	 * @test
-	 * @runInSeparateProcess
-	 */
+	/** @test */
 	public function
 	TestUnconfigured():
 	void {
@@ -87,10 +84,7 @@ extends PHPUnit\Framework\TestCase {
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
 
-	/**
-	 * @test
-	 * @runInSeparateProcess
-	 */
+	/** @test */
 	public function
 	TestRouterDynamic():
 	void {
@@ -114,10 +108,7 @@ extends PHPUnit\Framework\TestCase {
 		return;
 	}
 
-	/**
-	 * @test
-	 * @runInSeparateProcess
-	 */
+	/** @test */
 	public function
 	TestRouterStatic():
 	void {

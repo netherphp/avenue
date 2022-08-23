@@ -15,10 +15,7 @@ use Nether\Object\Datastore;
 class RouteScannerTest
 extends PHPUnit\Framework\TestCase {
 
-	/**
-	 * @test
-	 * @runInSeparateProcess
-	 */
+	/** @test */
 	public function
 	TestLocateRoutes():
 	void {
@@ -84,10 +81,7 @@ extends PHPUnit\Framework\TestCase {
 		return;
 	}
 
-	/**
-	 * @test
-	 * @runInSeparateProcess
-	 */
+	/** @test */
 	public function
 	TestFetchFiles():
 	void {
@@ -124,10 +118,7 @@ extends PHPUnit\Framework\TestCase {
 		return;
 	}
 
-	/**
-	 * @test
-	 * @runInSeparateProcess
-	 */
+	/** @test */
 	public function
 	TestDetermineRoutableClasses():
 	void {
@@ -163,10 +154,7 @@ extends PHPUnit\Framework\TestCase {
 		return;
 	}
 
-	/**
-	 * @test
-	 * @runInSeparateProcess
-	 */
+	/** @test */
 	public function
 	TestDetermineRoutableMethods():
 	void {
@@ -285,10 +273,7 @@ extends PHPUnit\Framework\TestCase {
 		return;
 	}
 
-	/**
-	 * @test
-	 * @runInSeparateProcess
-	 */
+	/** @test */
 	public function
 	TestGenerate():
 	void {
