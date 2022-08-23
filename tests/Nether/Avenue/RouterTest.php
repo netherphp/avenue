@@ -10,12 +10,16 @@ use Nether\Avenue\Response;
 use Nether\Avenue\Library;
 use Nether\Avenue\Error\RouterRouteRootUndefined;
 use Nether\Avenue\Error\RouterWebRootUndefined;
+use Nether\Avenue\Error\RouteMissingWillAnswerRequest;
 use Nether\Object\Datastore;
 
 class RouterTest
 extends PHPUnit\Framework\TestCase {
 
-	/** @test */
+	/**
+	 * @test
+	 * @runInSeparateProcess
+	 */
 	public function
 	TestUnconfigured():
 	void {
@@ -79,21 +83,45 @@ extends PHPUnit\Framework\TestCase {
 		return;
 	}
 
-	/** @test */
+	/**
+	 * @test
+	 * @runInSeparateProcess
+	 */
 	public function
-	TestStaticRouteFile():
+	TestRouterDynamic():
+	void {
+
+		$RouteRoot = sprintf('%s/routes', dirname(__FILE__, 4));
+		$WebRoot = sprintf('%s/www', dirname(__FILE__, 4));
+
+		$Conf = Library::PrepareDefaultConfig();
+		$Conf[Library::ConfRouteFile] = NULL;
+		$Conf[Library::ConfRouteRoot] = $RouteRoot;
+		$Conf[Library::ConfWebRoot] = $WebRoot;
+		$Router = new Router($Conf);
+
+		$this->AssertInstanceOf(Datastore::class, $Router->Conf);
+		$this->AssertInstanceOf(Request::class, $Router->Request);
+		$this->AssertInstanceOf(Response::class, $Router->Response);
+		$this->AssertTrue($Conf === $Router->Conf);
+		$this->AssertEquals('dirscan', $Router->GetSource());
+
+		$this->ContinueTestRouterAfterLoading($Router);
+		return;
+	}
+
+	/**
+	 * @test
+	 * @runInSeparateProcess
+	 */
+	public function
+	TestRouterStatic():
 	void {
 
 		$RouteRoot = sprintf('%s/routes', dirname(__FILE__, 4));
 		$RouteFile = sprintf('%s/routes-test.phson', dirname(__FILE__, 4));
 		$WebRoot = sprintf('%s/www', dirname(__FILE__, 4));
 		$Conf = new Datastore;
-		$Handlers = NULL;
-		$Handler = NULL;
-		$Expect = NULL;
-		$Methods = NULL;
-		$Verb = NULL;
-		$HadExcept = NULL;
 
 		////////
 
@@ -108,6 +136,21 @@ extends PHPUnit\Framework\TestCase {
 		$this->AssertTrue($Conf === $Router->Conf);
 		$this->AssertEquals('cache', $Router->GetSource());
 
+		$this->ContinueTestRouterAfterLoading($Router);
+		return;
+	}
+
+	protected function
+	ContinueTestRouterAfterLoading(Router $Router):
+	void {
+
+		$Handlers = NULL;
+		$Handler = NULL;
+		$Expect = NULL;
+		$Methods = NULL;
+		$Verb = NULL;
+		$HadExcept = NULL;
+
 		// test that the router generated a seemingly usable route map.
 
 		$Handlers = $Router->SortHandlers()->GetHandlers();
@@ -118,8 +161,9 @@ extends PHPUnit\Framework\TestCase {
 				'TestRoutes\\Blog::ViewPost',
 				'TestRoutes\\Home::About',
 				'TestRoutes\\Home::Index',
-				'TestRoutes\\Dashboard::Index',
-				'TestRoutes\\Dashboard::SingleConfirm'
+				'TestRoutes\\Dashboard::FailConfirm',
+				'TestRoutes\\Dashboard::SingleConfirm',
+				'TestRoutes\\Dashboard::DoubleConfirm'
 			]
 		];
 
@@ -128,7 +172,7 @@ extends PHPUnit\Framework\TestCase {
 		foreach($Handlers as $Verb => $Methods)
 		$this->AssertCount(count($Expect[$Verb]), $Methods);
 
-		// test that the router returns the routes we expect.
+		// test that it found a route that was configured well enough.
 
 		$Router->Request->ParseRequest('GET', 'avenue.test', '/index');
 		$Handler = $Router->Select();
@@ -140,59 +184,38 @@ extends PHPUnit\Framework\TestCase {
 		$Handler = $Router->Select();
 		$this->AssertNull($Handler);
 
+		// test that it failed to find a route because it just didn't
+		// want to answer.
+
+		$Router->Request->ParseRequest('GET', 'avenue.test', '/dashboard/singleconfirm');
+		$Handler = $Router->Select();
+		$this->AssertNull($Handler);
+
+		// test that it failed to find a route because it did find one but
+		// it refused to continue and demand nobody else tries.
+
+		$Router->Request->ParseRequest('GET', 'avenue.test', '/dashboard/doubleconfirm');
+		$Handler = $Router->Select();
+		$this->AssertNull($Handler);
+
 		// test that it fails to find a route because it was tagged with
 		// the confirm attribute but the method was never defined.
 
 		try {
 			$HadExcept = FALSE;
-			$Router->Request->ParseRequest('GET', 'avenue.test', '/dashboard');
+			$Router->Request->ParseRequest('GET', 'avenue.test', '/dashboard/failconfirm');
 			$Handler = $Router->Select();
 		}
 
 		catch(Exception $Err) {
 			$HadExcept = TRUE;
+			$this->AssertInstanceOf(
+				RouteMissingWillAnswerRequest::class,
+				$Err
+			);
 		}
 
 		$this->AssertTrue($HadExcept);
-
-		// test that it found a route that was configured well enough.
-
-		$Router->Request->ParseRequest('GET', 'avenue.test', '/dashboard/singleconfirm');
-		$Handler = $Router->Select();
-
-		$this->AssertEquals($Expect['GET'][5], $Handler->GetCallableName());
-
-		// test that it failed to find a route with a confirm.
-
-		// ...
-
-		// test that it succeeded to find a route but rejected executing
-
-		// ...
-
-		return;
-	}
-
-	/** @test */
-	public function
-	TestDynamicDirectory():
-	void {
-
-		$RouteRoot = sprintf('%s/routes', dirname(__FILE__, 4));
-		$WebRoot = sprintf('%s/www', dirname(__FILE__, 4));
-
-		$Conf = Library::PrepareDefaultConfig();
-		$Conf[Library::ConfRouteRoot] = $RouteRoot;
-		$Conf[Library::ConfWebRoot] = $WebRoot;
-		$Router = new Router($Conf);
-
-		$this->AssertInstanceOf(Datastore::class, $Router->Conf);
-		$this->AssertInstanceOf(Request::class, $Router->Request);
-		$this->AssertInstanceOf(Response::class, $Router->Response);
-		$this->AssertTrue($Conf === $Router->Conf);
-		$this->AssertEquals('dirscan', $Router->GetSource());
-
-		// todo - validate expected routes.
 
 		return;
 	}

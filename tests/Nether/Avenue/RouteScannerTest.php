@@ -182,7 +182,7 @@ extends PHPUnit\Framework\TestCase {
 			'TestRoutes\\Home'   => [ 'Index', 'About' ],
 			'TestRoutes\\Errors' => [],
 			'TestRoutes\\Blog'   => [ 'Index', 'ViewPost' ],
-			'TestRoutes\\Dashboard' => [ 'Index', 'SingleConfirm' ]
+			'TestRoutes\\Dashboard' => [ 'FailConfirm', 'SingleConfirm', 'DoubleConfirm' ]
 		];
 
 		foreach($Classes as $Class) {
@@ -293,8 +293,9 @@ extends PHPUnit\Framework\TestCase {
 			'TestRoutes\\Home::About',
 			'TestRoutes\\Blog::Index',
 			'TestRoutes\\Blog::ViewPost',
-			'TestRoutes\\Dashboard::Index',
-			'TestRoutes\\Dashboard::SingleConfirm'
+			'TestRoutes\\Dashboard::FailConfirm',
+			'TestRoutes\\Dashboard::SingleConfirm',
+			'TestRoutes\\Dashboard::DoubleConfirm'
 		];
 
 		$ErrorHandlers = [

@@ -9,17 +9,20 @@ use Nether\Avenue\Meta\ConfirmWillAnswerRequest;
 class Dashboard
 extends Route {
 
-	#[RouteHandler('/dashboard')]
+	#[RouteHandler('/dashboard/failconfirm')]
 	#[ConfirmWillAnswerRequest]
 	public function
-	Index():
+	FailConfirm():
 	void {
 
 		// this method will fail in the test because the
-		// IndexWillAnswerRequest method is missing.
+		// FailConfirmWillAnswerRequest method is missing.
 
 		return;
 	}
+
+	////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////
 
 	#[RouteHandler('/dashboard/singleconfirm')]
 	#[ConfirmWillAnswerRequest]
@@ -32,6 +35,26 @@ extends Route {
 
 	public function
 	SingleConfirmWillAnswerRequest():
+	?bool {
+
+		return FALSE;
+	}
+
+	////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////
+
+	#[RouteHandler('/dashboard/doubleconfirm')]
+	#[ConfirmWillAnswerRequest]
+	#[ConfirmWillAnswerRequest('RequireAdminUser')]
+	public function
+	DoubleConfirm():
+	void {
+
+		return;
+	}
+
+	public function
+	DoubleConfirmWillAnswerRequest():
 	?bool {
 
 		return TRUE;

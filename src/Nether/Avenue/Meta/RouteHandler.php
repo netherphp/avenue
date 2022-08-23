@@ -7,6 +7,7 @@ use Nether\Avenue\Request;
 use Nether\Avenue\Response;
 use Nether\Avenue\Util;
 use Nether\Avenue\Struct\RouteHandlerArg;
+use Nether\Avenue\Error\RouteMissingWillAnswerRequest;
 use Nether\Object\Prototype\MethodInfo;
 use Nether\Object\Prototype\MethodInfoInterface;
 
@@ -233,11 +234,7 @@ implements MethodInfoInterface {
 		foreach($Attribs as $Attrib) {
 
 			if(!method_exists($Inst, $Attrib->MethodName))
-			throw new Exception(sprintf(
-				'%s %s not callable',
-				$Attrib::class,
-				$Attrib->MethodName
-			));
+			throw new RouteMissingWillAnswerRequest($Info->Name, $Attrib->MethodName);
 
 			////////
 
