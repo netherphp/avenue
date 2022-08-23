@@ -18,7 +18,7 @@ extends PHPUnit\Framework\TestCase {
 		$this->AssertCount(0, $Config);
 
 		Library::Init($Config);
-		$this->AssertTrue(count($Config) >= 6);
+		$this->AssertTrue(count($Config) >= 5);
 
 		return;
 	}

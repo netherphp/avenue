@@ -14,8 +14,7 @@ implements LibraryInitWithConfig {
 	ConfRouteRoot           = 'Nether.Avenue.RouteRoot',
 	ConfWebRoot             = 'Nether.Avenue.WebRoot',
 	ConfDomainLvl           = 'Nether.Avenue.DomainLvl',
-	ConfDomainSep           = 'Nether.Avenue.DomainSep',
-	ConfParsePathableConfig = 'Nether.Avenue.ParsePathableConfig';
+	ConfDomainSep           = 'Nether.Avenue.DomainSep';
 
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
@@ -44,8 +43,7 @@ implements LibraryInitWithConfig {
 			static::ConfDomainSep           => '.',
 			static::ConfRouteFile           => '../routes.phson',
 			static::ConfRouteRoot           => '../routes',
-			static::ConfWebRoot             => '../www',
-			static::ConfParsePathableConfig => TRUE
+			static::ConfWebRoot             => '../www'
 		]);
 
 		return $Config;
