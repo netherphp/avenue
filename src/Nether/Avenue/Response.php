@@ -132,8 +132,17 @@ extends Prototype {
 	////////////////////////////////////////////////////////////////
 
 	public function
+	Clear():
+	static {
+
+		$this->Content = '';
+
+		return $this;
+	}
+
+	public function
 	Render():
-	void {
+	static {
 	/*//
 	dump the captured content out.
 	//*/
@@ -144,7 +153,8 @@ extends Prototype {
 		}
 
 		echo $this->Content;
-		return;
+
+		return $this;
 	}
 
 }

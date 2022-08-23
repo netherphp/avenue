@@ -8,6 +8,7 @@ use Nether\Avenue\Router;
 use Nether\Avenue\Request;
 use Nether\Avenue\Response;
 use Nether\Avenue\Library;
+use Nether\Avenue\Meta\RouteHandler;
 use Nether\Avenue\Error\RouterRouteRootUndefined;
 use Nether\Avenue\Error\RouterWebRootUndefined;
 use Nether\Avenue\Error\RouteMissingWillAnswerRequest;
@@ -82,6 +83,9 @@ extends PHPUnit\Framework\TestCase {
 
 		return;
 	}
+
+	////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////
 
 	/**
 	 * @test
@@ -219,5 +223,117 @@ extends PHPUnit\Framework\TestCase {
 
 		return;
 	}
+
+	////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * @test
+	 * @runInSeparateProcess
+	 */
+	public function
+	TestRouterExecute():
+	void {
+
+		$RouteFile = sprintf('%s/routes-test.phson', dirname(__FILE__, 4));
+		$WebRoot = sprintf('%s/www', dirname(__FILE__, 4));
+		$Conf = new Datastore;
+		$Handler = NULL;
+
+		$Conf[Library::ConfRouteFile] = $RouteFile;
+		$Conf[Library::ConfWebRoot] = $WebRoot;
+		$Router = new Router($Conf);
+
+		$Router->Request->ParseRequest('GET', 'avenue.test', '/index');
+		$Handler = $Router->Select();
+		$this->AssertInstanceOf(RouteHandler::class, $Handler);
+
+		// test that it executes a selected route.
+
+		$Router->Response->Clear();
+		$Router->Execute($Handler);
+		$this->AssertEquals('Index Page', $Router->Response->Content);
+
+		// test that it executes a not found route.
+
+		$Router->Response->Clear();
+		$Router->Execute(NULL);
+		$this->AssertEquals('Not Found', $Router->Response->Content);
+
+		// test that it executes a forbidden route.
+
+		$Router->Response->Clear();
+		$Router->Response->SetCode(Response::CodeForbidden);
+		$Router->Execute(NULL);
+		$this->AssertEquals('Forbidden', $Router->Response->Content);
+
+		// test that nothing happens if it just cant.
+
+		$Router->Response->Clear();
+		$Router->Response->SetCode(69);
+		$Router->Execute(NULL);
+		$this->AssertEquals('', $Router->Response->Content);
+
+		return;
+	}
+
+	/**
+	 * @test
+	 * @runInSeparateProcess
+	 */
+	public function
+	TestRouterRender():
+	void {
+
+		$RouteFile = sprintf('%s/routes-test.phson', dirname(__FILE__, 4));
+		$WebRoot = sprintf('%s/www', dirname(__FILE__, 4));
+		$Conf = new Datastore;
+		$Handler = NULL;
+
+		$Conf[Library::ConfRouteFile] = $RouteFile;
+		$Conf[Library::ConfWebRoot] = $WebRoot;
+		$Router = new Router($Conf);
+
+		$Router->Request->ParseRequest('GET', 'avenue.test', '/index');
+		$Handler = $Router->Select();
+		$Router->Execute($Handler);
+
+		ob_start();
+		$Router->Render();
+		$Buffer = ob_get_clean();
+
+		$this->AssertEquals('Index Page', $Buffer);
+
+		return;
+	}
+
+	/**
+	 * @test
+	 * @runInSeparateProcess
+	 */
+	public function
+	TestRouterRun():
+	void {
+
+		$RouteFile = sprintf('%s/routes-test.phson', dirname(__FILE__, 4));
+		$WebRoot = sprintf('%s/www', dirname(__FILE__, 4));
+		$Conf = new Datastore;
+		$Handler = NULL;
+
+		$Conf[Library::ConfRouteFile] = $RouteFile;
+		$Conf[Library::ConfWebRoot] = $WebRoot;
+		$Router = new Router($Conf);
+
+		$Router->Request->ParseRequest('GET', 'avenue.test', '/index');
+
+		ob_start();
+		$Router->Run();
+		$Buffer = ob_get_clean();
+
+		$this->AssertEquals('Index Page', $Buffer);
+
+		return;
+	}
+
 
 }

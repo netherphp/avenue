@@ -12,7 +12,7 @@ extends Route {
 	public function
 	Index():
 	void {
-
+		echo 'Index Page';
 		return;
 	}
 

@@ -14,6 +14,7 @@ extends Route {
 	NotFound():
 	void {
 
+		echo 'Not Found';
 		return;
 	}
 
@@ -22,6 +23,7 @@ extends Route {
 	Forbidden():
 	void {
 
+		echo 'Forbidden';
 		return;
 	}
 

@@ -57,7 +57,7 @@ extends PHPUnit\Framework\TestCase {
 	 * @runInSeparateProcess
 	 */
 	public function
-	TestRender():
+	TestRenderAndClear():
 	void {
 
 		$Resp = new Response();
@@ -72,7 +72,11 @@ extends PHPUnit\Framework\TestCase {
 		$Resp->Render();
 		$Output = ob_get_clean();
 
+		$this->AssertEquals('BANANA', $Resp->Content);
 		$this->AssertEquals('BANANA', $Output);
+
+		$Resp->Clear();
+		$this->AssertEquals('', $Resp->Content);
 
 		return;
 	}
