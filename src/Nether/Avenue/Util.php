@@ -54,6 +54,12 @@ class Util {
 				}
 			}
 
+			// this can only really happen when passing in a file that
+			// is syntax errored to have a never ending namespace.
+
+			if(!array_key_exists($T, $Tokens))
+			continue;
+
 			// when we find a class keyword we need to find the next
 			// string forward as the class name.
 
@@ -63,7 +69,7 @@ class Util {
 					break;
 
 					if($Tokens[$T]->Is(['(']))
-					continue;
+					break;
 
 					if(!$Tokens[$T]->Is(T_STRING))
 					continue;

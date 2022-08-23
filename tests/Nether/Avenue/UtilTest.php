@@ -10,6 +10,46 @@ extends PHPUnit\Framework\TestCase {
 
 	/** @test */
 	public function
+	TestFindClassesInFile():
+	void {
+
+		// test something that should work.
+
+		$Path = sprintf('%s/src/Nether/Avenue/Router.php', dirname(__FILE__, 4));
+		$Found = Util::FindClassesInFile($Path);
+		$this->AssertCount(1, $Found);
+		$this->AssertEquals('Nether\\Avenue\\Router', $Found[0]);
+
+		// test a file with known stupid.
+
+		$Path = sprintf('%s/routes/NotActuallyAnRoute.php', dirname(__FILE__, 4));
+		$Found = Util::FindClassesInFile($Path);
+		$this->AssertCount(1, $Found);
+
+		// test a file with known syntax errors.
+
+		$Path = sprintf('%s/misc/syntax-error-namespace1.php', dirname(__FILE__, 4));
+		$Found = Util::FindClassesInFile($Path);
+		$this->AssertCount(0, $Found);
+
+		$Path = sprintf('%s/misc/syntax-error-namespace2.php', dirname(__FILE__, 4));
+		$Found = Util::FindClassesInFile($Path);
+		$this->AssertCount(0, $Found);
+
+		$Path = sprintf('%s/misc/syntax-error-class1.php', dirname(__FILE__, 4));
+		$Found = Util::FindClassesInFile($Path);
+		$this->AssertCount(0, $Found);
+
+		// test a file that does not exist.
+
+		$Found = Util::FindClassesInFile('/omg/wtf/bbq');
+		$this->AssertCount(0, $Found);
+
+		return;
+	}
+
+	/** @test */
+	public function
 	TestParseStr():
 	void {
 
