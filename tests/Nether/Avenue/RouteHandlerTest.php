@@ -16,24 +16,23 @@ extends Route {
 
 	public function
 	Allow(...$Argv):
-	?bool {
+	int {
 
-		return TRUE;
+		return Response::CodeOK;
 	}
 
 	public function
 	Deny(...$Argv):
-	?bool {
+	int {
 
-		return FALSE;
+		return Response::CodeNope;
 	}
 
 	public function
 	Forbidden(...$Argv):
-	?bool {
+	int {
 
-		$this->Response->SetCode(Response::CodeForbidden);
-		return NULL;
+		return Response::CodeForbidden;
 	}
 
 	#[RouteHandler('/index')]
@@ -97,9 +96,9 @@ extends Route {
 
 	public function
 	PageConfirmWillAnswerRequest():
-	bool {
+	int {
 
-		return FALSE;
+		return Response::CodeNope;
 	}
 
 	#[RouteHandler('/page/invalidconfirm')]
@@ -265,11 +264,13 @@ extends PHPUnit\Framework\TestCase {
 		$Req->ParseRequest('GET', 'avenue.test', '/index');
 		$this->AssertTrue($Handler->CanAnswerRequest($Req));
 		$this->AssertTrue($Handler->WillAnswerRequest($Req, $Resp));
+		$this->AssertEquals(Response::CodeOK, $Resp->Code);
 
 		$Handler = $Methods['PageAllowed']->GetAttribute(RouteHandler::class);
 		$Req->ParseRequest('GET', 'avenue.test', '/page/allowed');
 		$this->AssertTrue($Handler->CanAnswerRequest($Req));
 		$this->AssertTrue($Handler->WillAnswerRequest($Req, $Resp));
+		$this->AssertEquals(Response::CodeOK, $Resp->Code);
 
 		// try a page that will pass on handling the request.
 
@@ -308,6 +309,7 @@ extends PHPUnit\Framework\TestCase {
 			$HadException = TRUE;
 		}
 
+		$this->AssertEquals(Response::CodeServerError, $Resp->Code);
 		$this->AssertTrue($HadException);
 
 		return;

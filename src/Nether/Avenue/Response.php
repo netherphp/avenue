@@ -18,13 +18,15 @@ extends Prototype {
 	ContentTypeXML  = 'application/xml';
 
 	const
+	CodeNope         = 0,
 	CodeOK           = 200,
 	CodeRedirectPerm = 301,
 	CodeNotModified  = 304,
 	CodeRedirectTemp = 307,
 	CodeBadRequest   = 400,
 	CodeForbidden    = 403,
-	CodeNotFound     = 404;
+	CodeNotFound     = 404,
+	CodeServerError  = 500;
 
 	public bool
 	$HTTP = TRUE;

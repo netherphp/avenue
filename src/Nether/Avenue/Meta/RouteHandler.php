@@ -233,8 +233,13 @@ implements MethodInfoInterface {
 
 		foreach($Attribs as $Attrib) {
 
-			if(!method_exists($Inst, $Attrib->MethodName))
-			throw new RouteMissingWillAnswerRequest($Info->Name, $Attrib->MethodName);
+			if(!method_exists($Inst, $Attrib->MethodName)) {
+				$Resp->SetCode(Response::CodeServerError);
+				throw new RouteMissingWillAnswerRequest(
+					$Info->Name,
+					$Attrib->MethodName
+				);
+			}
 
 			////////
 
@@ -242,10 +247,19 @@ implements MethodInfoInterface {
 				...$this->GetMethodArgValues()
 			);
 
-			if($Confirm === NULL)
-			return NULL;
+			// hard fails will push their response code into the
+			// response object and quit asking.
 
-			if($Confirm === FALSE)
+			if($Confirm >= 400) {
+				$Resp->SetCode($Confirm);
+				return NULL;
+			}
+
+			// a soft fail will allow the router to continue asking other
+			// routes if they want to handle it, so a response status
+			// is not quite relevant yet.
+
+			if($Confirm === 0 || $Confirm === 100)
 			return FALSE;
 		}
 

@@ -191,15 +191,14 @@ class Router {
 				$this->Response
 			);
 
-			// false means this did not care to handle this request.
-			// try the next one.
+			// false means this did not care to handle this request and
+			// it is ok to ask another route to try.
 
 			if($Code === FALSE)
 			continue;
 
-			// null means it wanted to handle it but it refuses to
-			// probably to require a login or admin or something.
-			// nobody else should bother trying to to handle it.
+			// null means it wanted to handle it but it refuses and
+			// also does not want other routes to try.
 
 			if($Code === NULL)
 			return NULL;

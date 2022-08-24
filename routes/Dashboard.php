@@ -3,6 +3,7 @@
 namespace TestRoutes;
 
 use Nether\Avenue\Route;
+use Nether\Avenue\Response;
 use Nether\Avenue\Meta\RouteHandler;
 use Nether\Avenue\Meta\ConfirmWillAnswerRequest;
 
@@ -35,9 +36,9 @@ extends Route {
 
 	public function
 	SingleConfirmWillAnswerRequest():
-	?bool {
+	int {
 
-		return FALSE;
+		return 0;
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -55,16 +56,19 @@ extends Route {
 
 	public function
 	DoubleConfirmWillAnswerRequest():
-	?bool {
+	int {
 
-		return TRUE;
+		// we want this method to approve so that the second
+		// confirm gets executed and rejects it hard.
+
+		return Response::CodeOK;
 	}
 
 	public function
 	RequireAdminUser():
-	?bool {
+	int {
 
-		return NULL;
+		return Response::CodeForbidden;
 	}
 
 }
