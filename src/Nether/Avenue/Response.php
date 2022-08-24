@@ -3,6 +3,8 @@
 namespace Nether\Avenue;
 
 use Nether\Object\Prototype;
+use Nether\Object\Datastore;
+use Nether\Object\Meta\PropertyObjectify;
 
 class Response
 extends Prototype {
@@ -20,10 +22,14 @@ extends Prototype {
 	const
 	CodeNope         = 0,
 	CodeOK           = 200,
-	CodeRedirectPerm = 301,
+	CodeMovedPerm    = 301,
+	CodeFound        = 302,
+	CodeSeeOther     = 303,
 	CodeNotModified  = 304,
 	CodeRedirectTemp = 307,
+	CodeRedirectPerm = 308,
 	CodeBadRequest   = 400,
+	CodeUnauthorized = 401,
 	CodeForbidden    = 403,
 	CodeNotFound     = 404,
 	CodeServerError  = 500;
@@ -36,6 +42,10 @@ extends Prototype {
 
 	public string
 	$ContentType = self::ContentTypeHTML;
+
+	#[PropertyObjectify]
+	public Datastore
+	$Headers;
 
 	public string
 	$Content = '';
@@ -127,6 +137,27 @@ extends Prototype {
 	static {
 
 		$this->ContentType = $ContentType;
+
+		$this->SetHeader('content-type', $ContentType);
+
+		return $this;
+	}
+
+	public function
+	SetHeader(string $Name, mixed $Value):
+	static {
+
+		$this->Headers[strtolower($Name)] = $Value;
+
+		return $this;
+	}
+
+	public function
+	RemoveHeader(string $Name):
+	static {
+
+		unset($this->Headers[strtolower($Name)]);
+
 		return $this;
 	}
 
@@ -151,7 +182,14 @@ extends Prototype {
 
 		if($this->HTTP === TRUE) {
 			http_response_code($this->Code);
+
+			if(!$this->Headers->HasKey('content-type'))
 			header("Content-type: {$this->ContentType}");
+
+			$this->Headers->Each(
+				fn($Val, $Key)
+				=> header("{$Key}: {$Val}")
+			);
 		}
 
 		echo $this->Content;

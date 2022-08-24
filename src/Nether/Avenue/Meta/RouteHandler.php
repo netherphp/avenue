@@ -248,9 +248,11 @@ implements MethodInfoInterface {
 			);
 
 			// hard fails will push their response code into the
-			// response object and quit asking.
+			// response object and quit asking. redirects are considered
+			// fails too so that the client may close the connection and
+			// deal with any location headers it got.
 
-			if($Confirm >= 400) {
+			if($Confirm >= 300) {
 				$Resp->SetCode($Confirm);
 				return NULL;
 			}

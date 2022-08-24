@@ -95,6 +95,38 @@ extends PHPUnit\Framework\TestCase {
 		return;
 	}
 
+	/**
+	 * @test
+	 * @runInSeparateProcess
+	 */
+	public function
+	TestHeaders():
+	void {
+
+		$Resp = new Response;
+		$this->AssertCount(0, $Resp->Headers);
+
+		// test set.
+		$Resp->SetHeader('content-type', 'banana');
+		$Resp->SetHeader('content-length', 'long');
+		$this->AssertCount(2, $Resp->Headers);
+
+		// test remove.
+		$Resp->RemoveHeader('content-length');
+		$this->AssertCount(1, $Resp->Headers);
+
+		// test overwrite.
+		$Resp->SetHeader('content-length', 'long');
+		$Resp->SetHeader('content-length', 'longish');
+		$this->AssertEquals('longish', $Resp->Headers['content-length']);
+
+		ob_start();
+		$Resp->Render();
+		ob_get_clean();
+
+		return;
+	}
+
 	/** @test */
 	public function
 	TestContentType():
