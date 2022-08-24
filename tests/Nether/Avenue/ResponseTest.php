@@ -137,6 +137,7 @@ extends PHPUnit\Framework\TestCase {
 
 		$Resp->SetContentType(Response::ContentTypeJSON);
 		$this->AssertEquals(Response::ContentTypeJSON, $Resp->ContentType);
+		$this->AssertEquals($Resp->ContentType, $Resp->Headers->Get('content-type'));
 
 		return;
 	}

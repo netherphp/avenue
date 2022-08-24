@@ -167,6 +167,9 @@ extends Prototype {
 	public function
 	Clear():
 	static {
+	/*//
+	clear all the captured content.
+	//*/
 
 		$this->Content = '';
 
@@ -177,7 +180,7 @@ extends Prototype {
 	Render():
 	static {
 	/*//
-	dump the captured content out.
+	dump the captured content out. also includes http headers if enabled.
 	//*/
 
 		if($this->HTTP === TRUE) {
