@@ -55,16 +55,13 @@ extends Nether\Avenue\Route {
 
 	public function
 	DashboardWillAnswerRequest():
-	?bool {
+	int {
 
 		// allow the user to visit this page.
 		if(YourAppSessionLib::GetCurrentUser())
-		return TRUE;
+		return Nether\Avenue\Response::CodeOK;
 
-		($this->Response)
-		->SetCode(Nether\Avenue\Response::CodeForbidden);
-
-		return NULL;
+		return Nether\Avenue\Response::CodeForbidden;
 	}
 
 }
