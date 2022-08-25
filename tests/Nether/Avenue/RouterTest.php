@@ -159,7 +159,13 @@ extends PHPUnit\Framework\TestCase {
 				'TestRoutes\\Dashboard::FailConfirm',
 				'TestRoutes\\Dashboard::SingleConfirm',
 				'TestRoutes\\Dashboard::DoubleConfirm',
-				'TestRoutes\\Deep\\Deeper\\DeepRoute::SoDeep'
+				'TestRoutes\\Deep\\Deeper\\DeepRoute::SoDeep',
+				'TestRoutes\\Sorts::SortA',
+				'TestRoutes\\Sorts::SortB',
+				'TestRoutes\\Sorts::SortC',
+				'TestRoutes\\Sorts::SortX',
+				'TestRoutes\\Sorts::SortY',
+				'TestRoutes\\Sorts::SortZ'
 			]
 		];
 
@@ -212,6 +218,31 @@ extends PHPUnit\Framework\TestCase {
 		}
 
 		$this->AssertTrue($HadExcept);
+
+		// see if our sorting seems reasonable.
+
+		$Handlers = $Router->SortHandlers()->GetHandlers();
+
+		$Sorts = (
+			$Handlers['GET']
+			->Distill(
+				fn(RouteHandler $H)=>
+				str_starts_with($H->Method, 'Sort')
+			)
+			->Revalue()
+		);
+
+		$Expect = [
+			'SortZ', 'SortX', 'SortY',
+			'SortB', 'SortC', 'SortA'
+		];
+
+		$Key = NULL;
+		$Handler = NULL;
+
+		foreach($Sorts as $Key => $Handler) {
+			$this->AssertEquals($Expect[$Key], $Handler->Method);
+		}
 
 		return;
 	}

@@ -104,7 +104,8 @@ extends PHPUnit\Framework\TestCase {
 			'DeepRoute.php',
 			'Errors.php',
 			'Home.php',
-			'NotActuallyAnRoute.php'
+			'NotActuallyAnRoute.php',
+			'Sorts.php'
 		];
 
 		$this->AssertEquals(count($Expect), $Files->Count());
@@ -140,7 +141,8 @@ extends PHPUnit\Framework\TestCase {
 			'TestRoutes\\Dashboard',
 			'TestRoutes\\Errors',
 			'TestRoutes\\Home',
-			'TestRoutes\\Deep\\Deeper\\DeepRoute'
+			'TestRoutes\\Deep\\Deeper\\DeepRoute',
+			'TestRoutes\\Sorts'
 		];
 
 		sort($Expect);
@@ -185,7 +187,8 @@ extends PHPUnit\Framework\TestCase {
 			'TestRoutes\\Errors' => [],
 			'TestRoutes\\Blog'   => [ 'Index', 'ViewPost' ],
 			'TestRoutes\\Dashboard' => [ 'FailConfirm', 'SingleConfirm', 'DoubleConfirm' ],
-			'TestRoutes\\Deep\\Deeper\\DeepRoute' => [ 'SoDeep' ]
+			'TestRoutes\\Deep\\Deeper\\DeepRoute' => [ 'SoDeep' ],
+			'TestRoutes\\Sorts' => [ 'SortA', 'SortB', 'SortC', 'SortX', 'SortY' ,'SortZ' ]
 		];
 
 		foreach($Classes as $Class) {
@@ -214,7 +217,8 @@ extends PHPUnit\Framework\TestCase {
 			'TestRoutes\\Errors'    => [ 'NotFound', 'Forbidden' ],
 			'TestRoutes\\Blog'      => [ ],
 			'TestRoutes\\Dashboard' => [ ],
-			'TestRoutes\\Deep\\Deeper\\DeepRoute' => [ ]
+			'TestRoutes\\Deep\\Deeper\\DeepRoute' => [ ],
+			'TestRoutes\\Sorts'     => [ ]
 		];
 
 		foreach($Classes as $Class) {
@@ -297,7 +301,13 @@ extends PHPUnit\Framework\TestCase {
 			'TestRoutes\\Dashboard::FailConfirm',
 			'TestRoutes\\Dashboard::SingleConfirm',
 			'TestRoutes\\Dashboard::DoubleConfirm',
-			'TestRoutes\\Deep\\Deeper\\DeepRoute::SoDeep'
+			'TestRoutes\\Deep\\Deeper\\DeepRoute::SoDeep',
+			'TestRoutes\\Sorts::SortA',
+			'TestRoutes\\Sorts::SortB',
+			'TestRoutes\\Sorts::SortC',
+			'TestRoutes\\Sorts::SortX',
+			'TestRoutes\\Sorts::SortY',
+			'TestRoutes\\Sorts::SortZ'
 		];
 
 		$ErrorHandlers = [

@@ -340,8 +340,13 @@ implements MethodInfoInterface {
 		// in before a wildcard consumes it all.
 
 		$Bit = NULL;
-		$Bits = explode('/', $this->Path);
-		$Bout = strtolower($this->Class);
+		$Bits = explode('/', trim($this->Path, '/'));
+
+		$Bout = sprintf(
+			'%s-%s',
+			str_replace('\\', '-', strtolower($this->Class)),
+			($this->Domain ? 'ds' : 'dw')
+		);
 
 		foreach($Bits as $Bit)
 		$Bout .= match(TRUE) {

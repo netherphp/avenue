@@ -149,7 +149,13 @@ class Router {
 					if($A->Sort !== $B->Sort)
 					return $A->Sort <=> $B->Sort;
 
+					if($A->Domain !== $B->Domain)
+					return $A->Domain <=> $B->Domain;
+
+					if($A->Path !== $B->Path)
 					return $A->Path <=> $B->Path;
+
+					return $A->Method <=> $B->Method;
 				}
 			)
 		);
