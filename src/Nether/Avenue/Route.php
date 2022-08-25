@@ -62,4 +62,14 @@ class Route {
 		return;
 	}
 
+	public function
+	__Call(string $Name, array $Argv):
+	mixed {
+
+		if(method_exists($this, $Name))
+		return $this->{$Name}(...$Argv);
+
+		return NULL;
+	}
+
 }

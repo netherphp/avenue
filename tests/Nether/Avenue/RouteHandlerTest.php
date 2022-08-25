@@ -327,12 +327,12 @@ extends PHPUnit\Framework\TestCase {
 		$Handler2 = $Method2->GetAttribute(RouteHandler::class);
 
 		$this->AssertEquals(
-			'nethertestsuite-avenue-routehandler-testroute1-dw-s',
+			'dw-s',
 			$Handler1->Sort
 		);
 
 		$this->AssertEquals(
-			'nethertestsuite-avenue-routehandler-testroute1-dw-s-w',
+			'dw-s-w',
 			$Handler2->Sort
 		);
 

@@ -7,6 +7,14 @@ use Nether;
 class Sorts
 extends Nether\Avenue\Route {
 
+	// expected ordering reasons
+	// SortA - static domain, segment count sort, wildcard sort
+	// SortZ - static domain, domain sort
+	// SortX - static domain, domain sort
+	// SortY - static domain, domain sort
+	// SortB - wild domain, method sort
+	// SortC - wild domain, method sort
+
 	#[Nether\Avenue\Meta\RouteHandler('/sort')]
 	public function
 	SortB():

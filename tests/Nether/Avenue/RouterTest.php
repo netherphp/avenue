@@ -232,9 +232,11 @@ extends PHPUnit\Framework\TestCase {
 			->Revalue()
 		);
 
+		//print_r($Sorts); die();
+
 		$Expect = [
-			'SortZ', 'SortX', 'SortY',
-			'SortB', 'SortC', 'SortA'
+			'SortA', 'SortZ', 'SortX',
+			'SortY', 'SortB', 'SortC'
 		];
 
 		$Key = NULL;

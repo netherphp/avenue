@@ -343,8 +343,8 @@ implements MethodInfoInterface {
 		$Bits = explode('/', trim($this->Path, '/'));
 
 		$Bout = sprintf(
-			'%s-%s',
-			str_replace('\\', '-', strtolower($this->Class)),
+			'%s',
+			//str_replace('\\', '-', strtolower($this->Class)),
 			($this->Domain ? 'ds' : 'dw')
 		);
 

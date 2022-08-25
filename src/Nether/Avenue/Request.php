@@ -157,7 +157,7 @@ extends Prototype {
 		if(str_contains($URI, '?'))
 		list($Path, $Query) = explode('?', $URI, 2);
 
-		parse_str($Query, $Vars);
+		$Vars = Util::ParseQueryString($Query);
 
 		if($Path === '/')
 		$Path = '/index';
@@ -190,7 +190,7 @@ extends Prototype {
 			=> $_POST,
 
 			default
-			=> Util::ParseStr(file_get_contents('php://input'))
+			=> Util::ParseQueryString(file_get_contents('php://input'))
 		});
 
 		// bind the file data filter.

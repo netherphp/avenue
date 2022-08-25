@@ -146,6 +146,12 @@ class Router {
 			fn(Datastore $Verb)
 			=> $Verb->Sort(
 				function(RouteHandler $A, RouteHandler $B) {
+					$CA = substr_count($A->Sort, '-');
+					$CB = substr_count($B->Sort, '-');
+
+					if($CA !== $CB)
+					return $CB <=> $CA;
+
 					if($A->Sort !== $B->Sort)
 					return $A->Sort <=> $B->Sort;
 

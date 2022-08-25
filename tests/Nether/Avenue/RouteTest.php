@@ -7,6 +7,7 @@ use Nether\Avenue\Route;
 use Nether\Avenue\Request;
 use Nether\Avenue\Response;
 use Nether\Avenue\Meta\RouteHandler;
+use Nether\Avenue\Meta\ConfirmWillAnswerRequest;
 use Nether\Object\Prototype\MethodInfo;
 
 class TestRoute1
@@ -39,6 +40,10 @@ extends PHPUnit\Framework\TestCase {
 		$this->AssertTrue($Handler === $Route->Handler);
 		$this->AssertTrue($Req === $Route->Request);
 		$this->AssertTrue($Resp === $Route->Response);
+
+		// test the magic method nullcase.
+
+		$this->AssertNull($Route->DoesNotExist());
 
 		return;
 	}

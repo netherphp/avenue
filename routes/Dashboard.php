@@ -54,7 +54,7 @@ extends Route {
 		return;
 	}
 
-	public function
+	protected function
 	DoubleConfirmWillAnswerRequest():
 	int {
 
@@ -64,7 +64,7 @@ extends Route {
 		return Response::CodeOK;
 	}
 
-	public function
+	protected function
 	RequireAdminUser():
 	int {
 

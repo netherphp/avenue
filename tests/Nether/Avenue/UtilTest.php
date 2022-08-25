@@ -54,7 +54,7 @@ extends PHPUnit\Framework\TestCase {
 	void {
 
 		$Str = 'one=1&two=2&three=3&four=4';
-		$Arr = Util::ParseStr($Str);
+		$Arr = Util::ParseQueryString($Str);
 
 		$this->AssertCount(4, $Arr);
 		$this->AssertEquals('1', $Arr['one']);
@@ -76,6 +76,31 @@ extends PHPUnit\Framework\TestCase {
 
 		// tbh dont care about these.
 		$this->AssertTrue(TRUE);
+
+		return;
+	}
+
+	/** @test */
+	public function
+	TestMakePathableKey():
+	void {
+
+		$Things = [
+			'/index'           => '/index',
+			'/sub/dir'         => '/sub/dir',
+			'asdf-jkl-zxc-nml' => 'asdf-jkl-zxc-nml',
+			'this/../nope'     => 'this/nope',
+			'this/../../nope'  => 'this/nope',
+			'this/...../nope'  => 'this/nope',
+			'this-42-69'       => 'this-42-69',
+			'that?banana?man'  => 'thatbananaman'
+		];
+
+		$Input = NULL;
+		$Expected = NULL;
+
+		foreach($Things as $Input => $Expected)
+		$this->AssertEquals(Util::MakePathableKey($Input), $Expected);
 
 		return;
 	}
