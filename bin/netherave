@@ -35,6 +35,9 @@ extends Nether\Console\Client {
 	#[Console\Meta\Info('Generate a static route map.')]
 	#[Console\Meta\SubcommandArg('dir-to-scan', Text: 'Directory to scan for route classes. (default "routes")')]
 	#[Console\Meta\SubcommandArg('file-to-write', Text: 'Directory to scan for route classes. (default "routes.phson")')]
+	#[Console\Meta\SubcommandOption('--show', Text: 'Show a list of all the routes not just the quick summary.')]
+	#[Console\Meta\SubcommandOption('--dry-run', Text: 'Only pretend to do it.')]
+	#[Console\Meta\SubcommandOption('--plain', Text: 'No colour.')]
 	#[Console\Meta\Error(1, 'unknown error.')]
 	#[Console\Meta\Error(2, 'invalid route directory.')]
 	#[Console\Meta\Error(3, 'unreadable route directory.')]
@@ -47,6 +50,9 @@ extends Nether\Console\Client {
 		$Scanner = NULL;
 		$Show = $this->GetOption('show') ?? FALSE;
 		$Route = NULL;
+
+		$F = new Nether\Console\TerminalFormatter;
+		$F->Enable(!$this->GetOption('plain'));
 
 		////////
 
@@ -64,16 +70,18 @@ extends Nether\Console\Client {
 
 		////////
 
-		static::Message("Route Directory: {$Dir}");
-		static::Message("Route File: {$Outfile}");
+		static::Message("{$F->BoldYellow('Route Directory:')} {$Dir}");
+		static::Message("{$F->BoldYellow('Route File:')} {$Outfile}");
 		static::Message();
 
 		$RouteMap = $Scanner->Generate();
+
+		if(!$this->GetOption('dry-run'))
 		$RouteMap->Write($Outfile);
 
 		////////
 
-		static::Message('Summary:');
+		static::Message("{$F->BoldYellow('Summary:')}");
 
 		$Verb = NULL;
 		$Routes = NULL;
@@ -81,11 +89,30 @@ extends Nether\Console\Client {
 
 		if($RouteMap['Verbs']) {
 			foreach($RouteMap['Verbs'] as $Verb => $Routes) {
-				static::Message(sprintf(' * %s (%d)', $Verb, count($Routes)));
+				static::Message(sprintf(
+					' * %s (%d)',
+					$F->BoldYellow($Verb),
+					count($Routes)
+				));
 
 				if($Show) {
 					foreach($Routes as $Route)
-					static::Message(sprintf('   %s', $Route->GetCallableName()));
+					printf(
+						'    %s%s%s%s'.
+						'        %s %s, %s %s, %s %s%s%s',
+						str_replace('\\', $F->Yellow('::'), $Route->Class),
+						$F->Yellow('::'),
+						$Route->Method,
+						PHP_EOL,
+							$F->BoldYellow('Verb:'),
+							$Route->Verb,
+							$F->BoldYellow('Path:'),
+							$Route->Path,
+							$F->BoldYellow('Domain:'),
+							($Route->Domain ?? '<any>'),
+						PHP_EOL,
+						PHP_EOL
+					);
 
 					static::Message();
 				}

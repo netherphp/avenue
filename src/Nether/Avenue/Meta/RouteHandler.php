@@ -70,7 +70,7 @@ implements MethodInfoInterface {
 			$this->Class,
 			$this->Method,
 			$this->Path,
-			$this->Domain,
+			($this->Domain ?? '<any>'),
 			$this->Verb
 		);
 	}
