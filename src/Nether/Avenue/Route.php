@@ -2,8 +2,8 @@
 
 namespace Nether\Avenue;
 
-use Nether\Avenue\Router;
 use Nether\Avenue\Meta\RouteHandler;
+use Nether\Object\Datastore;
 use Nether\Object\Package\ClassInfoPackage;
 use Nether\Object\Package\PropertyInfoPackage;
 use Nether\Object\Package\MethodInfoPackage;
@@ -71,5 +71,55 @@ class Route {
 
 		return NULL;
 	}
+
+	public function
+	OnWillConfirmReady(?Datastore $ExtraData):
+	void {
+	/*// prepare any references that will be needed before the methods are
+	called to do work. this mainly would be to absorb extradata in here for
+	something like your app reference or whatevs. this only runs before
+	queries are asked like the will confirm handlers. //*/
+
+		return;
+	}
+
+	public function
+	OnWillConfirmDone():
+	void {
+
+		return;
+	}
+
+
+	public function
+	OnReady(?Datastore $ExtraData):
+	void {
+	/*// prepare any references that will be needed before the methods are
+	called to do work. this mainly would be to absorb extradata in here for
+	something like your app reference or whatevs. this only runs before the
+	Router has decided it is done screwing around. //*/
+
+		// the instance spawned for will confirm checks only ever
+		// experiences to will confirm ready. the instance spawned for the
+		// real run only experience the plain ready. most instances will
+		// likely need to absorb something frome extra data.
+		// a very typical scenerio might simply be:
+
+		// $this->OnWillConfirmReady($ExtraData);
+		// ... and then some.
+
+		return;
+	}
+
+	public function
+	OnDone():
+	void {
+	/*// this method should be called by whatever is being used to manage
+	the route to tell the object that it is done probing it and can clean
+	itself up. this is handled by the Router if you are using that. //*/
+
+		return;
+	}
+
 
 }

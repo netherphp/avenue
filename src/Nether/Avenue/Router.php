@@ -173,7 +173,7 @@ class Router {
 	////////////////////////////////////////////////////////////////
 
 	public function
-	Select():
+	Select(?Datastore $ExtraData=NULL):
 	?RouteHandler {
 	/*//
 	inspect the current request and determine if we have a handler that can
@@ -200,7 +200,8 @@ class Router {
 
 			$Code = $Handler->WillAnswerRequest(
 				$this->Request,
-				$this->Response
+				$this->Response,
+				$ExtraData
 			);
 
 			// false means this did not care to handle this request and
@@ -224,7 +225,7 @@ class Router {
 	}
 
 	public function
-	Execute(?RouteHandler $Handler):
+	Execute(?RouteHandler $Handler, ?Datastore $ExtraData=NULL):
 	static {
 	/*//
 	execute the specified handler. if none was specified then it will try to
@@ -232,9 +233,7 @@ class Router {
 	//*/
 
 		if($Handler !== NULL)
-		return $this->Execute_RouteHandler($Handler);
-
-		////////
+		return $this->Execute_RouteHandler($Handler, $ExtraData);
 
 		// if we made it this far and the response code is ok that pretty
 		// likely means our dev was super lazy as at this point we are now
@@ -248,7 +247,8 @@ class Router {
 		if(isset($this->ErrorHandlers[$this->Response->Code]))
 		if($this->ErrorHandlers[$this->Response->Code] instanceof RouteHandler)
 		return $this->Execute_RouteHandler(
-			$this->ErrorHandlers[$this->Response->Code]
+			$this->ErrorHandlers[$this->Response->Code],
+			$ExtraData
 		);
 
 		////////
@@ -257,7 +257,7 @@ class Router {
 	}
 
 	protected function
-	Execute_RouteHandler(RouteHandler $Handler):
+	Execute_RouteHandler(RouteHandler $Handler, ?Datastore $ExtraData):
 	static {
 	/*//
 	perform route handler execution.
@@ -266,7 +266,9 @@ class Router {
 		$Inst = $Handler->GetRouteInstance($this->Request, $this->Response);
 
 		$this->Response->CaptureBegin();
+		$Inst->OnReady($ExtraData);
 		$Inst->{$Handler->Method}(...$Handler->GetMethodArgValues());
+		$Inst->OnDone();
 		$this->Response->CaptureEnd(TRUE);
 
 		return $this;
@@ -284,7 +286,7 @@ class Router {
 	}
 
 	public function
-	Run():
+	Run(?Datastore $ExtraData=NULL):
 	static {
 	/*//
 	perform all the operations needed to select execute and render out
@@ -293,7 +295,7 @@ class Router {
 
 		$this
 		->SortHandlers()
-		->Execute($this->Select())
+		->Execute($this->Select($ExtraData), $ExtraData)
 		->Render();
 
 		return $this;

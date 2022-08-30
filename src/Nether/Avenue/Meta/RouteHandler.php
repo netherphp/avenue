@@ -8,6 +8,7 @@ use Nether\Avenue\Response;
 use Nether\Avenue\Util;
 use Nether\Avenue\Struct\RouteHandlerArg;
 use Nether\Avenue\Error\RouteMissingWillAnswerRequest;
+use Nether\Object\Datastore;
 use Nether\Object\Prototype\MethodInfo;
 use Nether\Object\Prototype\MethodInfoInterface;
 
@@ -200,7 +201,7 @@ implements MethodInfoInterface {
 	}
 
 	public function
-	WillAnswerRequest(Request $Req, Response $Resp):
+	WillAnswerRequest(Request $Req, Response $Resp, ?Datastore $ExtraData=NULL):
 	?bool {
 	/*//
 	checks if this route is willing to satisify the specified request
@@ -243,9 +244,11 @@ implements MethodInfoInterface {
 
 			////////
 
+			$Inst->OnWillConfirmReady($ExtraData);
 			$Confirm = ($Inst)->{$Attrib->MethodName}(
 				...$this->GetMethodArgValues()
 			);
+			$Inst->OnWillConfirmDone();
 
 			// hard fails will push their response code into the
 			// response object and quit asking. redirects are considered
