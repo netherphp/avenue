@@ -4,10 +4,33 @@
 	"keywords": [ "php", "router" ],
 	"license": "BSD-2-Clause",
 	"authors":[
-		{ "name": "Bob Majdak Jr",
-		  "email": "bob@majdak.net",
-		  "homepage": "http://pegasusgate.net/+bob",
-		  "role": "developer" }
+		{
+			"name": "Bob Majdak Jr",
+			"email": "bmajdak@php.net",
+			"homepage": "http://pegasusgate.net/+bob",
+			"role": "developer"
+		}
+	],
+	"require": {
+		"php": "^8.1",
+		"netherphp/object": "dev-redux",
+		"netherphp/console": "dev-redux"
+	},
+	"require-dev": {
+		"netherphp/standards": ">=0.1.9",
+		"phpunit/phpunit": "^9.5",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.2"
+	},
+	"autoload": {
+		"psr-0": {
+			"Nether\\":"src/"
+		},
+		"psr-4": {
+			"TestRoutes\\": "routes/"
+		}
+	},
+	"bin": [
+		"bin/netherave"
 	],
 	"config": {
 		"preferred-install": {
@@ -17,27 +40,6 @@
 		"allow-plugins": {
 			"netherphp/composer-plugin": true,
 			"dealerdirect/phpcodesniffer-composer-installer": true
-		}
-	},
-	"require": {
-		"php":              "^8.1",
-		"netherphp/object": "dev-redux",
-		"netherphp/console": "dev-redux"
-	},
-	"require-dev": {
-		"netherphp/standards": ">=0.1.9",
-		"phpunit/phpunit": "^9.5",
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.2"
-	},
-	"bin": [
-		"bin/netherave"
-	],
-	"autoload": {
-		"psr-0": {
-			"Nether\\":"src/"
-		},
-		"psr-4": {
-			"TestRoutes\\": "routes/"
 		}
 	}
 }
