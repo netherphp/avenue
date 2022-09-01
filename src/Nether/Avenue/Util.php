@@ -179,7 +179,7 @@ class Util {
 			'#^(\h+)#ms',
 			(
 				fn(array $Result)
-				=> str_repeat("\t", strlen($Result[1]) / 2)
+				=> str_repeat("\t", floor(strlen($Result[1]) / 2.0))
 			),
 			$Output
 		);
