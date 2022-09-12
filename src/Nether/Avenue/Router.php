@@ -189,6 +189,7 @@ class Router {
 		$Code = NULL;
 
 		foreach($this->Handlers[$this->Request->Verb] as $Handler) {
+			/** @var Meta\RouteHandler $Handler */
 
 			// check if this route can answer for this request.
 			// try the next one.
