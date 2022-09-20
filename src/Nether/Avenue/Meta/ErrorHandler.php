@@ -14,7 +14,10 @@ extends RouteHandler {
 
 	public function
 	__Construct(int $Code) {
+
 		$this->Code = $Code;
+		$this->Path = '';
+
 		return;
 	}
 
