@@ -11,6 +11,9 @@ class Request
 extends Prototype {
 
 	public string
+	$Protocol;
+
+	public string
 	$Verb;
 
 	public string
@@ -72,10 +75,23 @@ extends Prototype {
 	static {
 
 		$this
+		->ParseProtocol()
 		->ParseRequestVerb($Verb)
 		->ParseRequestDomain($Domain, $this->DomainLvl)
 		->ParseRequestURI($URI)
 		->ParseRequestData();
+
+		return $this;
+	}
+
+	public function
+	ParseProtocol():
+	static {
+
+		$this->Protocol = 'http';
+
+		if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'])
+		$this->Protocol = 'https';
 
 		return $this;
 	}
@@ -205,6 +221,23 @@ extends Prototype {
 	string {
 
 		return "//{$this->Domain}{$this->Path}";
+	}
+
+	public function
+	GetURL():
+	string {
+
+		$Output = sprintf(
+			'%s://%s%s',
+			$this->Protocol,
+			(isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $this->Domain),
+			$this->Path
+		);
+
+		if($this->Query->Count())
+		$Output .= "?{$this->Query->GetQueryString()}";
+
+		return $Output;
 	}
 
 }
