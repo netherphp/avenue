@@ -82,7 +82,7 @@ class RouteScanner {
 			$ErrorMethods = $this->DetermineErrorMethods($RouteClass);
 			foreach($ErrorMethods as $RouteMethod) {
 
-				$Errors[$RouteMethod->Code] = $RouteMethod;
+				$Errors["e{$RouteMethod->Code}"] = $RouteMethod;
 			}
 		}
 

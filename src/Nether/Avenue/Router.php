@@ -32,7 +32,7 @@ class Router {
 	$RouteRoot = NULL;
 
 	protected ?string
-	$RouteSource = NULL;
+	$RouteSource = 'none';
 
 	protected ?string
 	$WebRoot = NULL;
@@ -50,6 +50,9 @@ class Router {
 	__Construct(Datastore $Conf) {
 
 		$this->Conf = $Conf;
+
+		$this->Handlers = new Datastore;
+		$this->ErrorHandlers = new Datastore;
 
 		$this->OnReady();
 		return;
@@ -99,29 +102,54 @@ class Router {
 		// read from the cached index if it exists.
 
 		if($this->RouteFile && is_readable($this->RouteFile)) {
-			$Map = Datastore::NewFromFile($this->RouteFile);
-
-			$this->RouteSource = 'cache';
-			$this->Handlers = $Map['Verbs'];
-			$this->ErrorHandlers = $Map['Errors'];
+			$this->ReadRouteFile();
 		}
 
 		// scan the directory if needed.
 
 		elseif($this->RouteRoot && is_dir($this->RouteRoot)) {
-			$Scanner = new RouteScanner($this->RouteRoot);
-			$Map = $Scanner->Generate();
-
-			$this->RouteSource = 'dirscan';
-			$this->Handlers = $Map['Verbs'];
-			$this->ErrorHandlers = $Map['Errors'];
+			$this->ScanForRoutes();
 		}
 
 		return;
 	}
 
+	public function
+	ReadRouteFile():
+	static {
+
+		$Map = Datastore::NewFromFile($this->RouteFile);
+
+		$this->RouteSource = Library::RouteSourceFile;
+		$this->Handlers->MergeRight($Map['Verbs']);
+		$this->ErrorHandlers->MergeRight($Map['Errors']);
+
+		return $this;
+	}
+
+	public function
+	ScanForRoutes():
+	static {
+
+		$Scanner = new RouteScanner($this->RouteRoot);
+		$Map = $Scanner->Generate();
+
+		$this->RouteSource = Library::RouteSourceScan;
+		$this->Handlers->MergeRight($Map['Verbs']);
+		$this->ErrorHandlers->MergeRight($Map['Errors']);
+
+		return $this;
+	}
+
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
+
+	public function
+	GetRouteFile():
+	?string {
+
+		return $this->RouteFile;
+	}
 
 	public function
 	GetSource():
@@ -160,7 +188,7 @@ class Router {
 	AddErrorHandler(int $Code, Meta\RouteHandler $Handler):
 	static {
 
-		$this->ErrorHandlers[$Code] = $Handler;
+		$this->ErrorHandlers["e{$Code}"] = $Handler;
 
 		return $this;
 	}
@@ -176,7 +204,7 @@ class Router {
 			if(!($Handler instanceof Meta\RouteHandler))
 			continue;
 
-			$this->ErrorHandlers[$Key] = $Handler;
+			$this->ErrorHandlers["e{$Key}"] = $Handler;
 		}
 
 		return $this;
@@ -187,6 +215,13 @@ class Router {
 	Datastore {
 
 		return $this->Handlers;
+	}
+
+	public function
+	GetErrorHandlers():
+	Datastore {
+
+		return $this->ErrorHandlers;
 	}
 
 	public function
@@ -297,10 +332,12 @@ class Router {
 
 		////////
 
-		if(isset($this->ErrorHandlers[$this->Response->Code]))
-		if($this->ErrorHandlers[$this->Response->Code] instanceof RouteHandler)
+		$CodeKey = "e{$this->Response->Code}";
+
+		if(isset($this->ErrorHandlers[$CodeKey]))
+		if($this->ErrorHandlers[$CodeKey] instanceof RouteHandler)
 		return $this->Execute_RouteHandler(
-			$this->ErrorHandlers[$this->Response->Code],
+			$this->ErrorHandlers[$CodeKey],
 			$ExtraData
 		);
 

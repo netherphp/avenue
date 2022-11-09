@@ -30,7 +30,7 @@
 		}
 	},
 	"bin": [
-		"bin/netherave"
+		"bin/nave"
 	],
 	"config": {
 		"preferred-install": {

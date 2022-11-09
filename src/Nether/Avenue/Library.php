@@ -10,11 +10,15 @@ class Library
 implements LibraryInitWithConfig {
 
 	public const
-	ConfRouteFile = 'Nether.Avenue.RouteFile',
-	ConfRouteRoot = 'Nether.Avenue.RouteRoot',
-	ConfWebRoot   = 'Nether.Avenue.WebRoot',
-	ConfDomainLvl = 'Nether.Avenue.DomainLvl',
-	ConfDomainSep = 'Nether.Avenue.DomainSep';
+	ConfRouteFile    = 'Nether.Avenue.RouteFile',
+	ConfRouteRoot    = 'Nether.Avenue.RouteRoot',
+	ConfWebRoot      = 'Nether.Avenue.WebRoot',
+	ConfDomainLvl    = 'Nether.Avenue.DomainLvl',
+	ConfDomainSep    = 'Nether.Avenue.DomainSep';
+
+	public const
+	RouteSourceScan = 'dirscan',
+	RouteSourceFile = 'file';
 
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
@@ -43,7 +47,7 @@ implements LibraryInitWithConfig {
 			static::ConfDomainSep => '.',
 			static::ConfRouteFile => '../routes.phson',
 			static::ConfRouteRoot => '../routes',
-			static::ConfWebRoot   => '../www'
+			static::ConfWebRoot   => 'www'
 		]);
 
 		return $Config;

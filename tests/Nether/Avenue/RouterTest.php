@@ -129,7 +129,7 @@ extends PHPUnit\Framework\TestCase {
 		$this->AssertInstanceOf(Request::class, $Router->Request);
 		$this->AssertInstanceOf(Response::class, $Router->Response);
 		$this->AssertTrue($Conf === $Router->Conf);
-		$this->AssertEquals('cache', $Router->GetSource());
+		$this->AssertEquals(Library::RouteSourceFile, $Router->GetSource());
 
 		$this->ContinueTestRouterAfterLoading($Router);
 		return;

@@ -1,0 +1,123 @@
+#!/usr/bin/env php
+<?php
+
+use Nether\Object\Datastore;
+use Nether\Avenue\Error\RouteScannerDirInvalid;
+use Nether\Avenue\Error\RouteScannerDirUnreadable;
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+(function(){
+
+	$CWD = getcwd();
+	$Autoloader = sprintf('%s/autoload.php', dirname(__DIR__, 3));
+
+	if(file_exists("{$CWD}/dev.lock"))
+	$Autoloader = sprintf('%s/vendor/autoload.php', dirname(__DIR__, 1));
+
+	////////
+
+	//echo "Autoloader: {$Autoloader}", PHP_EOL;
+	require($Autoloader);
+
+	return;
+})();
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+class App
+extends Nether\Console\Client {
+
+	#[Nether\Console\Meta\Command]
+	public function
+	Gen():
+	int {
+
+		$Dirs = $this->Args->Inputs;
+		$Outfile = $this->GetOption('Outfile') ?: './routes.phson';
+		$UseAtlantis = $this->GetOption('atlantis') ?: FALSE;
+
+		// loop stuff.
+
+		$Scanner = NULL;
+		$Map = NULL;
+		$Verb = NULL;
+		$Hands = NULL;
+		$Hand = NULL;
+
+		// result stuff.
+
+		$VHand = new Datastore;
+		$EHand = new Datastore;
+		$Final = new Datastore;
+
+		////////
+
+		if($UseAtlantis) {
+			if(!class_exists('Nether\\Atlantis\\Engine'))
+			throw new Nether\Avenue\Error\AtlantisNotFound;
+
+			$Conf = new Datastore();
+			$Conf->Shove(Nether\Avenue\Library::ConfRouteFile, NULL);
+
+			$App = new Nether\Atlantis\Engine(getcwd(), $Conf);
+			$VHand = $App->Router->GetHandlers();
+			$EHand = $App->Router->GetErrorHandlers();
+
+			foreach($VHand as $Verb => $Hands) {
+				static::PrintLn("{$Verb} - {$App->Router->GetSource()}");
+
+				foreach($Hands as $Hand)
+				Nether\Console\Util::ObjectDump($Hand);
+
+				static::PrintLn();
+			}
+
+			$Final
+			->Shove('Verbs', $VHand)
+			->Shove('Errors', $EHand)
+			->Write($Outfile);
+
+			return 0;
+		}
+
+		////////
+
+		foreach($Dirs as $Dir) {
+			if(!is_dir($Dir))
+			continue;
+
+			$Scanner = new Nether\Avenue\RouteScanner($Dir);
+			$Map = $Scanner->Generate();
+
+			// normal handlers are keyed by the verb they respond to.
+
+			foreach($Map['Verbs'] as $Verb => $Hands) {
+				if(!$VHand->HasKey($Verb))
+				$VHand->Shove($Verb, new Datastore);
+
+				foreach($Hands as $Hand)
+				$VHand[$Verb]->Push($Hand);
+			}
+
+			// error handlers are keyed to the error they respond to.
+
+			foreach($Map['Errors'] as $Verb => $Hand)
+			$EHand->Shove($Verb, $Hand);
+		}
+
+		////////
+
+		$Final
+		->Shove('Verbs', $VHand)
+		->Shove('Errors', $EHand)
+		->Write($Outfile);
+
+		return 0;
+	}
+
+}
+
+(new App)->Run();
