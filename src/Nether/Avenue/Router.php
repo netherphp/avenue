@@ -131,6 +131,58 @@ class Router {
 	}
 
 	public function
+	AddHandler(Meta\RouteHandler $Handler):
+	static {
+
+		if(!$this->Handlers->HasKey($Handler->Verb))
+		$this->Handlers->Shove($Handler->Verb, new Datastore);
+
+		$this->Handlers[$Handler->Verb]->Push($Handler);
+
+		return $this;
+	}
+
+	public function
+	AddHandlers(iterable $Handlers):
+	static {
+
+		$Handler = NULL;
+
+		foreach($Handlers as $Handler) {
+			if($Handler instanceof Meta\RouteHandler)
+			$this->AddHandler($Handler);
+		}
+
+		return $this;
+	}
+
+	public function
+	AddErrorHandler(int $Code, Meta\RouteHandler $Handler):
+	static {
+
+		$this->ErrorHandlers[$Code] = $Handler;
+
+		return $this;
+	}
+
+	public function
+	AddErrorHandlers(iterable $Handlers):
+	static {
+
+		$Key = NULL;
+		$Handler = NULL;
+
+		foreach($Handlers as $Key => $Handler) {
+			if(!($Handler instanceof Meta\RouteHandler))
+			continue;
+
+			$this->ErrorHandlers[$Key] = $Handler;
+		}
+
+		return $this;
+	}
+
+	public function
 	GetHandlers():
 	Datastore {
 
