@@ -25,6 +25,12 @@ class Router {
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
 
+	protected bool
+	$HasExecuted = FALSE;
+
+	protected bool
+	$HasRendered = FALSE;
+
 	protected ?string
 	$RouteFile = NULL;
 
@@ -55,6 +61,15 @@ class Router {
 		$this->ErrorHandlers = new Datastore;
 
 		$this->OnReady();
+		return;
+	}
+
+	public function
+	__Destruct() {
+
+		if($this->HasExecuted && !$this->HasRendered)
+		$this->Render();
+
 		return;
 	}
 
@@ -110,6 +125,16 @@ class Router {
 		elseif($this->RouteRoot && is_dir($this->RouteRoot)) {
 			$this->ScanForRoutes();
 		}
+
+		return;
+	}
+
+	public function
+	ResetExecutedRendered():
+	void {
+
+		$this->HasExecuted = FALSE;
+		$this->HasRendered = FALSE;
 
 		return;
 	}
@@ -320,6 +345,8 @@ class Router {
 	run the proper 404 handler.
 	//*/
 
+		$this->HasExecuted = TRUE;
+
 		if($Handler !== NULL)
 		return $this->Execute_RouteHandler($Handler, $ExtraData);
 
@@ -371,7 +398,9 @@ class Router {
 	tells the current response object to render out.
 	//*/
 
+		$this->HasRendered = TRUE;
 		$this->Response->Render();
+
 		return $this;
 	}
 

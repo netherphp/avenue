@@ -63,6 +63,13 @@ class Route {
 	}
 
 	public function
+	__Destruct() {
+
+		$this->OnDestroy();
+		return;
+	}
+
+	public function
 	__Call(string $Name, array $Argv):
 	mixed {
 
@@ -89,7 +96,6 @@ class Route {
 
 		return;
 	}
-
 
 	public function
 	OnReady(?Datastore $ExtraData):
@@ -121,5 +127,40 @@ class Route {
 		return;
 	}
 
+	public function
+	OnDestroy():
+	void {
+
+		return;
+	}
+
+	////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////
+
+	public function
+	Goto(string $URI, string $AppendGoto=''):
+	void {
+	/*//
+	@date 2022-11-11
+	//*/
+
+		if($AppendGoto) {
+			if($AppendGoto === 'nether://self')
+			$AppendGoto = $this->GetEncodedURL();
+			else
+			$AppendGoto = base64_encode($AppendGoto);
+
+			// repare the final header url.
+
+			if(strpos($URI,'?') === FALSE)
+			$URI .= "?goto={$AppendGoto}";
+			else
+			$URI .= "&goto={$AppendGoto}";
+		}
+
+		header("Location: {$URI}");
+		exit(0);
+		return;
+	}
 
 }
