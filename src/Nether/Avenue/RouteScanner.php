@@ -62,6 +62,7 @@ class RouteScanner {
 		$RouteClass = NULL;
 		$RouteMethods = NULL;
 		$RouteMethod = NULL;
+		$RM = NULL;
 
 		////////
 
@@ -72,11 +73,20 @@ class RouteScanner {
 
 		foreach($RouteClasses as $RouteClass) {
 			$RouteMethods = $this->DetermineRoutableMethods($RouteClass);
-			foreach($RouteMethods as $RouteMethod) {
-				if(!isset($Verbs[$RouteMethod->Verb]))
-				$Verbs[$RouteMethod->Verb] = new Datastore;
 
-				$Verbs[$RouteMethod->Verb]->Push($RouteMethod);
+			// support for methods to have multiple route handlers
+			// associated with them.
+
+			foreach($RouteMethods as $RouteMethod) {
+				if(!is_array($RouteMethod))
+				$RouteMethod = [ $RouteMethod ];
+
+				foreach($RouteMethod as $RM) {
+					if(!isset($Verbs[$RM->Verb]))
+					$Verbs[$RM->Verb] = new Datastore;
+
+					$Verbs[$RM->Verb]->Push($RM);
+				}
 			}
 
 			$ErrorMethods = $this->DetermineErrorMethods($RouteClass);

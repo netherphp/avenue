@@ -18,7 +18,7 @@ use ReflectionNamedType;
 use ReflectionAttribute;
 use ReflectionMethod;
 
-#[Attribute(Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::TARGET_METHOD|Attribute::IS_REPEATABLE)]
 class RouteHandler
 implements MethodInfoInterface {
 

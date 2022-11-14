@@ -27,7 +27,7 @@ implements LibraryInitWithConfig {
 	Init(Datastore $Config=NULL):
 	bool {
 
-		static::PrepareDefaultConfig($Config);
+		static::InitDefaultConfig($Config);
 
 		return TRUE;
 	}
@@ -36,7 +36,7 @@ implements LibraryInitWithConfig {
 	////////////////////////////////////////////////////////////////
 
 	static public function
-	PrepareDefaultConfig(?Datastore $Config=NULL):
+	InitDefaultConfig(?Datastore $Config=NULL):
 	Datastore {
 
 		if($Config === NULL)
