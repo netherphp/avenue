@@ -158,7 +158,10 @@ class Route {
 			$URI .= "&goto={$AppendGoto}";
 		}
 
-		header("Location: {$URI}");
+		($this->Response)
+		->SetHeader('Location', $URI)
+		->SetCode(Response::CodeFound);
+
 		exit(0);
 		return;
 	}
