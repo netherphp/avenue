@@ -1,8 +1,10 @@
 <?php
 
 namespace Nether\Avenue;
+use Nether;
 
 use Nether\Avenue\Meta\RouteHandler;
+use Nether\Common\Datafilters;
 use Nether\Object\Datastore;
 use Nether\Object\Package\ClassInfoPackage;
 use Nether\Object\Package\PropertyInfoPackage;
@@ -138,28 +140,38 @@ class Route {
 	////////////////////////////////////////////////////////////////
 
 	public function
-	Goto(string $URI, string $AppendGoto=''):
+	Goto(string $URI, string|bool $AppendGoto=FALSE):
 	void {
 	/*//
 	@date 2022-11-11
 	//*/
 
+		$Output = $URI;
+
+		// decide on if we want to add a goto url argument and if so what
+		// it should actually be.
+
+		if($AppendGoto === TRUE)
+		$AppendGoto = Datafilters::Base64Encode(
+			$this->Request->GetURL()
+		);
+
+		elseif(is_string($AppendGoto))
+		$AppendGoto = Datafilters::Base64Encode($AppendGoto);
+
+		// build final uri.
+
 		if($AppendGoto) {
-			if($AppendGoto === 'nether://self')
-			$AppendGoto = $this->GetEncodedURL();
+			if(str_contains($URI, '?'))
+			$Output .= "&goto={$AppendGoto}";
 			else
-			$AppendGoto = base64_encode($AppendGoto);
-
-			// repare the final header url.
-
-			if(strpos($URI,'?') === FALSE)
-			$URI .= "?goto={$AppendGoto}";
-			else
-			$URI .= "&goto={$AppendGoto}";
+			$Output .= "?goto={$AppendGoto}";
 		}
 
+		// set the response accordingly to gtfo.
+
 		($this->Response)
-		->SetHeader('Location', $URI)
+		->SetHeader('Location', $Output)
 		->SetCode(Response::CodeFound);
 
 		exit(0);

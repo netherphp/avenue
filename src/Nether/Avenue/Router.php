@@ -49,6 +49,9 @@ class Router {
 	protected Datastore
 	$ErrorHandlers;
 
+	protected ?RouteHandler
+	$CurrentHandler = NULL;
+
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
 
@@ -168,6 +171,13 @@ class Router {
 
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
+
+	public function
+	GetCurrentHandler():
+	?RouteHandler {
+
+		return $this->CurrentHandler;
+	}
 
 	public function
 	GetRouteFile():
@@ -380,6 +390,7 @@ class Router {
 	perform route handler execution.
 	//*/
 
+		$this->CurrentHandler = $Handler;
 		$Inst = $Handler->GetRouteInstance($this->Request, $this->Response);
 
 		$this->Response->CaptureBegin();

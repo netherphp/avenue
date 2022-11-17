@@ -1,13 +1,13 @@
 <?php
 
 namespace Nether\Avenue;
+use Nether;
 
 use SplFileInfo;
 use Nether\Object\Datastore;
-use Nether\Avenue\Struct\LibraryInitWithConfig;
 
 class Library
-implements LibraryInitWithConfig {
+extends Nether\Common\Library {
 
 	public const
 	ConfRouteFile    = 'Nether.Avenue.RouteFile',
@@ -24,16 +24,12 @@ implements LibraryInitWithConfig {
 	////////////////////////////////////////////////////////////////
 
 	static public function
-	Init(Datastore $Config=NULL):
-	bool {
+	Init(...$Argv):
+	void {
 
-		static::InitDefaultConfig($Config);
-
-		return TRUE;
+		static::OnInit(...$Argv);
+		return;
 	}
-
-	////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////
 
 	static public function
 	InitDefaultConfig(?Datastore $Config=NULL):
@@ -51,6 +47,15 @@ implements LibraryInitWithConfig {
 		]);
 
 		return $Config;
+	}
+
+	static public function
+	OnInit(?Datastore $Config=NULL, ...$Argv):
+	void {
+
+		static::InitDefaultConfig($Config);
+
+		return;
 	}
 
 }

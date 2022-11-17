@@ -205,6 +205,10 @@ extends Prototype {
 			'POST'
 			=> $_POST,
 
+			// @todo 2022-11-16 in the default case detect query string
+			// format vs form multipart format. and find a good form
+			// multi part decoder.
+
 			default
 			=> Util::ParseQueryString(file_get_contents('php://input'))
 		});
