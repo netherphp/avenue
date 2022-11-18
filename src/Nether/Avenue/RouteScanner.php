@@ -2,6 +2,8 @@
 
 namespace Nether\Avenue;
 
+use Nether\Common;
+
 use FilesystemIterator;
 use SplFileInfo;
 use PhpToken;
@@ -27,6 +29,15 @@ class RouteScanner {
 
 	public array
 	$ErrorRoutes = [];
+
+	public array
+	$HistoryFiles = [];
+
+	public array
+	$HistoryClasses = [];
+
+	public array
+	$HistoryMethods = [];
 
 	public function
 	__Construct(string $Path) {
@@ -135,6 +146,7 @@ class RouteScanner {
 
 		foreach($Dir as $File) {
 			$Path = $File->GetRealPath();
+			$this->HistoryFiles[] = $Path;
 
 			if($File->IsDir()) {
 				$Output->MergeRight(
@@ -187,14 +199,25 @@ class RouteScanner {
 
 		$Output
 		->SetData(
-			($ClassName)::FetchMethodsWithAttribute(RouteHandler::class)
+			($ClassName)::GetMethodsWithAttribute(RouteHandler::class)
 		)
 		->Remap(function(MethodInfo $Method) {
 			$Attr = NULL;
 
-			foreach($Method->Attributes as $Attr)
-			if($Attr instanceof RouteHandler)
-			return $Attr;
+			$this->HistoryMethods[] = $Method->Class . '::' . $Method->Name;
+
+			foreach($Method->Attributes as $Attr) {
+				if(is_object($Attr)) {
+					if($Attr instanceof RouteHandler)
+					return $Attr;
+				}
+
+				if(is_array($Attr)) {
+					foreach($Attr as $AAttr)
+					if($AAttr instanceof RouteHandler)
+					return $Attr;
+				}
+			}
 
 			return NULL;
 		});
@@ -210,6 +233,8 @@ class RouteScanner {
 
 		if(!is_subclass_of($ClassName, static::RouteBaseClass))
 		throw new Error\RouteScannerClassNotValid($ClassName);
+
+		$this->HistoryClasses[] = $ClassName;
 
 		$Output
 		->SetData(
