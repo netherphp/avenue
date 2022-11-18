@@ -40,6 +40,12 @@ extends Prototype {
 	protected string
 	$DomainSep = '.';
 
+	protected bool
+	$VerbRewrite = FALSE;
+
+	protected string
+	$VerbSource = 'verb';
+
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
 
@@ -99,6 +105,11 @@ extends Prototype {
 	public function
 	ParseRequestVerb(?string $Verb=NULL):
 	static {
+
+		if($Verb === NULL) {
+			if($this->VerbRewrite && isset($_GET[$this->VerbSource]))
+			$Verb = $_GET[$this->VerbSource];
+		}
 
 		if($Verb === NULL) {
 			if(isset($_SERVER['REQUEST_METHOD']))
@@ -198,7 +209,7 @@ extends Prototype {
 		// nonstandard ones do not populate a global but can be parsed
 		// from the php input.
 
-		$this->Data = new Datafilter(match($this->Verb){
+		$this->Data = new Datafilter(match($this->Verb) {
 			'GET'
 			=> $_GET,
 

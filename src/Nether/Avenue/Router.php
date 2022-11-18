@@ -105,8 +105,12 @@ class Router {
 		$this->Request = new Request([
 			'DomainLvl'
 			=> ($this->Conf[Library::ConfDomainLvl] ?? 2),
+
 			'DomainSep'
-			=> ($this->Conf[Library::ConfDomainSep] ?? '.')
+			=> ($this->Conf[Library::ConfDomainSep] ?? '.'),
+
+			'VerbRewrite'
+			=> ($this->Conf[Library::ConfVerbRewrite] ?? FALSE)
 		]);
 
 		$this->Request->ParseRequest();

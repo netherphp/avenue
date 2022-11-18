@@ -82,6 +82,9 @@ class RouteScanner {
 				$RouteMethod = [ $RouteMethod ];
 
 				foreach($RouteMethod as $RM) {
+					if($RM instanceof ErrorHandler)
+					continue;
+
 					if(!isset($Verbs[$RM->Verb]))
 					$Verbs[$RM->Verb] = new Datastore;
 
@@ -173,6 +176,10 @@ class RouteScanner {
 	DetermineRoutableMethods(string $ClassName):
 	Datastore {
 
+		// @todo 2022-11-17 clean unused bits up. this was hacked at a bit
+		// to make attributes be extendable and still return if this one
+		// extended the one we wanted.
+
 		$Output = new Datastore;
 
 		if(!is_subclass_of($ClassName, static::RouteBaseClass))
@@ -182,10 +189,15 @@ class RouteScanner {
 		->SetData(
 			($ClassName)::FetchMethodsWithAttribute(RouteHandler::class)
 		)
-		->Remap(
-			fn(MethodInfo $Method)=>
-			($Method->Attributes[RouteHandler::class])
-		);
+		->Remap(function(MethodInfo $Method) {
+			$Attr = NULL;
+
+			foreach($Method->Attributes as $Attr)
+			if($Attr instanceof RouteHandler)
+			return $Attr;
+
+			return NULL;
+		});
 
 		return $Output;
 	}
@@ -201,7 +213,7 @@ class RouteScanner {
 
 		$Output
 		->SetData(
-			($ClassName)::FetchMethodsWithAttribute(ErrorHandler::class)
+			($ClassName)::GetMethodsWithAttribute(ErrorHandler::class)
 		)
 		->Remap(
 			fn(MethodInfo $Method)=>

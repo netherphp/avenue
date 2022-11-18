@@ -1,6 +1,7 @@
 <?php
 
 namespace Nether\Avenue\Meta;
+use Nether;
 
 use Nether\Avenue\Route;
 use Nether\Avenue\Request;
@@ -172,8 +173,11 @@ implements MethodInfoInterface {
 		// 1 is the domain name
 		// 2+ are the arguments.
 
+		//Nether\Common\Dump::Var($this->Args);
+
 		foreach($this->Args as $Arg) {
-			$Arg->Value = $Data[$Iter++];
+			if(array_key_exists($Iter++, $Data))
+			$Arg->Value = $Data[$Iter];
 
 			// data from the urls and stuff come in as strings they will
 			// be recast for the method args.
@@ -189,7 +193,7 @@ implements MethodInfoInterface {
 				// zero and one to parse as bools.
 
 				if($Arg->Type !== 'string')
-				if(!ctype_digit($Arg->Value))
+				if($Arg->Value !== NULL && !ctype_digit($Arg->Value))
 				$Arg->Value = 0;
 
 				settype($Arg->Value, $Arg->Type);

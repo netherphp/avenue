@@ -14,7 +14,8 @@ extends Nether\Common\Library {
 	ConfRouteRoot    = 'Nether.Avenue.RouteRoot',
 	ConfWebRoot      = 'Nether.Avenue.WebRoot',
 	ConfDomainLvl    = 'Nether.Avenue.DomainLvl',
-	ConfDomainSep    = 'Nether.Avenue.DomainSep';
+	ConfDomainSep    = 'Nether.Avenue.DomainSep',
+	ConfVerbRewrite  = 'Nether.Avenue.VerbRewrite';
 
 	public const
 	RouteSourceScan = 'dirscan',
