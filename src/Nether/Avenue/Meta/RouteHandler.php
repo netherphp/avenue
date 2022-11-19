@@ -176,8 +176,8 @@ implements MethodInfoInterface {
 		//Nether\Common\Dump::Var($this->Args);
 
 		foreach($this->Args as $Arg) {
-			if(array_key_exists($Iter++, $Data))
-			$Arg->Value = $Data[$Iter];
+			if(array_key_exists($Iter, $Data))
+			$Arg->Value = $Data[$Iter++];
 
 			// data from the urls and stuff come in as strings they will
 			// be recast for the method args.
