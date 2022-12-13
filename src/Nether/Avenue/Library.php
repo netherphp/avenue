@@ -40,11 +40,12 @@ extends Nether\Common\Library {
 		$Config = new Datastore;
 
 		$Config->BlendRight([
-			static::ConfDomainLvl => 2,
-			static::ConfDomainSep => '.',
-			static::ConfRouteFile => '../routes.phson',
-			static::ConfRouteRoot => '../routes',
-			static::ConfWebRoot   => 'www'
+			static::ConfDomainLvl   => 2,
+			static::ConfDomainSep   => '.',
+			static::ConfRouteFile   => '../routes.phson',
+			static::ConfRouteRoot   => '../routes',
+			static::ConfWebRoot     => 'www',
+			static::ConfVerbRewrite => FALSE
 		]);
 
 		return $Config;
