@@ -17,7 +17,7 @@ extends PHPUnit\Framework\TestCase {
 		$Config = new Datastore;
 		$this->AssertCount(0, $Config);
 
-		Library::Init($Config);
+		new Library(Config: $Config);
 		$this->AssertTrue(count($Config) >= 5);
 
 		return;

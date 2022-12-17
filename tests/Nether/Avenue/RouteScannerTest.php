@@ -184,7 +184,7 @@ extends PHPUnit\Framework\TestCase {
 
 		$Expect = [
 			'TestRoutes\\Home'   => [ 'Index', 'About' ],
-			'TestRoutes\\Errors' => [],
+			'TestRoutes\\Errors' => [ 'NotFound', 'Forbidden' ],
 			'TestRoutes\\Blog'   => [ 'Index', 'ViewPost' ],
 			'TestRoutes\\Dashboard' => [ 'FailConfirm', 'SingleConfirm', 'DoubleConfirm' ],
 			'TestRoutes\\Deep\\Deeper\\DeepRoute' => [ 'SoDeep' ],

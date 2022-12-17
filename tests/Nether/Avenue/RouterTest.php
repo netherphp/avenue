@@ -92,7 +92,8 @@ extends PHPUnit\Framework\TestCase {
 		$RouteRoot = sprintf('%s/routes', dirname(__FILE__, 4));
 		$WebRoot = sprintf('%s/www', dirname(__FILE__, 4));
 
-		$Conf = Library::InitDefaultConfig();
+		$Ave = new Library();
+		$Conf = $Ave::Config();
 		$Conf[Library::ConfRouteFile] = NULL;
 		$Conf[Library::ConfRouteRoot] = $RouteRoot;
 		$Conf[Library::ConfWebRoot] = $WebRoot;
