@@ -22,7 +22,7 @@ extends PHPUnit\Framework\TestCase {
 	TestUnconfigured():
 	void {
 
-		$RouteRoot = sprintf('%s/routes', dirname(__FILE__, 4));
+		$RouteRoot = sprintf('%s/testdata/routes', dirname(__FILE__, 4));
 		$WebRoot = sprintf('%s/www', dirname(__FILE__, 4));
 		$HadExcept = FALSE;
 		$Conf = new Datastore;
@@ -89,7 +89,7 @@ extends PHPUnit\Framework\TestCase {
 	TestRouterDynamic():
 	void {
 
-		$RouteRoot = sprintf('%s/routes', dirname(__FILE__, 4));
+		$RouteRoot = sprintf('%s/testdata/routes', dirname(__FILE__, 4));
 		$WebRoot = sprintf('%s/www', dirname(__FILE__, 4));
 
 		$Ave = new Library();
@@ -114,8 +114,8 @@ extends PHPUnit\Framework\TestCase {
 	TestRouterStatic():
 	void {
 
-		$RouteRoot = sprintf('%s/routes', dirname(__FILE__, 4));
-		$RouteFile = sprintf('%s/routes-test.phson', dirname(__FILE__, 4));
+		$RouteRoot = sprintf('%s/testdata/routes', dirname(__FILE__, 4));
+		$RouteFile = sprintf('%s/testdata/routes-test.phson', dirname(__FILE__, 4));
 		$WebRoot = sprintf('%s/www', dirname(__FILE__, 4));
 		$Conf = new Datastore;
 
@@ -261,7 +261,7 @@ extends PHPUnit\Framework\TestCase {
 	TestRouterExecute():
 	void {
 
-		$RouteFile = sprintf('%s/routes-test.phson', dirname(__FILE__, 4));
+		$RouteFile = sprintf('%s/testdata/routes-test.phson', dirname(__FILE__, 4));
 		$WebRoot = sprintf('%s/www', dirname(__FILE__, 4));
 		$Conf = new Datastore;
 		$Handler = NULL;
@@ -311,7 +311,7 @@ extends PHPUnit\Framework\TestCase {
 	TestRouterRender():
 	void {
 
-		$RouteFile = sprintf('%s/routes-test.phson', dirname(__FILE__, 4));
+		$RouteFile = sprintf('%s/testdata/routes-test.phson', dirname(__FILE__, 4));
 		$WebRoot = sprintf('%s/www', dirname(__FILE__, 4));
 		$Conf = new Datastore;
 		$Handler = NULL;
@@ -341,7 +341,7 @@ extends PHPUnit\Framework\TestCase {
 	TestRouterRun():
 	void {
 
-		$RouteFile = sprintf('%s/routes-test.phson', dirname(__FILE__, 4));
+		$RouteFile = sprintf('%s/testdata/routes-test.phson', dirname(__FILE__, 4));
 		$WebRoot = sprintf('%s/www', dirname(__FILE__, 4));
 		$Conf = new Datastore;
 		$Handler = NULL;

@@ -20,7 +20,7 @@ extends PHPUnit\Framework\TestCase {
 	TestLocateRoutes():
 	void {
 
-		$Path = sprintf('%s/routes', dirname(__FILE__, 4));
+		$Path = sprintf('%s/testdata/routes', dirname(__FILE__, 4));
 		$HadExcept = NULL;
 
 		// try a path that should be valid and working.
@@ -86,7 +86,7 @@ extends PHPUnit\Framework\TestCase {
 	TestFetchFiles():
 	void {
 
-		$Path = sprintf('%s/routes', dirname(__FILE__, 4));
+		$Path = sprintf('%s/testdata/routes', dirname(__FILE__, 4));
 		$Scanner = new RouteScanner($Path);
 		$Files = NULL;
 		$Expect = NULL;
@@ -124,7 +124,7 @@ extends PHPUnit\Framework\TestCase {
 	TestDetermineRoutableClasses():
 	void {
 
-		$Path = sprintf('%s/routes', dirname(__FILE__, 4));
+		$Path = sprintf('%s/testdata/routes', dirname(__FILE__, 4));
 		$Scanner = new RouteScanner($Path);
 		$Files = $Scanner->FetchFilesInDir($Scanner->Directory);
 		$Classes = NULL;
@@ -165,7 +165,7 @@ extends PHPUnit\Framework\TestCase {
 		// its because the array_diff method used. it should scan the file
 		// for tokens.
 
-		$Path = sprintf('%s/routes', dirname(__FILE__, 4));
+		$Path = sprintf('%s/testdata/routes', dirname(__FILE__, 4));
 		$Scanner = new RouteScanner($Path);
 		$Files = $Scanner->FetchFilesInDir($Scanner->Directory);
 		$Classes = $Scanner->DetermineRoutableClasses($Files);
@@ -282,7 +282,7 @@ extends PHPUnit\Framework\TestCase {
 	TestGenerate():
 	void {
 
-		$Path = sprintf('%s/routes', dirname(__FILE__, 4));
+		$Path = sprintf('%s/testdata/routes', dirname(__FILE__, 4));
 		$Scanner = new RouteScanner($Path);
 		$Map = $Scanner->Generate();
 		$Verbs = NULL;

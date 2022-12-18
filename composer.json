@@ -27,7 +27,7 @@
 			"Nether\\":"src/"
 		},
 		"psr-4": {
-			"TestRoutes\\": "routes/"
+			"TestRoutes\\": "testdata/routes/"
 		}
 	},
 	"bin": [

@@ -22,21 +22,21 @@ extends PHPUnit\Framework\TestCase {
 
 		// test a file with known stupid.
 
-		$Path = sprintf('%s/routes/NotActuallyAnRoute.php', dirname(__FILE__, 4));
+		$Path = sprintf('%s/testdata/routes/NotActuallyAnRoute.php', dirname(__FILE__, 4));
 		$Found = Util::FindClassesInFile($Path);
 		$this->AssertCount(1, $Found);
 
 		// test a file with known syntax errors.
 
-		$Path = sprintf('%s/misc/syntax-error-namespace1.php', dirname(__FILE__, 4));
+		$Path = sprintf('%s/testdata/misc/syntax-error-namespace1.php', dirname(__FILE__, 4));
 		$Found = Util::FindClassesInFile($Path);
 		$this->AssertCount(0, $Found);
 
-		$Path = sprintf('%s/misc/syntax-error-namespace2.php', dirname(__FILE__, 4));
+		$Path = sprintf('%s/testdata/misc/syntax-error-namespace2.php', dirname(__FILE__, 4));
 		$Found = Util::FindClassesInFile($Path);
 		$this->AssertCount(0, $Found);
 
-		$Path = sprintf('%s/misc/syntax-error-class1.php', dirname(__FILE__, 4));
+		$Path = sprintf('%s/testdata/misc/syntax-error-class1.php', dirname(__FILE__, 4));
 		$Found = Util::FindClassesInFile($Path);
 		$this->AssertCount(0, $Found);
 
