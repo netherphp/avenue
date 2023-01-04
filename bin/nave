@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+use Nether\Console;
+
 use Nether\Object\Datastore;
 use Nether\Avenue\Error\RouteScannerDirInvalid;
 use Nether\Avenue\Error\RouteScannerDirUnreadable;
@@ -28,9 +30,10 @@ use Nether\Avenue\Error\RouteScannerDirUnreadable;
 ////////////////////////////////////////////////////////////////////////////////
 
 class App
-extends Nether\Console\Client {
+extends Console\Client {
 
-	#[Nether\Console\Meta\Command]
+	#[Console\Meta\Command]
+	#[Console\Meta\Toggle('--atlantis', 'Include the Atlantis framework routes.')]
 	public function
 	Gen():
 	int {
