@@ -302,7 +302,7 @@ implements MethodInfoInterface {
 
 		$RegEx = preg_replace(
 			'#\\\\:[A-Za-z0-9]+\\\\:#',
-			'(.+?)',
+			'([^\/]+)',
 			"#^//{$DomainComp}{$PathComp}$#"
 		);
 
