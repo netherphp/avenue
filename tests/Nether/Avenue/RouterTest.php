@@ -12,7 +12,7 @@ use Nether\Avenue\Meta\RouteHandler;
 use Nether\Avenue\Error\RouterRouteRootUndefined;
 use Nether\Avenue\Error\RouterWebRootUndefined;
 use Nether\Avenue\Error\RouteMissingWillAnswerRequest;
-use Nether\Object\Datastore;
+use Nether\Common\Datastore;
 
 class RouterTest
 extends PHPUnit\Framework\TestCase {

@@ -4,7 +4,7 @@ namespace Nether\Avenue;
 use Nether;
 
 use SplFileInfo;
-use Nether\Object\Datastore;
+use Nether\Common\Datastore;
 
 class Library
 extends Nether\Common\Library {

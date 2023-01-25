@@ -3,7 +3,7 @@
 
 use Nether\Console;
 
-use Nether\Object\Datastore;
+use Nether\Common\Datastore;
 use Nether\Avenue\Error\RouteScannerDirInvalid;
 use Nether\Avenue\Error\RouteScannerDirUnreadable;
 

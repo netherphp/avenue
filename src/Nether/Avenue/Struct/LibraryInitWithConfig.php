@@ -2,7 +2,7 @@
 
 namespace Nether\Avenue\Struct;
 
-use Nether\Object\Datastore;
+use Nether\Common\Datastore;
 
 interface LibraryInitWithConfig {
 

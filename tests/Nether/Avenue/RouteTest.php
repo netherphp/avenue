@@ -8,7 +8,7 @@ use Nether\Avenue\Request;
 use Nether\Avenue\Response;
 use Nether\Avenue\Meta\RouteHandler;
 use Nether\Avenue\Meta\ConfirmWillAnswerRequest;
-use Nether\Object\Prototype\MethodInfo;
+use Nether\Common\Prototype\MethodInfo;
 
 class TestRoute1
 extends Route {

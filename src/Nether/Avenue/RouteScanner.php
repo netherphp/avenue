@@ -8,8 +8,8 @@ use FilesystemIterator;
 use SplFileInfo;
 use PhpToken;
 
-use Nether\Object\Datastore;
-use Nether\Object\Prototype\MethodInfo;
+use Nether\Common\Datastore;
+use Nether\Common\Prototype\MethodInfo;
 use Nether\Avenue\Meta\RouteHandler;
 use Nether\Avenue\Meta\ErrorHandler;
 

@@ -4,7 +4,7 @@ namespace NetherTestSuite\AvenueTests;
 use PHPUnit;
 
 use Nether\Avenue\Request;
-use Nether\Object\Datafilter;
+use Nether\Common\Datafilter;
 
 class RequestTest
 extends PHPUnit\Framework\TestCase {

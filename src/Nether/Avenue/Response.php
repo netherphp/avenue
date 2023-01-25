@@ -2,9 +2,9 @@
 
 namespace Nether\Avenue;
 
-use Nether\Object\Prototype;
-use Nether\Object\Datastore;
-use Nether\Object\Meta\PropertyObjectify;
+use Nether\Common\Prototype;
+use Nether\Common\Datastore;
+use Nether\Common\Meta\PropertyObjectify;
 
 class Response
 extends Prototype {

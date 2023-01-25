@@ -2,8 +2,8 @@
 
 namespace Nether\Avenue;
 
-use Nether\Object\Prototype;
-use Nether\Object\Datastore;
+use Nether\Common\Prototype;
+use Nether\Common\Datastore;
 use Nether\Avenue\Meta\RouteHandler;
 
 use SplFileInfo;

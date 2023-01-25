@@ -13,13 +13,13 @@
 	],
 	"require": {
 		"php": "^8.1",
-		"netherphp/common": "^5.0",
+		"netherphp/common": "^5.0.5",
 		"netherphp/object": "dev-redux",
 		"netherphp/console": "dev-redux"
 	},
 	"require-dev": {
-		"netherphp/standards": ">=0.1.9",
-		"phpunit/phpunit": "^9.5",
+		"netherphp/standards": ">=0.2.8",
+		"phpunit/phpunit": "^9.5.28",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.2"
 	},
 	"autoload": {

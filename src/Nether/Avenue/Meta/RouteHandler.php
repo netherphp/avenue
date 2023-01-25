@@ -9,9 +9,9 @@ use Nether\Avenue\Response;
 use Nether\Avenue\Util;
 use Nether\Avenue\Struct\RouteHandlerArg;
 use Nether\Avenue\Error\RouteMissingWillAnswerRequest;
-use Nether\Object\Datastore;
-use Nether\Object\Prototype\MethodInfo;
-use Nether\Object\Prototype\MethodInfoInterface;
+use Nether\Common\Datastore;
+use Nether\Common\Prototype\MethodInfo;
+use Nether\Common\Prototype\MethodInfoInterface;
 
 use Attribute;
 use Exception;

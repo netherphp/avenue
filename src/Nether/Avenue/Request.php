@@ -2,9 +2,9 @@
 
 namespace Nether\Avenue;
 
-use Nether\Object\Prototype;
-use Nether\Object\Datafilter;
-use Nether\Object\Prototype\PropertyInfo;
+use Nether\Common\Prototype;
+use Nether\Common\Datafilter;
+use Nether\Common\Prototype\PropertyInfo;
 use Nether\Avenue\Util;
 
 class Request

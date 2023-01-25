@@ -4,7 +4,7 @@ namespace NetherTestSuite\AvenueTests;
 use PHPUnit;
 
 use Nether\Avenue\Library;
-use Nether\Object\Datastore;
+use Nether\Common\Datastore;
 
 class LibraryTest
 extends PHPUnit\Framework\TestCase {

@@ -10,7 +10,7 @@ use Nether\Avenue\Meta\RouteHandler;
 use Nether\Avenue\Error\RouteScannerDirInvalid;
 use Nether\Avenue\Error\RouteScannerDirUnreadable;
 use Nether\Avenue\Error\RouteScannerClassNotValid;
-use Nether\Object\Datastore;
+use Nether\Common\Datastore;
 
 class RouteScannerTest
 extends PHPUnit\Framework\TestCase {
