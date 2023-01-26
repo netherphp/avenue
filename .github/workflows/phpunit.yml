@@ -31,9 +31,6 @@ jobs:
       - name: Run PHPUnit
         run: |
           composer install
-          cd vendor/netherphp/object
-          git pull origin redux
-          cd ../../../
           phpunit tests --bootstrap vendor/autoload.php --coverage-clover ./coverage.xml
       - name: Push to Codecov Probably
         if: ${{ matrix.php-versions == '8.1' && matrix.operating-system == 'ubuntu-latest' }}

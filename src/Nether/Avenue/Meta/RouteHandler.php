@@ -347,7 +347,7 @@ implements MethodInfoInterface {
 		// in before a wildcard consumes it all.
 
 		$Bit = NULL;
-		$Bits = explode('/', trim($this->Path, '/'));
+		$Bits = explode('/', trim($this->Path ?? '', '/'));
 
 		$Bout = sprintf(
 			'%s',
