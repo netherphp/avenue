@@ -306,6 +306,14 @@ implements MethodInfoInterface {
 			"#^//{$DomainComp}{$PathComp}$#"
 		);
 
+		//\Nether\Common\Dump::Var($RegEx, TRUE);
+
+		$RegEx = str_replace(
+			'\:([^\/]+)\:',
+			'(.+?)',
+			$RegEx
+		);
+
 		return $RegEx;
 	}
 
