@@ -336,8 +336,6 @@ implements MethodInfoInterface {
 	remap the method arguments for dumping into the method calls.
 	//*/
 
-		//\Nether\Common\Dump::Var($this->Args, TRUE);
-
 		if(array_key_exists('ExtraData', $this->Args))
 		$this->Args['ExtraData']->Value = $ExtraData;
 
