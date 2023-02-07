@@ -252,7 +252,7 @@ implements MethodInfoInterface {
 
 			$Inst->OnWillConfirmReady($ExtraData);
 			$Confirm = ($Inst)->{$Attrib->MethodName}(
-				...$this->GetMethodArgValues()
+				...$this->GetMethodArgValues($ExtraData)
 			);
 			$Inst->OnWillConfirmDone();
 
@@ -330,11 +330,16 @@ implements MethodInfoInterface {
 	}
 
 	public function
-	GetMethodArgValues():
+	GetMethodArgValues(?Datastore $ExtraData=NULL):
 	array {
 	/*//
 	remap the method arguments for dumping into the method calls.
 	//*/
+
+		//\Nether\Common\Dump::Var($this->Args, TRUE);
+
+		if(array_key_exists('ExtraData', $this->Args))
+		$this->Args['ExtraData']->Value = $ExtraData;
 
 		return array_map(
 			function(RouteHandlerArg $Arg){ return $Arg->Value; },

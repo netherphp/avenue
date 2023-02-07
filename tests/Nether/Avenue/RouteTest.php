@@ -9,6 +9,7 @@ use Nether\Avenue\Response;
 use Nether\Avenue\Meta\RouteHandler;
 use Nether\Avenue\Meta\ConfirmWillAnswerRequest;
 use Nether\Common\Prototype\MethodInfo;
+use Nether\Common\Datastore;
 
 class TestRoute1
 extends Route {
@@ -16,6 +17,26 @@ extends Route {
 	#[RouteHandler('/index')]
 	public function
 	Index():
+	void { return; }
+
+	#[RouteHandler('/extradata1')]
+	public function
+	ExtraData1():
+	void { return; }
+
+	#[RouteHandler('/extradata2/:Arg:')]
+	public function
+	ExtraData2(Datastore $ExtraData):
+	void { return; }
+
+	#[RouteHandler('/extradata3/:arg:')]
+	public function
+	ExtraData3(string $Arg, Datastore $ExtraData):
+	void { return; }
+
+	#[RouteHandler('/extradata3/:arg:')]
+	public function
+	ExtraData4(Datastore $ExtraData, string $Arg):
 	void { return; }
 
 }
@@ -52,8 +73,6 @@ extends PHPUnit\Framework\TestCase {
 	public function
 	TestBasic2():
 	void {
-
-
 
 		$this->AssertTrue(TRUE);
 		return;

@@ -183,7 +183,7 @@ extends PHPUnit\Framework\TestCase {
 		$Classes->Sort()->Revalue();
 
 		$Expect = [
-			'TestRoutes\\Home'   => [ 'Index', 'About' ],
+			'TestRoutes\\Home'   => [ 'Index', 'About', 'ExtraData1', 'ExtraData2', 'ExtraData3', 'ExtraData4' ],
 			'TestRoutes\\Errors' => [ 'NotFound', 'Forbidden' ],
 			'TestRoutes\\Blog'   => [ 'Index', 'ViewPost' ],
 			'TestRoutes\\Dashboard' => [ 'FailConfirm', 'SingleConfirm', 'DoubleConfirm' ],
@@ -296,6 +296,10 @@ extends PHPUnit\Framework\TestCase {
 		$RouteHandlers = [
 			'TestRoutes\\Home::Index',
 			'TestRoutes\\Home::About',
+			'TestRoutes\\Home::ExtraData1',
+			'TestRoutes\\Home::ExtraData2',
+			'TestRoutes\\Home::ExtraData3',
+			'TestRoutes\\Home::ExtraData4',
 			'TestRoutes\\Blog::Index',
 			'TestRoutes\\Blog::ViewPost',
 			'TestRoutes\\Dashboard::FailConfirm',

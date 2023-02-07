@@ -2,8 +2,9 @@
 
 namespace Nether\Avenue;
 
+use Nether\Common;
+
 use Nether\Common\Prototype;
-use Nether\Common\Datastore;
 use Nether\Avenue\Meta\RouteHandler;
 
 use SplFileInfo;
@@ -13,7 +14,7 @@ class Router {
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
 
-	public Datastore
+	public Common\Datastore
 	$Conf;
 
 	public Request
@@ -43,10 +44,10 @@ class Router {
 	protected ?string
 	$WebRoot = NULL;
 
-	protected Datastore
+	protected Common\Datastore
 	$Handlers;
 
-	protected Datastore
+	protected Common\Datastore
 	$ErrorHandlers;
 
 	protected ?RouteHandler
@@ -56,12 +57,12 @@ class Router {
 	////////////////////////////////////////////////////////////////
 
 	public function
-	__Construct(Datastore $Conf) {
+	__Construct(Common\Datastore $Conf) {
 
 		$this->Conf = $Conf;
 
-		$this->Handlers = new Datastore;
-		$this->ErrorHandlers = new Datastore;
+		$this->Handlers = new Common\Datastore;
+		$this->ErrorHandlers = new Common\Datastore;
 
 		$this->OnReady();
 		return;
@@ -150,7 +151,7 @@ class Router {
 	ReadRouteFile():
 	static {
 
-		$Map = Datastore::NewFromFile($this->RouteFile);
+		$Map = Common\Datastore::NewFromFile($this->RouteFile);
 
 		$this->RouteSource = Library::RouteSourceFile;
 		$this->Handlers->MergeRight($Map['Verbs']);
@@ -202,7 +203,7 @@ class Router {
 	static {
 
 		if(!$this->Handlers->HasKey($Handler->Verb))
-		$this->Handlers->Shove($Handler->Verb, new Datastore);
+		$this->Handlers->Shove($Handler->Verb, new Common\Datastore);
 
 		$this->Handlers[$Handler->Verb]->Push($Handler);
 
@@ -251,14 +252,14 @@ class Router {
 
 	public function
 	GetHandlers():
-	Datastore {
+	Common\Datastore {
 
 		return $this->Handlers;
 	}
 
 	public function
 	GetErrorHandlers():
-	Datastore {
+	Common\Datastore {
 
 		return $this->ErrorHandlers;
 	}
@@ -269,7 +270,7 @@ class Router {
 
 		($this->Handlers)
 		->Each(
-			fn(Datastore $Verb)
+			fn(Common\Datastore $Verb)
 			=> $Verb->Sort(
 				function(RouteHandler $A, RouteHandler $B) {
 					$CA = substr_count($A->Sort, '-');
@@ -299,7 +300,7 @@ class Router {
 	////////////////////////////////////////////////////////////////
 
 	public function
-	Select(?Datastore $ExtraData=NULL):
+	Select(?Common\Datastore $ExtraData=NULL):
 	?RouteHandler {
 	/*//
 	inspect the current request and determine if we have a handler that can
@@ -352,7 +353,7 @@ class Router {
 	}
 
 	public function
-	Execute(?RouteHandler $Handler, ?Datastore $ExtraData=NULL):
+	Execute(?RouteHandler $Handler, ?Common\Datastore $ExtraData=NULL):
 	static {
 	/*//
 	execute the specified handler. if none was specified then it will try to
@@ -388,7 +389,7 @@ class Router {
 	}
 
 	protected function
-	Execute_RouteHandler(RouteHandler $Handler, ?Datastore $ExtraData):
+	Execute_RouteHandler(RouteHandler $Handler, ?Common\Datastore $ExtraData):
 	static {
 	/*//
 	perform route handler execution.
@@ -399,7 +400,7 @@ class Router {
 
 		$this->Response->CaptureBegin();
 		$Inst->OnReady($ExtraData);
-		$Inst->{$Handler->Method}(...$Handler->GetMethodArgValues());
+		$Inst->{$Handler->Method}(...$Handler->GetMethodArgValues($ExtraData));
 		$Inst->OnDone();
 		$this->Response->CaptureEnd(TRUE);
 
@@ -420,12 +421,15 @@ class Router {
 	}
 
 	public function
-	Run(?Datastore $ExtraData=NULL):
+	Run(?Common\Datastore $ExtraData=NULL):
 	static {
 	/*//
 	perform all the operations needed to select execute and render out
 	a request and response in one shot.
 	//*/
+
+		if($ExtraData === NULL)
+		$ExtraData = new Common\Datastore;
 
 		$this
 		->SortHandlers()
