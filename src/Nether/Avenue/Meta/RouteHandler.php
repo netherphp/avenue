@@ -112,6 +112,8 @@ implements MethodInfoInterface {
 			if($RefParamType instanceof ReflectionNamedType) {
 				if($RefParamType->IsBuiltIn())
 				$RefParamTypeStr = $RefParamType->GetName();
+				else
+				$RefParamTypeStr = 'mixed';
 			}
 
 			else {
