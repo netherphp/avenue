@@ -223,6 +223,10 @@ implements MethodInfoInterface {
 		$Attrib = NULL;
 		$Confirm = NULL;
 
+		$WillRef = NULL;
+		$WillHdl = NULL;
+		$WillArgs = NULL;
+
 		// check if the method has a ConfirmWillAnswerRequest that defines
 		// what method to use as a pre-check. that method should accept
 		// a request as input and spit a boolean out regarding if it is
@@ -250,9 +254,27 @@ implements MethodInfoInterface {
 
 			////////
 
+			// this is some foolery that allows the confirm method to
+			// have differing arguments than the final handler method
+			// while keeping the path slots intact. WillAnswer methods
+			// can accept the $ExtraData argument while the final handler
+			// will have the extra data expanded as arguments after the
+			// path slots.
+
+			$WillInfo = ($Inst)::GetMethodInfo($Attrib->MethodName);
+			$WillArgs = array_intersect_key($this->Args, $WillInfo->Args);
+
+			if(array_key_exists('ExtraData', $WillInfo->Args))
+			$WillArgs['ExtraData'] = new RouteHandlerArg(
+				Name: 'ExtraData',
+				Type: Datastore::class
+			);
+
+			////////
+
 			$Inst->OnWillConfirmReady($ExtraData);
 			$Confirm = ($Inst)->{$Attrib->MethodName}(
-				...$this->GetMethodArgValues($ExtraData)
+				...static::RemapArgValues($WillArgs, $ExtraData, FALSE)
 			);
 			$Inst->OnWillConfirmDone();
 
@@ -330,18 +352,16 @@ implements MethodInfoInterface {
 	}
 
 	public function
-	GetMethodArgValues(?Datastore $ExtraData=NULL):
+	GetMethodArgValues(?Datastore $ExtraData=NULL, bool $ExpandExtra=FALSE):
 	array {
 	/*//
 	remap the method arguments for dumping into the method calls.
 	//*/
 
-		if(array_key_exists('ExtraData', $this->Args))
-		$this->Args['ExtraData']->Value = $ExtraData;
-
-		return array_map(
-			function(RouteHandlerArg $Arg){ return $Arg->Value; },
-			$this->Args
+		return static::RemapArgValues(
+			$this->Args,
+			$ExtraData,
+			$ExpandExtra
 		);
 	}
 
@@ -378,6 +398,38 @@ implements MethodInfoInterface {
 		};
 
 		return $Bout;
+	}
+
+	static public function
+	RemapArgValues(array $Args, ?Datastore $ExtraData=NULL, bool $ExpandExtra=FALSE):
+	array {
+	/*//
+	remap the method arguments for dumping into the method calls.
+	//*/
+
+		// expand the extradata data set if there is a key in there that
+		// matches an existing argument.
+
+		if($ExpandExtra && $ExtraData)
+		$ExtraData->Each(function(mixed $Val, string $Key) use($Args) {
+			if(array_key_exists($Key, $Args))
+			$Args[$Key]->Value = $Val;
+
+			return;
+		});
+
+		// if an extradata argument was asked for them give it the entire
+		// extradata data object.
+
+		if(array_key_exists('ExtraData', $Args))
+		$Args['ExtraData']->Value = $ExtraData;
+
+		// then remap the values to a flat list.
+
+		return array_map(
+			function(RouteHandlerArg $Arg){ return $Arg->Value; },
+			$Args
+		);
 	}
 
 }

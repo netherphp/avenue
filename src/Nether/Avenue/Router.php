@@ -400,7 +400,7 @@ class Router {
 
 		$this->Response->CaptureBegin();
 		$Inst->OnReady($ExtraData);
-		$Inst->{$Handler->Method}(...$Handler->GetMethodArgValues($ExtraData));
+		$Inst->{$Handler->Method}(...$Handler->GetMethodArgValues($ExtraData, TRUE));
 		$Inst->OnDone();
 		$this->Response->CaptureEnd(TRUE);
 
