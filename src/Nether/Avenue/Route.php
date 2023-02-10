@@ -83,13 +83,13 @@ class Route {
 
 	public function
 	OnWillConfirmReady(?Datastore $ExtraData):
-	void {
+	int {
 	/*// prepare any references that will be needed before the methods are
 	called to do work. this mainly would be to absorb extradata in here for
 	something like your app reference or whatevs. this only runs before
 	queries are asked like the will confirm handlers. //*/
 
-		return;
+		return Response::CodeOK;
 	}
 
 	public function
@@ -172,7 +172,7 @@ class Route {
 
 		($this->Response)
 		->SetHeader('Location', $Output)
-		->SetCode(Response::CodeFound);
+		->SetCode(Response::CodeRedirectTemp);
 
 		exit(0);
 		return;

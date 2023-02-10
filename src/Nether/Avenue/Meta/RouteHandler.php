@@ -272,11 +272,25 @@ implements MethodInfoInterface {
 
 			////////
 
-			$Inst->OnWillConfirmReady($ExtraData);
-			$Confirm = ($Inst)->{$Attrib->MethodName}(
-				...static::RemapArgValues($WillArgs, $ExtraData, FALSE)
-			);
-			$Inst->OnWillConfirmDone();
+			// give the confirm ready method a chance to provide the
+			// same system to accept or bail that the actual confirm
+			// method has. this will provide a way for a framework to
+			// have stuff like a global auth check prior to whatever
+			// it wanted to validate in the confirm method. specifically
+			// for example atlantis uses attributes on the real handing
+			// method to restrict to users or admins. this will allow
+			// the will confirm ready to inspect those prior so that
+			// the final will confirm would not need to.
+
+			$Confirm = $Inst->OnWillConfirmReady($ExtraData);
+
+			if($Confirm === Response::CodeOK) {
+				$Confirm = ($Inst)->{$Attrib->MethodName}(
+					...static::RemapArgValues($WillArgs, $ExtraData, FALSE)
+				);
+
+				$Inst->OnWillConfirmDone();
+			}
 
 			// hard fails will push their response code into the
 			// response object and quit asking. redirects are considered

@@ -321,6 +321,8 @@ class Router {
 			// check if this route can answer for this request.
 			// try the next one.
 
+			$this->CurrentHandler = $Handler;
+
 			if(!$Handler->CanAnswerRequest($this->Request))
 			continue;
 
