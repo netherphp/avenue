@@ -300,7 +300,7 @@ class Router {
 	////////////////////////////////////////////////////////////////
 
 	public function
-	Select(?Common\Datastore $ExtraData=NULL):
+	Select(?Struct\ExtraData $ExtraData=NULL):
 	?RouteHandler {
 	/*//
 	inspect the current request and determine if we have a handler that can
@@ -423,7 +423,7 @@ class Router {
 	}
 
 	public function
-	Run(?Common\Datastore $ExtraData=NULL):
+	Run(?Struct\ExtraData $ExtraData=NULL):
 	static {
 	/*//
 	perform all the operations needed to select execute and render out
@@ -431,7 +431,7 @@ class Router {
 	//*/
 
 		if($ExtraData === NULL)
-		$ExtraData = new Common\Datastore;
+		$ExtraData = new Struct\ExtraData;
 
 		$this
 		->SortHandlers()

@@ -3,6 +3,8 @@
 namespace Nether\Avenue;
 use Nether;
 
+use Nether\Avenue;
+
 use Nether\Avenue\Meta\RouteHandler;
 use Nether\Common\Datafilters;
 use Nether\Common\Datastore;
@@ -82,7 +84,7 @@ class Route {
 	}
 
 	public function
-	OnWillConfirmReady(?Datastore $ExtraData):
+	OnWillConfirmReady(?Avenue\Struct\ExtraData $ExtraData):
 	int {
 	/*// prepare any references that will be needed before the methods are
 	called to do work. this mainly would be to absorb extradata in here for
@@ -100,7 +102,7 @@ class Route {
 	}
 
 	public function
-	OnReady(?Datastore $ExtraData):
+	OnReady(?Avenue\Struct\ExtraData $ExtraData):
 	void {
 	/*// prepare any references that will be needed before the methods are
 	called to do work. this mainly would be to absorb extradata in here for

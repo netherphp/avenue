@@ -7,6 +7,7 @@ use Nether\Avenue\Route;
 use Nether\Avenue\Request;
 use Nether\Avenue\Response;
 use Nether\Avenue\Util;
+use Nether\Avenue\Struct\ExtraData;
 use Nether\Avenue\Struct\RouteHandlerArg;
 use Nether\Avenue\Error\RouteMissingWillAnswerRequest;
 use Nether\Common\Datastore;
@@ -207,7 +208,7 @@ implements MethodInfoInterface {
 	}
 
 	public function
-	WillAnswerRequest(Request $Req, Response $Resp, ?Datastore $ExtraData=NULL):
+	WillAnswerRequest(Request $Req, Response $Resp, ?ExtraData $ExtraData=NULL):
 	?bool {
 	/*//
 	checks if this route is willing to satisify the specified request
@@ -219,6 +220,7 @@ implements MethodInfoInterface {
 
 		$Inst = $this->GetRouteInstance($Req, $Resp);
 		$Info = ($Inst)::GetMethodInfo($this->Method);
+		$ExtraDataName = 'ExtraData';
 		$Attribs = NULL;
 		$Attrib = NULL;
 		$Confirm = NULL;
@@ -264,11 +266,19 @@ implements MethodInfoInterface {
 			$WillInfo = ($Inst)::GetMethodInfo($Attrib->MethodName);
 			$WillArgs = array_intersect_key($this->Args, $WillInfo->Args);
 
-			if(array_key_exists('ExtraData', $WillInfo->Args))
-			$WillArgs['ExtraData'] = new RouteHandlerArg(
-				Name: 'ExtraData',
-				Type: Datastore::class
-			);
+			if($WillInfo->CountArgsOfType(ExtraData::class) > 0) {
+				$ExtraDataName = $WillInfo->GetArgsOfType(ExtraData::class)[0];
+				$WillArgs[$ExtraDataName] = new RouteHandlerArg(
+					Name: $ExtraDataName,
+					Type: ExtraData::class
+				);
+			}
+
+			//if(array_key_exists('ExtraData', $WillInfo->Args))
+			//$WillArgs['ExtraData'] = new RouteHandlerArg(
+			//	Name: 'ExtraData',
+			//	Type: ExtraData::class
+			//);
 
 			////////
 
@@ -286,7 +296,7 @@ implements MethodInfoInterface {
 
 			if($Confirm === Response::CodeOK) {
 				$Confirm = ($Inst)->{$Attrib->MethodName}(
-					...static::RemapArgValues($WillArgs, $ExtraData, FALSE)
+					...static::RemapArgValues($WillArgs, $ExtraData, FALSE, $ExtraDataName)
 				);
 
 				$Inst->OnWillConfirmDone();
@@ -366,7 +376,7 @@ implements MethodInfoInterface {
 	}
 
 	public function
-	GetMethodArgValues(?Datastore $ExtraData=NULL, bool $ExpandExtra=FALSE):
+	GetMethodArgValues(?ExtraData $ExtraData=NULL, bool $ExpandExtra=FALSE):
 	array {
 	/*//
 	remap the method arguments for dumping into the method calls.
@@ -415,7 +425,7 @@ implements MethodInfoInterface {
 	}
 
 	static public function
-	RemapArgValues(array $Args, ?Datastore $ExtraData=NULL, bool $ExpandExtra=FALSE):
+	RemapArgValues(array $Args, ?ExtraData $ExtraData=NULL, bool $ExpandExtra=FALSE, string $NameExtra='ExtraData'):
 	array {
 	/*//
 	remap the method arguments for dumping into the method calls.
@@ -435,8 +445,8 @@ implements MethodInfoInterface {
 		// if an extradata argument was asked for them give it the entire
 		// extradata data object.
 
-		if(array_key_exists('ExtraData', $Args))
-		$Args['ExtraData']->Value = $ExtraData;
+		if(array_key_exists($NameExtra, $Args))
+		$Args[$NameExtra]->Value = $ExtraData;
 
 		// then remap the values to a flat list.
 
