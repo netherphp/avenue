@@ -45,16 +45,12 @@ $Router->Run();
 ```php
 namespace Routes;
 
-use Nether\Avenue\Route;
-use Nether\Avenue\Response;
-use Nether\Avenue\Meta\RouteHandler;
-use Nether\Avenue\Meta\ErrorHandler;
-use Nether\Avenue\Meta\ConfirmWillAnswerRequest;
+use Nether\Avenue;
 
 class Home
-extends Nether\Avenue\Route {
+extends Avenue\Route {
 
-	#[RouteHandler('/index')]
+	#[Avenue\Meta\RouteHandler('/index')]
 	public function
 	Index():
 	void {
@@ -63,8 +59,8 @@ extends Nether\Avenue\Route {
 		return;
 	}
 
-	#[RouteHandler('/dashboard')]
-	#[ConfirmWillAnswerRequest]
+	#[Avenue\Meta\RouteHandler('/dashboard')]
+	#[Avenue\Meta\ConfirmWillAnswerRequest]
 	public function
 	Dashboard():
 	void {
@@ -80,12 +76,12 @@ extends Nether\Avenue\Route {
 		$User = YourAppSessionLib::GetCurrentUser();
 
 		if($User && $User->CanHasDashboard())
-		return Response::CodeOK;
+		return Avenue\Response::CodeOK;
 
-		return Response::CodeForbidden;
+		return Avenue\Response::CodeForbidden;
 	}
 
-	#[ErrorHandler(403)]
+	#[Avenue\Meta\ErrorHandler(403)]
 	public function
 	HandleForbidden():
 	void {
@@ -94,7 +90,7 @@ extends Nether\Avenue\Route {
 		return;
 	}
 
-	#[ErrorHandler(404)]
+	#[Avenue\Meta\ErrorHandler(404)]
 	public function
 	HandleNotFound():
 	void {
