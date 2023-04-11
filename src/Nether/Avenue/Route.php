@@ -174,7 +174,7 @@ class Route {
 
 		($this->Response)
 		->SetHeader('Location', $Output)
-		->SetCode(Response::CodeRedirectTemp);
+		->SetCode(Response::CodeFound);
 
 		exit(0);
 		return;
