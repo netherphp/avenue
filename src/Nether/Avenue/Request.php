@@ -31,6 +31,9 @@ extends Prototype {
 	public Datafilter
 	$File;
 
+	public ?string
+	$RemoteAddr = NULL;
+
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
 
@@ -81,11 +84,22 @@ extends Prototype {
 	static {
 
 		$this
+		->ParseRemote()
 		->ParseProtocol()
 		->ParseRequestVerb($Verb)
 		->ParseRequestDomain($Domain, $this->DomainLvl)
 		->ParseRequestURI($URI)
 		->ParseRequestData();
+
+		return $this;
+	}
+
+	public function
+	ParseRemote():
+	static {
+
+		if(isset($_SERVER['REMOTE_ADDR']))
+		$this->RemoteAddr = $_SERVER['REMOTE_ADDR'];
 
 		return $this;
 	}
