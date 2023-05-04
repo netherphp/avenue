@@ -433,8 +433,14 @@ class Router {
 		if($ExtraData === NULL)
 		$ExtraData = new Struct\ExtraData;
 
+		////////
+
+		if($this->RouteSource !== Library::RouteSourceFile)
+		$this->SortHandlers();
+
+		////////
+
 		$this
-		->SortHandlers()
 		->Execute($this->Select($ExtraData), $ExtraData)
 		->Render();
 
