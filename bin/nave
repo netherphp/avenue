@@ -66,6 +66,7 @@ extends Console\Client {
 			$Conf->Shove(Nether\Avenue\Library::ConfRouteFile, NULL);
 
 			$App = new Nether\Atlantis\Engine(getcwd(), $Conf);
+			$App->Router->SortHandlers();
 			$VHand = $App->Router->GetHandlers();
 			$EHand = $App->Router->GetErrorHandlers();
 
