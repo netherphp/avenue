@@ -53,6 +53,9 @@ class Router {
 	protected ?RouteHandler
 	$CurrentHandler = NULL;
 
+	protected ?Route
+	$CurrentRoute = NULL;
+
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
 
@@ -182,6 +185,13 @@ class Router {
 	?RouteHandler {
 
 		return $this->CurrentHandler;
+	}
+
+	public function
+	GetCurrentRoute():
+	?Route {
+
+		return $this->CurrentRoute;
 	}
 
 	public function
@@ -398,12 +408,12 @@ class Router {
 	//*/
 
 		$this->CurrentHandler = $Handler;
-		$Inst = $Handler->GetRouteInstance($this->Request, $this->Response);
+		$this->CurrentRoute = $Handler->GetRouteInstance($this->Request, $this->Response);
 
 		$this->Response->CaptureBegin();
-		$Inst->OnReady($ExtraData);
-		$Inst->{$Handler->Method}(...$Handler->GetMethodArgValues($ExtraData, TRUE));
-		$Inst->OnDone();
+		$this->CurrentRoute->OnReady($ExtraData);
+		$this->CurrentRoute->{$Handler->Method}(...$Handler->GetMethodArgValues($ExtraData, TRUE));
+		$this->CurrentRoute->OnDone();
 		$this->Response->CaptureEnd(TRUE);
 
 		return $this;
