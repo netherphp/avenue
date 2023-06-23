@@ -155,7 +155,6 @@ class Util {
 		return $Output;
 	}
 
-
 	static public function
 	ParseQueryString(?string $Input):
 	array {
