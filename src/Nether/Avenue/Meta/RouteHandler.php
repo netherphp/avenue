@@ -1,18 +1,17 @@
 <?php
 
 namespace Nether\Avenue\Meta;
-use Nether;
+
+use Nether\Avenue;
+use Nether\Common;
 
 use Nether\Avenue\Route;
 use Nether\Avenue\Request;
 use Nether\Avenue\Response;
-use Nether\Avenue\Util;
 use Nether\Avenue\Struct\ExtraData;
 use Nether\Avenue\Struct\RouteHandlerArg;
 use Nether\Avenue\Error\RouteMissingWillAnswerRequest;
-use Nether\Common\Datastore;
 use Nether\Common\Prototype\MethodInfo;
-use Nether\Common\Prototype\MethodInfoInterface;
 
 use Attribute;
 use Exception;
@@ -22,7 +21,7 @@ use ReflectionMethod;
 
 #[Attribute(Attribute::TARGET_METHOD|Attribute::IS_REPEATABLE)]
 class RouteHandler
-implements MethodInfoInterface {
+implements Common\Prototype\MethodInfoInterface {
 
 	const
 	CanAnswerRequest = 1,
@@ -55,6 +54,19 @@ implements MethodInfoInterface {
 
 	public function
 	__Construct(?string $Path=NULL, ?string $Domain=NULL, ?string $Verb='GET', ?string $Sort=NULL) {
+
+		$Var = NULL;
+
+		// handle being able to look up global settings.
+
+		foreach([ 'Path', 'Domain', 'Verb', 'Sort' ] as $Var)
+		if(is_string($$Var) && str_starts_with($$Var, '@'))
+		$$Var = (
+			Avenue\Library::Get(str_replace('@', '', $$Var))
+			?? $$Var
+		);
+
+		// proceed with processing.
 
 		$this->Verb = strtoupper($Verb);
 		$this->Domain = $Domain;
