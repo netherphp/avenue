@@ -2,13 +2,10 @@
 
 namespace Nether\Avenue\Struct;
 
-use Nether\Atlantis;
-
 use Stringable;
 use JsonSerializable;
 
 class TrafficHash
-extends Atlantis\Prototype
 implements
 	Stringable,
 	JsonSerializable {
@@ -52,9 +49,13 @@ implements
 	JsonSerialize():
 	mixed {
 
-		$Data = $this->DescribeForPublicAPI();
-
-		$Data['Hash'] = $this->Get();
+		$Data = [
+			'Hash'    => $this->Get(),
+			'Visitor' => $this->GetVisitorHash(),
+			'IP'      => $this->IP,
+			'URL'     => $this->URL,
+			'Agent'   => $this->Agent
+		];
 
 		return $Data;
 	}
