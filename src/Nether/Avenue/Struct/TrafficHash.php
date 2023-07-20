@@ -69,4 +69,11 @@ implements
 		return hash('sha512', "{$this->IP}:{$this->URL}:{$this->Agent}");
 	}
 
+	public function
+	GetVisitorHash():
+	string {
+
+		return hash('sha512', "{$this->IP}:{$this->Agent}");
+	}
+
 }
