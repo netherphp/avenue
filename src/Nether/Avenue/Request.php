@@ -34,6 +34,9 @@ extends Prototype {
 	public ?string
 	$RemoteAddr = NULL;
 
+	public ?string
+	$UserAgent = NULL;
+
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
 
@@ -100,6 +103,9 @@ extends Prototype {
 
 		if(isset($_SERVER['REMOTE_ADDR']))
 		$this->RemoteAddr = $_SERVER['REMOTE_ADDR'];
+
+		if(isset($_SERVER['HTTP_USER_AGENT']))
+		$this->UserAgent = $_SERVER['HTTP_USER_AGENT'];
 
 		return $this;
 	}
@@ -260,13 +266,26 @@ extends Prototype {
 			'%s://%s%s',
 			$this->Protocol,
 			(isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $this->Domain),
-			$this->Path
+			preg_replace('/\/index$/', '/', $this->Path)
 		);
 
 		if($this->Query->Count())
 		$Output .= "?{$this->Query->GetQueryString()}";
 
 		return $Output;
+	}
+
+	public function
+	GetTrafficHash():
+	Struct\TrafficHash {
+
+		$Hash = new Struct\TrafficHash(
+			$this->RemoteAddr ?? '0.0.0.0',
+			$this->GetURL(),
+			$this->UserAgent ?? 'Unknown'
+		);
+
+		return $Hash;
 	}
 
 }
