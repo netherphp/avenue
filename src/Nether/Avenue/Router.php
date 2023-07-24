@@ -4,10 +4,9 @@ namespace Nether\Avenue;
 
 use Nether\Common;
 
-use Nether\Common\Prototype;
 use Nether\Avenue\Meta\RouteHandler;
-
-use SplFileInfo;
+use ArgumentCountError;
+use Throwable;
 
 class Router {
 
@@ -412,7 +411,26 @@ class Router {
 
 		$this->Response->CaptureBegin();
 		$this->CurrentRoute->OnReady($ExtraData);
-		$this->CurrentRoute->{$Handler->Method}(...$Handler->GetMethodArgValues($ExtraData, TRUE));
+
+		try {
+			$this->CurrentRoute->{$Handler->Method}(...$Handler->GetMethodArgValues($ExtraData, TRUE));
+		}
+
+		catch(ArgumentCountError $Err) {
+			throw new Error\RouteArgumentError($this->CurrentHandler, $this->CurrentRoute);
+		}
+
+		catch(Throwable $Err) {
+			$ErrMsg = strtolower($Err->GetMessage());
+
+			// imagine if php errors had codes that weren't all zero
+			// wouldn't that be amazing if they used their own features
+			// lmao.
+
+			if(str_contains($ErrMsg, 'unknown named parameter'))
+			throw new Error\RouteArgumentError($this->CurrentHandler, $this->CurrentRoute);
+		}
+
 		$this->CurrentRoute->OnDone();
 		$this->Response->CaptureEnd(TRUE);
 
