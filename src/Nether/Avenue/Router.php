@@ -429,6 +429,8 @@ class Router {
 
 			if(str_contains($ErrMsg, 'unknown named parameter'))
 			throw new Error\RouteArgumentError($this->CurrentHandler, $this->CurrentRoute);
+
+			throw $Err;
 		}
 
 		$this->CurrentRoute->OnDone();
