@@ -2,6 +2,8 @@
 
 namespace Nether\Avenue;
 
+use Nether\Common;
+
 use PhpToken;
 
 class Util {
