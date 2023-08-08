@@ -4,6 +4,7 @@ namespace Nether\Avenue;
 use Nether;
 
 use Nether\Avenue;
+use Nether\Common;
 
 use Nether\Avenue\Meta\RouteHandler;
 use Nether\Common\Datafilters;
@@ -154,12 +155,12 @@ class Route {
 		// it should actually be.
 
 		if($AppendGoto === TRUE)
-		$AppendGoto = Datafilters::Base64Encode(
+		$AppendGoto = Common\Filters\Text::Base64Encode(
 			$this->Request->GetURL()
 		);
 
 		elseif(is_string($AppendGoto))
-		$AppendGoto = Datafilters::Base64Encode($AppendGoto);
+		$AppendGoto = Common\Filters\Text::Base64Encode($AppendGoto);
 
 		// build final uri.
 
