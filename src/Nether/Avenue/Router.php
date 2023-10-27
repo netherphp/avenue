@@ -412,6 +412,13 @@ class Router {
 		$this->Response->CaptureBegin();
 		$this->CurrentRoute->OnReady($ExtraData);
 
+		////////
+
+		if($Handler instanceof Meta\ErrorHandler)
+		$this->Response->SetCode($Handler->Code);
+
+		////////
+
 		try {
 			$this->CurrentRoute->{$Handler->Method}(...$Handler->GetMethodArgValues($ExtraData, TRUE));
 		}
@@ -438,6 +445,8 @@ class Router {
 
 		$this->CurrentRoute->OnDone();
 		$this->Response->CaptureEnd(TRUE);
+
+		////////
 
 		return $this;
 	}
