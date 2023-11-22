@@ -259,6 +259,16 @@ extends Prototype {
 	}
 
 	public function
+	GetPathForWeb():
+	string {
+
+		if($this->Path === '/index')
+		return '/';
+
+		return $this->Path;
+	}
+
+	public function
 	GetURL():
 	string {
 
