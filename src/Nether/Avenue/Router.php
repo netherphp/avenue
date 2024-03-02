@@ -423,12 +423,12 @@ class Router {
 			$this->CurrentRoute->{$Handler->Method}(...$Handler->GetMethodArgValues($ExtraData, TRUE));
 		}
 
-		catch(ArgumentCountError $Err) {
+		#catch(ArgumentCountError $Err) {
 			// @todo 2023-09-13 inspect the trace stack better so that it
 			// catches fewer app fuckups.
-			Common\Dump::Var($Err, TRUE);
-			throw new Error\RouteArgumentError($this->CurrentHandler, $this->CurrentRoute);
-		}
+		#	Common\Dump::Var($Err, TRUE);
+		#	throw new Error\RouteArgumentError($this->CurrentHandler, $this->CurrentRoute);
+		#}
 
 		catch(Throwable $Err) {
 			$ErrMsg = strtolower($Err->GetMessage());
