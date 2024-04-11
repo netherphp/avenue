@@ -64,6 +64,9 @@ extends PHPUnit\Framework\TestCase {
 		$this->AssertTrue($Resp === $Route->Response);
 
 		// test the magic method nullcase.
+		// @todo 2024-04-10 this does not exist magic null stuff i think
+		// is going to be eliminated. nothing ever fleshed out to use it
+		// and i cannot even recall what the original reason was.
 
 		try {
 			$this->AssertNull($Route->DoesNotExist());
