@@ -76,7 +76,10 @@ class Route {
 	__Call(string $Name, array $Argv):
 	mixed {
 
-		// do we really need this method? i mean?
+		// @deprecated 2024-04-10
+		// do we really need this method? whatever reason this was put
+		// in place i think was forgotten by things just going in a less
+		// dumb direction.
 
 		if(!method_exists($this, $Name))
 		throw new Common\Error\MethodNotFound($Name, 'method');
