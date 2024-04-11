@@ -76,10 +76,12 @@ class Route {
 	__Call(string $Name, array $Argv):
 	mixed {
 
-		if(method_exists($this, $Name))
-		return $this->{$Name}(...$Argv);
+		// do we really need this method? i mean?
 
-		return NULL;
+		if(!method_exists($this, $Name))
+		throw new Common\Error\MethodNotFound($Name, 'method');
+
+		return $this->{$Name}(...$Argv);
 	}
 
 	public function
