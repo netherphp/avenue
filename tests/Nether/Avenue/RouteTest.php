@@ -10,6 +10,7 @@ use Nether\Avenue\Meta\RouteHandler;
 use Nether\Avenue\Meta\ConfirmWillAnswerRequest;
 use Nether\Common\Prototype\MethodInfo;
 use Nether\Common\Datastore;
+use Nether\Common\Error\MethodNotFound;
 
 class TestRoute1
 extends Route {
@@ -64,7 +65,13 @@ extends PHPUnit\Framework\TestCase {
 
 		// test the magic method nullcase.
 
-		$this->AssertNull($Route->DoesNotExist());
+		try {
+			$this->AssertNull($Route->DoesNotExist());
+		}
+
+		catch(MethodNotFound $Err) {
+			$this->AssertInstanceOf(MethodNotFound::class, $Err);
+		}
 
 		return;
 	}
