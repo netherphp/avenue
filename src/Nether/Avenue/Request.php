@@ -229,6 +229,8 @@ extends Prototype {
 		// nonstandard ones do not populate a global but can be parsed
 		// from the php input.
 
+		$Headers = new Datafilter(getallheaders());
+
 		$this->Data = new Datafilter(match($this->Verb) {
 			'GET'
 			=> $_GET,
@@ -241,7 +243,16 @@ extends Prototype {
 			// multi part decoder.
 
 			default
-			=> Util::ParseQueryString(file_get_contents('php://input'))
+			=> match(TRUE) {
+				(TRUE
+					&& $Headers->Get('content-type')
+					&& str_starts_with($Headers->Get('content-type'), 'multipart/form-data')
+				)
+				=> Util::ParseMultipartData(file_get_contents('php://input')),
+
+				default
+				=> Util::ParseQueryString(file_get_contents('php://input'))
+			}
 		});
 
 		// bind the file data filter.
