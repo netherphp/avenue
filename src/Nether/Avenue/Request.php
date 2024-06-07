@@ -238,30 +238,29 @@ extends Prototype {
 
 		////////
 
-		$this->Data = new Datafilter(match($this->Verb) {
-			'GET'
-			=> $_GET,
-
-			'POST'
-			=> $_POST,
-
-			// @todo 2022-11-16 in the default case detect query string
-			// format vs form multipart format. and find a good form
-			// multi part decoder.
-
-			default
-			=> match(TRUE) {
-				$IsMultipart
-				=> Util::ParseMultipartData(file_get_contents('php://input')),
-
-				default
-				=> Util::ParseQueryString(file_get_contents('php://input'))
+		switch($this->Verb) {
+			case 'GET': {
+				$this->Data = new Datafilter($_GET);
+				$this->File = new Datafilter($_FILES);
+				break;
 			}
-		});
+			case 'POST': {
+				$this->Data = new Datafilter($_POST);
+				$this->File = new Datafilter($_FILES);
+				break;
+			}
+			default: {
+				if($IsMultipart) {
+					list($this->Data, $this->File)
+					= Util::ParseMultipartRequest();
+				} else {
+					$this->Data = new Datafilter(Util::ParseQueryString(file_get_contents('php://input')));
+					$this->File = new Datafilter($_FILES);
+				}
 
-		// bind the file data filter.
-
-		$this->File = new Datafilter($_FILES);
+				break;
+			}
+		}
 
 		return $this;
 	}
