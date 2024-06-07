@@ -231,6 +231,11 @@ extends Prototype {
 
 		$Headers = new Datafilter(Util::FetchRequestHeaders());
 
+		$IsMultipart = (TRUE
+			&& $Headers->Get('content-type')
+			&& str_starts_with($Headers->Get('content-type'), 'multipart/form-data')
+		);
+
 		$this->Data = new Datafilter(match($this->Verb) {
 			'GET'
 			=> $_GET,
@@ -244,10 +249,7 @@ extends Prototype {
 
 			default
 			=> match(TRUE) {
-				(TRUE
-					&& $Headers->Get('content-type')
-					&& str_starts_with($Headers->Get('content-type'), 'multipart/form-data')
-				)
+				$IsMultipart
 				=> Util::ParseMultipartData(file_get_contents('php://input')),
 
 				default
