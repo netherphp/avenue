@@ -236,6 +236,8 @@ extends Prototype {
 			&& str_starts_with($Headers->Get('content-type'), 'multipart/form-data')
 		);
 
+		////////
+
 		$this->Data = new Datafilter(match($this->Verb) {
 			'GET'
 			=> $_GET,
