@@ -229,7 +229,7 @@ extends Prototype {
 		// nonstandard ones do not populate a global but can be parsed
 		// from the php input.
 
-		$Headers = new Datafilter(getallheaders());
+		$Headers = new Datafilter(Util::FetchRequestHeaders());
 
 		$this->Data = new Datafilter(match($this->Verb) {
 			'GET'

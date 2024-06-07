@@ -159,6 +159,18 @@ class Util {
 	}
 
 	static public function
+	FetchRequestHeaders():
+	array {
+
+		// this method exists purely because my unit tests are failing.
+
+		if(function_exists('getallheaders'))
+		return getallheaders();
+
+		return [];
+	}
+
+	static public function
 	ParseQueryString(?string $Input):
 	array {
 	/*//
