@@ -3,6 +3,7 @@
 	"description": "A Request Router.",
 	"keywords": [ "php", "router" ],
 	"license": "BSD-2-Clause",
+	"minimum-stability": "dev",
 	"authors":[
 		{
 			"name": "Bob Majdak Jr",
@@ -13,7 +14,7 @@
 	],
 	"require": {
 		"php": "^8.1",
-		"netherphp/common": "^5.0.12",
+		"netherphp/common": "^5.0",
 		"netherphp/console": "dev-redux",
 		"notihnio/php-multipart-form-data-parser": "^2.1"
 	},

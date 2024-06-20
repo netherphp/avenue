@@ -253,6 +253,17 @@ extends Prototype {
 				if($IsMultipart) {
 					list($this->Data, $this->File)
 					= Util::ParseMultipartRequest();
+
+					/*
+					$Parsed = Struct\FormData::FromRawInput(
+						file_get_contents('php://input')
+					);
+
+					list($this->Data, $this->File) = [
+						$Parsed->GetFields(),
+						$Parsed->GetFiles()
+					];
+					*/
 				} else {
 					$this->Data = new Datafilter(Util::ParseQueryString(file_get_contents('php://input')));
 					$this->File = new Datafilter($_FILES);

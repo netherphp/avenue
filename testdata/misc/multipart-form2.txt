@@ -1,0 +1,14 @@
+-----------------------------341358221521938010232373530959
+Content-Disposition: form-data; name="file"; filename="asdf.png"
+Content-Type: application/octet-stream
+
+asdf
+-----------------------------341358221521938010232373530959
+Content-Disposition: form-data; name="ID"
+
+1341
+-----------------------------341358221521938010232373530959
+Content-Disposition: form-data; name="UUID"
+
+018c701f-d06e-7240-be8f-f9b74c1a5ba7
+-----------------------------341358221521938010232373530959--
