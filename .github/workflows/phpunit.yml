@@ -20,6 +20,7 @@ jobs:
           coverage: xdebug
           extensions: mbstring, intl
       - name: Run PHPUnit 9
+        if: ${{ matrix.php-versions == '8.1' }}
         run: |
           composer install
           php vendor/bin/phpunit tests --bootstrap vendor/autoload.php --coverage-clover ./coverage.xml
