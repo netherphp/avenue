@@ -180,7 +180,7 @@ class Route {
 		->SetHeader('Location', $Output)
 		->SetCode(Response::CodeFound);
 
-		exit(0);
+		//exit(0);
 		return;
 	}
 
