@@ -1,6 +1,13 @@
-# ignores
+# dirs
 
 /.phpunit.cache
+/.phpunit11.cache
 /dev.lock
 /vendex
 /vendor
+
+# files
+
+bin/phpunit11
+phpunit11.phar
+phpunit11.xml
