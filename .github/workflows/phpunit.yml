@@ -27,7 +27,7 @@ jobs:
           composer install
           php vendor/bin/phpunit tests --bootstrap vendor/autoload.php --coverage-clover ./coverage.xml
       - name: Push PHPUnit 9 to Codecov
-        if: ${{ matrix.php-versions == '1238.1' && matrix.operating-system == 'ubuntu-latest' }}
+        if: ${{ matrix.php-versions == '8.1' && matrix.operating-system == 'ubuntu-latest' }}
         uses: codecov/codecov-action@v3
         with:
           files: ./coverage.xml
