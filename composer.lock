@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "00e00f96d830235f753d7b8d922cf647",
+    "content-hash": "2570b1bd6331dc420fed8c8319e1170a",
     "packages": [
         {
             "name": "brick/math",
@@ -1105,16 +1105,16 @@
         },
         {
             "name": "netherphp/common",
-            "version": "v5.0.35",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/netherphp/common.git",
-                "reference": "d50543c9853067c83905547486920ef3c274ddb9"
+                "reference": "c6f9e2252c33b0b8d5380b0f765fa7b0d85972f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/netherphp/common/zipball/d50543c9853067c83905547486920ef3c274ddb9",
-                "reference": "d50543c9853067c83905547486920ef3c274ddb9",
+                "url": "https://api.github.com/repos/netherphp/common/zipball/c6f9e2252c33b0b8d5380b0f765fa7b0d85972f1",
+                "reference": "c6f9e2252c33b0b8d5380b0f765fa7b0d85972f1",
                 "shasum": ""
             },
             "require": {
@@ -1129,6 +1129,7 @@
                 "netherphp/standards": ">=0.1.9",
                 "phpunit/phpunit": "^9.6"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -1154,9 +1155,9 @@
             ],
             "support": {
                 "issues": "https://github.com/netherphp/common/issues",
-                "source": "https://github.com/netherphp/common/tree/v5.0.35"
+                "source": "https://github.com/netherphp/common/tree/master"
             },
-            "time": "2024-06-18T21:20:46+00:00"
+            "time": "2024-06-19T20:52:24+00:00"
         },
         {
             "name": "netherphp/console",
@@ -5239,9 +5240,17 @@
             "time": "2024-03-03T12:36:25+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "package": "netherphp/common",
+            "version": "9999999-dev",
+            "alias": "5.0.98",
+            "alias_normalized": "5.0.98.0"
+        }
+    ],
     "minimum-stability": "dev",
     "stability-flags": {
+        "netherphp/common": 20,
         "netherphp/console": 20
     },
     "prefer-stable": false,

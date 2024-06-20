@@ -220,7 +220,7 @@ extends Prototype {
 	}
 
 	public function
-	ParseRequestData():
+	ParseRequestData(?iterable $Headers=NULL, ?string $Body=NULL):
 	static {
 
 		// bind the most relevant input source to the data property
@@ -229,7 +229,7 @@ extends Prototype {
 		// nonstandard ones do not populate a global but can be parsed
 		// from the php input.
 
-		$Headers = new Datafilter(Util::FetchRequestHeaders());
+		$Headers = new Datafilter($Headers ?? Util::FetchRequestHeaders());
 
 		$IsMultipart = (TRUE
 			&& $Headers->Get('content-type')
@@ -251,21 +251,20 @@ extends Prototype {
 			}
 			default: {
 				if($IsMultipart) {
-					list($this->Data, $this->File)
-					= Util::ParseMultipartRequest();
-
-					/*
-					$Parsed = Struct\FormData::FromRawInput(
-						file_get_contents('php://input')
+					$Parsed = Struct\FormData::FromMultipartRaw(
+						$Body ?? file_get_contents('php://input')
 					);
 
 					list($this->Data, $this->File) = [
-						$Parsed->GetFields(),
-						$Parsed->GetFiles()
+						new Datafilter($Parsed->GetFields()),
+						new Datafilter($Parsed->GetFiles())
 					];
-					*/
+
 				} else {
-					$this->Data = new Datafilter(Util::ParseQueryString(file_get_contents('php://input')));
+					$this->Data = new Datafilter(Util::ParseQueryString(
+						$Body ?? file_get_contents('php://input')
+					));
+
 					$this->File = new Datafilter($_FILES);
 				}
 

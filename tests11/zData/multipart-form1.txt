@@ -1,0 +1,14 @@
+--YOLOSWAG
+Content-Disposition: form-data; name="File"; filename="asdf.png"
+Content-Type: application/octet-stream
+
+asdf
+--YOLOSWAG
+Content-Disposition: form-data; name="ID"
+
+69
+--YOLOSWAG
+Content-Disposition: form-data; name="UUID"
+
+018c701f-d06e-7240-be8f-f9b74c1a5ba7
+--YOLOSWAG--

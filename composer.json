@@ -14,7 +14,7 @@
 	],
 	"require": {
 		"php": "^8.1",
-		"netherphp/common": "^5.0",
+		"netherphp/common": "dev-master as 5.0.98",
 		"netherphp/console": "dev-redux",
 		"notihnio/php-multipart-form-data-parser": "^2.1"
 	},
@@ -28,7 +28,8 @@
 			"Nether\\":"src/"
 		},
 		"psr-4": {
-			"TestRoutes\\": "testdata/routes/"
+			"TestRoutes\\": "testdata/routes/",
+			"NetherTestSuite\\Avenue\\zRoutes\\": "tests11/zRoutes"
 		}
 	},
 	"bin": [

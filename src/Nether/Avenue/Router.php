@@ -73,8 +73,8 @@ class Router {
 	public function
 	__Destruct() {
 
-		if($this->HasExecuted && !$this->HasRendered)
-		$this->Render();
+		//if($this->HasExecuted && !$this->HasRendered)
+		//$this->Render();
 
 		return;
 	}

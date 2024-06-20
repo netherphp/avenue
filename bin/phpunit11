@@ -1,0 +1,3 @@
+#!/bin/sh
+
+php phpunit11.phar -c phpunit11.xml
