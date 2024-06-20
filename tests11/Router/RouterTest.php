@@ -124,6 +124,9 @@ extends PHPUnit\Framework\TestCase {
 	TestVerbPostwithMultipartData():
 	void {
 
+		// at the moment we trust that PHP handles POST as it always has.
+		// it is other verbs that we need to test more.
+
 		$Router = static::PrepareRouter();
 		$Router->Request->ParseRequest('POST', 'nether.local', '/api/test/basic');
 		//$Router->Request->ParseRequestData(
