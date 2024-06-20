@@ -1,0 +1,9 @@
+--YOLOSWAG
+Content-Disposition: form-data; name="File"; filename="asdf.png"
+Content-Type: application/octet-stream
+
+asdf
+--YOLOSWAG
+
+69
+--YOLOSWAG--

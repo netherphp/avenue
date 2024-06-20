@@ -41,48 +41,6 @@ extends Common\Prototype {
 		return $this->BMarker;
 	}
 
-	public function
-	GetPaddedBoundaryStart(int $At):
-	int {
-
-		return $At + strlen(static::BMarkerPad);
-	}
-
-	public function
-	GetPaddedBoundaryEnd(int $At):
-	int {
-
-		return $At - strlen(static::BMarkerPad);
-	}
-
-	public function
-	GetFields():
-	Common\Datastore {
-
-		return $this->Fields->Copy();
-	}
-
-	public function
-	GetFieldsArray():
-	array {
-
-		return $this->Fields->Export();
-	}
-
-	public function
-	GetFiles():
-	Common\Datastore {
-
-		return $this->Files->Copy();
-	}
-
-	public function
-	GetFilesArray():
-	array {
-
-		return $this->Files->Export();
-	}
-
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
 
@@ -102,6 +60,7 @@ extends Common\Prototype {
 
 		$Size = strlen($Input);
 		$Here = 0;
+		$Mark = NULL;
 
 		// check that the input looks like multipart data.
 
@@ -111,18 +70,14 @@ extends Common\Prototype {
 		// determine what the boundary marker is.
 
 		$Here = strpos($Input, static::EOL, 0);
+		$Mark = substr($Input, 0, $Here);
 
-		if($Here === FALSE)
-		throw new Avenue\Error\InvalidMultipartFormData('ParseRawInput: no boundary found');
+		if(!str_starts_with($Mark, static::BMarkerPad))
+		throw new Avenue\Error\InvalidMultipartFormData('ParseRawInput: invalid boundary marker');
 
 		////////
 
-		$this->BMarker = substr(
-			$Input,
-			$this->GetPaddedBoundaryStart(0),
-			$this->GetPaddedBoundaryEnd($Here)
-		);
-
+		$this->BMarker = substr($Mark, strlen(static::BMarkerPad));
 		return;
 	}
 
@@ -174,11 +129,20 @@ extends Common\Prototype {
 
 			$Head = $this->ParseRequestHeaders(substr($Input, $Chop, $DPos - $Chop));
 
-			if(!$Head->HasKey(static::HeadDisposition))
-			continue;
+			if(!$Head->HasKey(static::HeadDisposition)) {
+				$Step = $Stop;
+				continue;
+			}
 
-			if(!$Head[static::HeadDisposition]->HasKey('name'))
-			continue;
+			if(!($Head[static::HeadDisposition] instanceof Common\Datastore)) {
+				$Step = $Stop;
+				continue;
+			}
+
+			if(!$Head[static::HeadDisposition]->HasKey('name')) {
+				$Step = $Stop;
+				continue;
+			}
 
 			$Name = $Head[static::HeadDisposition]['name'];
 			$BPos = ($DPos + strlen($DBrk));
@@ -227,6 +191,9 @@ extends Common\Prototype {
 		////////
 
 		foreach($Lines as $Line) {
+			if(!str_contains($Line, ':'))
+			continue;
+
 			list($Field, $Data) = explode(':', $Line, 2);
 
 			$Field = strtolower($Field);

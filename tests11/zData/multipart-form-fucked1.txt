@@ -1,0 +1,9 @@
+--YOLOSWAG
+Content-Type: application/octet-stream
+
+no dispo header this shouldnt even show in the dataset
+--YOLOSWAG
+Content-Disposition: form-data; name="ID"
+
+69
+--YOLOSWAG--

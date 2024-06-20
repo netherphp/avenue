@@ -256,10 +256,9 @@ extends Prototype {
 					);
 
 					list($this->Data, $this->File) = [
-						new Datafilter($Parsed->GetFields()),
-						new Datafilter($Parsed->GetFiles())
+						new Datafilter($Parsed->Fields->Export()),
+						new Datafilter($Parsed->Files->Export())
 					];
-
 				} else {
 					$this->Data = new Datafilter(Util::ParseQueryString(
 						$Body ?? file_get_contents('php://input')

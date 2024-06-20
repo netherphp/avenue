@@ -1,0 +1,14 @@
+--YOLOSWAG
+Content-Disposition: form-data; filename="asdf.png"
+Content-Type: application/octet-stream
+
+asdf
+--YOLOSWAG
+Content-Disposition: form-data;
+
+69
+--YOLOSWAG
+Content-Disposition: form-data; meat; filename="asdf.png"
+
+jkl;
+--YOLOSWAG--
