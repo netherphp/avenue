@@ -157,7 +157,7 @@ extends Common\Prototype {
 				// in case it was a massive file that ooms us.
 				file_put_contents($Temp, substr($Input, $BPos, $BLen));
 
-				$Mime = 'x-lulz/todo';
+				$Mime = Common\Filesystem\Util::MimeType($Temp);
 
 				$this->Files[$Name] = [
 					'error'    => 0,

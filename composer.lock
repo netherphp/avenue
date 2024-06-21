@@ -233,12 +233,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/netherphp/common.git",
-                "reference": "c6f9e2252c33b0b8d5380b0f765fa7b0d85972f1"
+                "reference": "0e3022a6f3d240a3f8e160006e6823c2068ee6ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/netherphp/common/zipball/c6f9e2252c33b0b8d5380b0f765fa7b0d85972f1",
-                "reference": "c6f9e2252c33b0b8d5380b0f765fa7b0d85972f1",
+                "url": "https://api.github.com/repos/netherphp/common/zipball/0e3022a6f3d240a3f8e160006e6823c2068ee6ec",
+                "reference": "0e3022a6f3d240a3f8e160006e6823c2068ee6ec",
                 "shasum": ""
             },
             "require": {
@@ -281,7 +281,7 @@
                 "issues": "https://github.com/netherphp/common/issues",
                 "source": "https://github.com/netherphp/common/tree/master"
             },
-            "time": "2024-06-19T20:52:24+00:00"
+            "time": "2024-06-21T17:30:24+00:00"
         },
         {
             "name": "netherphp/console",
@@ -710,12 +710,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/instantiator.git",
-                "reference": "9955122a490d18ce723cf9014b196c126222c180"
+                "reference": "0dfb69d79d0964b8a80bfa92c07f50e3e8d73542"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/9955122a490d18ce723cf9014b196c126222c180",
-                "reference": "9955122a490d18ce723cf9014b196c126222c180",
+                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/0dfb69d79d0964b8a80bfa92c07f50e3e8d73542",
+                "reference": "0dfb69d79d0964b8a80bfa92c07f50e3e8d73542",
                 "shasum": ""
             },
             "require": {
@@ -773,7 +773,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-05-05T15:09:38+00:00"
+            "time": "2024-06-20T19:34:15+00:00"
         },
         {
             "name": "myclabs/deep-copy",
