@@ -20,7 +20,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           coverage: xdebug
-          extensions: mbstring, intl
+          extensions: mbstring, intl, fileinfo
       - name: Run PHPUnit 9
         if: ${{ matrix.php-versions == '8.1' }}
         run: |
@@ -38,7 +38,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           coverage: xdebug
-          extensions: mbstring, intl
+          extensions: mbstring, intl, fileinfo
       - name: Run PHPUnit 11
         if: ${{ matrix.php-versions == '8.3' }}
         run: |
