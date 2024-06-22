@@ -1,0 +1,14 @@
+--123456789
+Content-Disposition: form-data; name="File"; filename="asdf.png"
+Content-Type: application/octet-stream
+
+qwerty
+--123456789
+Content-Disposition: form-data; name="FieldData[ID]"
+
+42
+--123456789
+Content-Disposition: form-data; name="FieldData[UUID]"
+
+f349d052-30ab-11ef-ae83-7fc7251790b3
+--123456789--

@@ -62,6 +62,56 @@ extends PHPUnit\Framework\TestCase {
 
 	#[PHPUnit\Framework\Attributes\Test]
 	public function
+	TestFromMultipartRaw2():
+	void {
+
+		$ReqData = file_get_contents(sprintf(
+			'%s/zData/multipart-form2.txt',
+			dirname(__FILE__, 2)
+		));
+
+		$Parsed = Avenue\Struct\FormData::FromMultipartRaw($ReqData);
+
+		// check the basics of what was sent.
+
+		$this->AssertEquals('123456789', $Parsed->GetBoundaryMarker());
+		$this->AssertCount(1, $Parsed->Fields);
+		$this->AssertCount(1, $Parsed->Files);
+
+		$this->AssertTrue($Parsed->Fields->HasKey('FieldData'));
+		$this->AssertTrue($Parsed->Files->HasKey('File'));
+
+		// check that the fields look like fields.
+
+		$this->AssertEquals(
+			'42',
+			$Parsed->Fields['FieldData']['ID']
+		);
+
+		$this->AssertEquals(
+			'f349d052-30ab-11ef-ae83-7fc7251790b3',
+			$Parsed->Fields['FieldData']['UUID']
+		);
+
+		// check that the file looks like a file.
+
+		$File = $Parsed->Files->Get('File');
+		$this->AssertArrayHasKey('name', $File);
+		$this->AssertArrayHasKey('tmp_name', $File);
+		$this->AssertArrayHasKey('size', $File);
+
+		$this->AssertFileExists($File['tmp_name']);
+		$this->AssertEquals(6, $File['size']);
+		$this->AssertEquals(6, filesize($File['tmp_name']));
+
+		unlink($File['tmp_name']);
+
+		return;
+	}
+
+
+	#[PHPUnit\Framework\Attributes\Test]
+	public function
 	TestFromMultipartRawBadong1():
 	void {
 
