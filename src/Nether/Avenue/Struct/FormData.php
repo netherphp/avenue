@@ -188,24 +188,23 @@ extends Common\Prototype {
 		$Output = [];
 		$Key = NULL;
 		$Val = NULL;
-		$Found = NULL;
+		$Fob = NULL;
+
+		////////
 
 		foreach($this->Fields as $Key => $Val) {
 
-			if(preg_match('/^(.+?)\[(.+?)\]$/', $Key, $Found)) {
-				if(!array_key_exists($Found[1], $Output))
-				$Output[$Found[1]] = [];
+			if(preg_match('/^(.+?)\[(.+?)\]$/', $Key, $Fob)) {
+				if(!array_key_exists($Fob[1], $Output))
+				$Output[$Fob[1]] = [];
 
-				$Output[$Found[1]][$Found[2]] = $Val;
+				$Output[$Fob[1]][$Fob[2]] = $Val;
 				continue;
 			}
 
 			$Output[$Key] = $Val;
 			continue;
 		}
-
-		//Common\Dump::Var($this->Fields);
-		//Common\Dump::Var($Output);
 
 		return Common\Datastore::FromArray($Output);
 	}
