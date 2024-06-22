@@ -176,8 +176,38 @@ extends Common\Prototype {
 			continue;
 		}
 
+		$this->Fields = $this->ParseRawInputExpandFields();
 
 		return;
+	}
+
+	protected function
+	ParseRawInputExpandFields():
+	Common\Datastore {
+
+		$Output = [];
+		$Key = NULL;
+		$Val = NULL;
+		$Found = NULL;
+
+		foreach($this->Fields as $Key => $Val) {
+
+			if(preg_match('/^(.+?)\[(.+?)\]$/', $Key, $Found)) {
+				if(!array_key_exists($Found[1], $Output))
+				$Output[$Found[1]] = [];
+
+				$Output[$Found[1]][$Found[2]] = $Val;
+				continue;
+			}
+
+			$Output[$Key] = $Val;
+			continue;
+		}
+
+		//Common\Dump::Var($this->Fields);
+		//Common\Dump::Var($Output);
+
+		return Common\Datastore::FromArray($Output);
 	}
 
 	public function
