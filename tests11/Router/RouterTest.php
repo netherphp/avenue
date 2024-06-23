@@ -7,6 +7,8 @@ use Nether\Avenue;
 use Nether\Common;
 use NetherTestSuite\Avenue\zRoutes;
 
+new Avenue\Library([]);
+
 class RouterTest
 extends PHPUnit\Framework\TestCase {
 
@@ -179,6 +181,56 @@ extends PHPUnit\Framework\TestCase {
 		$this->AssertTrue($Router->Request->Data->Exists('UUID'));
 
 		unlink($Router->Request->File['file']['tmp_name']);
+		$Router->Response->Clear();
+
+		return;
+	}
+
+	////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////
+
+	#[PHPUnit\Framework\Attributes\Test]
+	public function
+	TestExtraDataArgExpansion():
+	void {
+
+		$ExtraData = new Avenue\Struct\ExtraData;
+		$Router = static::PrepareRouter();
+
+		////////
+
+		$ExtraData->Clear();
+		$Router->Response->Clear();
+		$Router->Request->ParseRequest('GET', 'nether.local', '/eda/false?one=1&two=second');
+		$Handler = $Router->Select($ExtraData);
+
+		$Router->Execute($Handler, $ExtraData);
+		$Result = Common\Filters\Text::TrimmedNullable($Router->Response->Content);
+
+		$this->AssertEquals('ExtraDataArgs=FALSE', $Result);
+		$this->AssertTrue($ExtraData->HasKey('One'));
+		$this->AssertEquals('1', $ExtraData->Get('One'));
+		$this->AssertTrue($ExtraData->HasKey('Two'));
+		$this->AssertEquals('second', $ExtraData->Get('Two'));
+
+		////////
+
+		$ExtraData->Clear();
+		$Router->Response->Clear();
+		$Router->Request->ParseRequest('GET', 'nether.local', '/eda/true?one=1&two=second');
+		$Handler = $Router->Select($ExtraData);
+
+		$Router->Execute($Handler, $ExtraData);
+		$Result = Common\Filters\Text::TrimmedNullable($Router->Response->Content);
+
+		$this->AssertEquals('ExtraDataArgs=TRUE, 1, second', $Result);
+		$this->AssertTrue($ExtraData->HasKey('One'));
+		$this->AssertEquals('1', $ExtraData->Get('One'));
+		$this->AssertTrue($ExtraData->HasKey('Two'));
+		$this->AssertEquals('second', $ExtraData->Get('Two'));
+
+		////////
+
 		$Router->Response->Clear();
 
 		return;

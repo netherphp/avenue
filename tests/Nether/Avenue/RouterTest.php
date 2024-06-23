@@ -14,6 +14,8 @@ use Nether\Avenue\Error\RouterWebRootUndefined;
 use Nether\Avenue\Error\RouteMissingWillAnswerRequest;
 use Nether\Common\Datastore;
 
+new \Nether\Avenue\Library([]);
+
 class RouterTest
 extends PHPUnit\Framework\TestCase {
 

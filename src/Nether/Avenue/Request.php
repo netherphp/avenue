@@ -214,7 +214,7 @@ extends Prototype {
 		////////
 
 		$this->Path = $Path;
-		$this->Query = new Datafilter($_GET);
+		$this->Query = new Datafilter($Vars);
 
 		return $this;
 	}

@@ -153,7 +153,10 @@ implements Common\Prototype\MethodInfoInterface {
 	keep it around for reuse later in the event route acceptance succeeds.
 	//*/
 
-		return new ($this->Class)($this, $Req, $Resp);
+		/** @var Route $Output */
+		$Output = new ($this->Class)($this, $Req, $Resp);
+
+		return $Output;
 	}
 
 	public function

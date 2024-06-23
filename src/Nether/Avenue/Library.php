@@ -10,12 +10,13 @@ class Library
 extends Nether\Common\Library {
 
 	public const
-	ConfRouteFile    = 'Nether.Avenue.RouteFile',
-	ConfRouteRoot    = 'Nether.Avenue.RouteRoot',
-	ConfWebRoot      = 'Nether.Avenue.WebRoot',
-	ConfDomainLvl    = 'Nether.Avenue.DomainLvl',
-	ConfDomainSep    = 'Nether.Avenue.DomainSep',
-	ConfVerbRewrite  = 'Nether.Avenue.VerbRewrite';
+	ConfRouteFile     = 'Nether.Avenue.RouteFile',
+	ConfRouteRoot     = 'Nether.Avenue.RouteRoot',
+	ConfWebRoot       = 'Nether.Avenue.WebRoot',
+	ConfDomainLvl     = 'Nether.Avenue.DomainLvl',
+	ConfDomainSep     = 'Nether.Avenue.DomainSep',
+	ConfVerbRewrite   = 'Nether.Avenue.VerbRewrite',
+	ConfExtraDataArgs = 'Nether.Avenue.Route.ExtraDataArgs';
 
 	public const
 	RouteSourceScan = 'dirscan',

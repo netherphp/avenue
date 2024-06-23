@@ -71,7 +71,7 @@ class Util {
 					if(!array_key_exists(++$T, $Tokens))
 					break;
 
-					if($Tokens[$T]->Is(['(']))
+					if($Tokens[$T]->Is(['(', ')']))
 					break;
 
 					if(!$Tokens[$T]->Is(T_STRING))

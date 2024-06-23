@@ -406,8 +406,18 @@ class Router {
 	perform route handler execution.
 	//*/
 
+		$Route = $Handler->GetRouteInstance($this->Request, $this->Response);
+		$MethodInfo = $Route::GetMethodInfo($Handler->Method);
+
+		$Extraspand = (FALSE
+			|| Library::Get(Library::ConfExtraDataArgs)
+			|| $MethodInfo->HasAttribute(Meta\ExtraDataArgs::class)
+		);
+
+		////////
+
 		$this->CurrentHandler = $Handler;
-		$this->CurrentRoute = $Handler->GetRouteInstance($this->Request, $this->Response);
+		$this->CurrentRoute = $Route;
 
 		$this->Response->CaptureBegin();
 		$this->CurrentRoute->OnReady($ExtraData);
@@ -420,7 +430,9 @@ class Router {
 		////////
 
 		try {
-			$this->CurrentRoute->{$Handler->Method}(...$Handler->GetMethodArgValues($ExtraData, TRUE));
+			$this->CurrentRoute->{$Handler->Method}(
+				...$Handler->GetMethodArgValues($ExtraData, $Extraspand
+			));
 		}
 
 		//catch(ArgumentCountError $Err) {
