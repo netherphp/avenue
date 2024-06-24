@@ -38,7 +38,6 @@ extends PHPUnit\Framework\TestCase {
 		$_SERVER['HTTP_HOST'] = 'avenue-magic.test';
 		$_SERVER['REQUEST_URI'] = '/test/magic?arg=one&with=query';
 		$_POST = [ 'item'=> 'thing' ];
-		$_GET = [ 'arg'=> 'one' ];
 
 		$Req = new Request;
 		$Req->ParseRequest();
