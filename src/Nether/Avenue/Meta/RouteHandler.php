@@ -356,10 +356,29 @@ implements Common\Prototype\MethodInfoInterface {
 		else
 		$DomainComp = sprintf('(%s)', preg_quote($this->Domain, '#'));
 
-		if($this->Path === NULL)
-		$PathComp = '/(.+?)';
-		else
-		$PathComp = preg_quote($this->Path, '#');
+		////////
+
+		// a null path equates to match anything.
+
+		if($this->Path === NULL) {
+			$PathComp = '/(.+?)';
+		}
+
+		// a modulus path equates to raw regex.
+		// %/(something|or|other)
+
+		elseif(str_starts_with($this->Path, '%')) {
+			$PathComp = preg_replace('/^%/', '', $this->Path);
+		}
+
+		// otherwise the helper syntax.
+		// /:Slot: or /::Slot::
+
+		else {
+			$PathComp = preg_quote($this->Path, '#');
+		}
+
+		////////
 
 		// replace tokens with slotted regex wildcards.
 
