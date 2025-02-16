@@ -32,6 +32,7 @@ extends Prototype {
 	CodeUnauthorized = 401,
 	CodeForbidden    = 403,
 	CodeNotFound     = 404,
+	CodeSlowDown     = 429,
 	CodeServerError  = 500;
 
 	public bool
