@@ -20,20 +20,21 @@ extends Prototype {
 	ContentTypeXML  = 'application/xml';
 
 	const
-	CodeNope         = 0,
-	CodeOK           = 200,
-	CodeMovedPerm    = 301,
-	CodeFound        = 302,
-	CodeSeeOther     = 303,
-	CodeNotModified  = 304,
-	CodeRedirectTemp = 307,
-	CodeRedirectPerm = 308,
-	CodeBadRequest   = 400,
-	CodeUnauthorized = 401,
-	CodeForbidden    = 403,
-	CodeNotFound     = 404,
-	CodeSlowDown     = 429,
-	CodeServerError  = 500;
+	CodeNope           = 0,
+	CodeOK             = 200,
+	CodeMovedPerm      = 301,
+	CodeFound          = 302,
+	CodeSeeOther       = 303,
+	CodeNotModified    = 304,
+	CodeRedirectTemp   = 307,
+	CodeRedirectPerm   = 308,
+	CodeBadRequest     = 400,
+	CodeUnauthorized   = 401,
+	CodeForbidden      = 403,
+	CodeNotFound       = 404,
+	CodeSlowDown       = 429,
+	CodeServerError    = 500,
+	CodeNotImplemented = 501;
 
 	public bool
 	$HTTP = TRUE;
