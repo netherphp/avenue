@@ -2,6 +2,7 @@
 
 namespace Nether\Avenue;
 
+use Nether\Common\Datastore;
 use Nether\Common\Prototype;
 use Nether\Common\Datafilter;
 use Nether\Common\Prototype\PropertyInfo;
@@ -220,8 +221,70 @@ extends Prototype {
 	}
 
 	public function
+	FetchRequestData(?iterable $Headers=NULL, ?string $Body=NULL):
+	Datastore {
+
+		$Output = new Datastore;
+		$Data = NULL;
+		$File = NULL;
+
+		$Headers = new Datafilter($Headers ?? Util::FetchRequestHeaders());
+
+		$IsMultipart = (TRUE
+			&& $Headers->Get('content-type')
+			&& str_starts_with($Headers->Get('content-type'), 'multipart/form-data')
+		);
+
+		////////
+
+		switch($this->Verb) {
+			case 'GET': {
+				$Data = ($_GET);
+				$File = ($_FILES);
+				break;
+			}
+			case 'POST': {
+				$Data = ($_POST);
+				$File = ($_FILES);
+				break;
+			}
+			default: {
+				if($IsMultipart) {
+					$Parsed = Struct\FormData::FromMultipartRaw(
+						$Body ?? file_get_contents('php://input')
+					);
+
+					list($Data, $File) = [
+						($Parsed->Fields->Export()),
+						($Parsed->Files->Export())
+					];
+				} else {
+					$Data = (Util::ParseQueryString(
+						$Body ?? file_get_contents('php://input')
+					));
+
+					$File = ($_FILES);
+				}
+
+				break;
+			}
+		}
+
+		$Output['Data'] = $Data;
+		$Output['File'] = $File;
+
+		return $Output;
+	}
+
+	public function
 	ParseRequestData(?iterable $Headers=NULL, ?string $Body=NULL):
 	static {
+
+		$Input = $this->FetchRequestData($Headers, $Body);
+		$this->Data = new Datafilter($Input['Data']);
+		$this->File = new Datafilter($Input['File']);
+
+		return $this;
 
 		// bind the most relevant input source to the data property
 		// based on the http verb. only get and post get parsed data
