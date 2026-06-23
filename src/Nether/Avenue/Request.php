@@ -5,6 +5,7 @@ namespace Nether\Avenue;
 use Nether\Common\Datastore;
 use Nether\Common\Prototype;
 use Nether\Common\Datafilter;
+use Nether\Common\Databox;
 use Nether\Common\Prototype\PropertyInfo;
 use Nether\Avenue\Util;
 
@@ -37,6 +38,19 @@ extends Prototype {
 
 	public ?string
 	$UserAgent = NULL;
+
+	////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////
+
+	// experimental databox api
+	// goal: replace the datafilter completely and hopefully be compatible
+	// enough to make my life only a small hell.
+
+	public Databox
+	$Input;
+
+	public Databox
+	$Upload;
 
 	////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////
@@ -283,6 +297,9 @@ extends Prototype {
 		$Input = $this->FetchRequestData($Headers, $Body);
 		$this->Data = new Datafilter($Input['Data']);
 		$this->File = new Datafilter($Input['File']);
+
+		$this->Input = new Databox($Input['Data']);
+		$this->Upload = new Databox($Input['File']);
 
 		return $this;
 
